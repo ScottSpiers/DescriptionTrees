@@ -2,7 +2,6 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,6 +17,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+
+import model.LeafNumRestrictor;
 
 public class DescriptionTreeView implements Observer {
 
@@ -74,6 +75,7 @@ public class DescriptionTreeView implements Observer {
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
+		scrl_restrictions.add(new RestrictionComponent(new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));
 		
 		
 		westBox.add(lbl_treeChoiceInstr);
@@ -92,6 +94,7 @@ public class DescriptionTreeView implements Observer {
 		
 		eastBox.add(scrl_restrictions);
 		eastBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		eastBox.add(new RestrictionComponent(new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));
 		
 		background.add(BorderLayout.WEST, westBox);
 		background.add(BorderLayout.EAST, eastBox);
