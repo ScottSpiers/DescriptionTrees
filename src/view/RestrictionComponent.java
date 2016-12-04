@@ -1,5 +1,9 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,7 +18,8 @@ public class RestrictionComponent extends JComponent {
 	
 	private static final long serialVersionUID = -7694510080532419887L;
 
-	public RestrictionComponent(Restriction r) {
+	public RestrictionComponent(Component parent, Restriction r) {
+		this.setLayout(new BorderLayout());
 		Box box_layout = new Box(BoxLayout.Y_AXIS);
 		Box box_name = new Box(BoxLayout.X_AXIS);
 		Box box_details = new Box(BoxLayout.X_AXIS);
@@ -26,7 +31,10 @@ public class RestrictionComponent extends JComponent {
 		box_details.add(createRemove());
 		box_layout.add(box_name);
 		box_layout.add(box_details);
+		this.add(box_layout, BorderLayout.NORTH);
 		this.setToolTipText(r.getDesc());
+		this.setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.setMinimumSize(new Dimension(parent.getWidth(), (int) (parent.getHeight() * 0.2)));
 		this.setVisible(true);
 	}
 	
