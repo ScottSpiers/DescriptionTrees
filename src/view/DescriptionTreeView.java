@@ -107,9 +107,7 @@ public class DescriptionTreeView implements Observer {
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
-		pnl_restrictions.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));
-		//scrl_restrictions.setMaximumSize(new Dimension(background.getWidth() /2, background.getHeight()));
-		
+		pnl_restrictions.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));		
 		
 		westBox.add(lbl_treeChoiceInstr);
 		westBox.add(rdo_alpha);
@@ -126,7 +124,6 @@ public class DescriptionTreeView implements Observer {
 		westBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
 		
 		eastBox.add(scrl_restrictions);
-		//eastBox.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));
 		eastBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
 		
 		background.add(BorderLayout.WEST, westBox);
