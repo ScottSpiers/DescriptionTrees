@@ -19,6 +19,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 import model.LeafNumRestrictor;
 
@@ -42,32 +44,28 @@ public class DescriptionTreeView implements Observer {
 		Box westBox = new Box(BoxLayout.Y_AXIS);
 		Box eastBox = new Box(BoxLayout.X_AXIS);
 		
-		JLabel lbl_treeChoiceInstr = new JLabel("Please choose a description tree:");
-		lbl_treeChoiceInstr.setAlignmentX(Component.LEFT_ALIGNMENT);
+		Dimension spnrSize = new Dimension(50, 20);
+		
+		JLabel lbl_treeChoiceInstr = new JLabel("<html>Please choose a description tree:</html>");
 		ButtonGroup grp_trees = new ButtonGroup();
 		JRadioButton rdo_alpha = new JRadioButton("Alpha(a, b)");
-		rdo_alpha.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JRadioButton rdo_beta = new JRadioButton("Beta(a, b)");
-		rdo_beta.setAlignmentX(Component.LEFT_ALIGNMENT);
 		grp_trees.add(rdo_alpha);
 		grp_trees.add(rdo_beta);
 		
-		JLabel lbl_params = new JLabel("Provide the paramaters");
-		lbl_params.setAlignmentX(Component.LEFT_ALIGNMENT);
+		JLabel lbl_params = new JLabel("<html>Provide the paramaters:</html>");
 		Box box_a = new Box(BoxLayout.X_AXIS);
-		Box box_b = new Box(BoxLayout.Y_AXIS);
+		Box box_b = new Box(BoxLayout.X_AXIS);
 		JLabel lbl_a = new JLabel("a = ");
-		lbl_a.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JLabel lbl_b = new JLabel("b = ");
-		lbl_b.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		JSpinner spnr_a = new JSpinner();
 		spnr_a.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnr_a.setAlignmentX(Component.LEFT_ALIGNMENT);
+		spnr_a.setMaximumSize(spnrSize);
 		
 		JSpinner spnr_b = new JSpinner();
 		spnr_b.setModel(new SpinnerNumberModel(1, 0, null, 1));
-		spnr_b.setAlignmentX(Component.LEFT_ALIGNMENT);
+		spnr_b.setMaximumSize(spnrSize);
 		
 		box_a.add(lbl_a);
 		box_a.add(spnr_a);
@@ -77,50 +75,66 @@ public class DescriptionTreeView implements Observer {
 		
 		JSpinner spnr_nodeMin = new JSpinner();
 		spnr_nodeMin.setModel(new SpinnerNumberModel(1, 0, null, 1));
-		spnr_nodeMin.setAlignmentX(Component.LEFT_ALIGNMENT);
+		spnr_nodeMin.setMaximumSize(spnrSize);
 		
 		JSpinner spnr_nodeMax = new JSpinner();
 		spnr_nodeMax.setModel(new SpinnerNumberModel(1, 0, null, 1));
-		spnr_nodeMax.setAlignmentX(Component.LEFT_ALIGNMENT);
+		spnr_nodeMax.setMaximumSize(spnrSize);
 		
 		JLabel lbl_numNodes = new JLabel("Provide the Number of Nodes:");
 		lbl_numNodes.setAlignmentX(Component.LEFT_ALIGNMENT);
 		Box box_node = new Box(BoxLayout.X_AXIS);
 		JLabel lbl_node = new JLabel("n = ");
-		lbl_node.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JLabel lbl_toMax = new JLabel(" to ");
-		lbl_toMax.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_node.add(lbl_node);
 		box_node.add(spnr_nodeMin);
 		box_node.add(lbl_toMax);
 		box_node.add(spnr_nodeMax);
 		
-		JLabel lbl_totalTrees = new JLabel("Total Number of Trees:");
-		lbl_totalTrees.setAlignmentX(Component.LEFT_ALIGNMENT);
+		JLabel lbl_totalTrees = new JLabel("<html>Total Number of Trees:</html>");
 		JLabel lbl_numTrees = new JLabel();
-		lbl_numTrees.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		JLabel lbl_numTreeSeqDesc = new JLabel("Number of Trees sequence:");
-		lbl_numTreeSeqDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+		JLabel lbl_numTreeSeqDesc = new JLabel("<html>Number of Trees sequence:</html>");
 		JLabel lbl_numTreeSeq = new JLabel();
-		lbl_numTreeSeq.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
 		pnl_restrictions.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));		
 		
-		westBox.add(lbl_treeChoiceInstr);
-		westBox.add(rdo_alpha);
-		westBox.add(rdo_beta);
-		westBox.add(lbl_params);
-		westBox.add(box_a);
-		westBox.add(box_b);
-		westBox.add(lbl_numNodes);
-		westBox.add(box_node);
-		westBox.add(lbl_totalTrees);
-		westBox.add(lbl_numTrees);
-		westBox.add(lbl_numTreeSeqDesc);		
-		westBox.add(lbl_numTreeSeq);
+		Border paramBorder = BorderFactory.createEmptyBorder(10, 0, 10, 0);
+		
+		Box box_treeChoice = new Box(BoxLayout.Y_AXIS);
+		box_treeChoice.setBorder(paramBorder);
+		box_treeChoice.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box_treeChoice.add(lbl_treeChoiceInstr);
+		box_treeChoice.add(rdo_alpha);
+		box_treeChoice.add(rdo_beta);
+		
+		Box box_params = new Box(BoxLayout.Y_AXIS);
+		box_params.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box_params.setBorder(paramBorder);
+		box_params.add(lbl_params);
+		box_params.add(box_a);
+		box_params.add(box_b);
+		
+		Box box_numNodes = new Box(BoxLayout.Y_AXIS);
+		box_numNodes.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box_numNodes.setBorder(paramBorder);
+		box_numNodes.add(lbl_numNodes);
+		box_numNodes.add(box_node);
+		
+		Box box_output = new Box(BoxLayout.Y_AXIS);
+		box_output.setAlignmentX(Component.LEFT_ALIGNMENT);
+		box_output.setBorder(paramBorder);
+		box_output.add(lbl_totalTrees);
+		box_output.add(lbl_numTrees);
+		box_output.add(lbl_numTreeSeqDesc);		
+		box_output.add(lbl_numTreeSeq);
+		
+		westBox.add(box_treeChoice);
+		westBox.add(box_params);
+		westBox.add(box_numNodes);
+		westBox.add(box_output);
 		westBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
 		
 		eastBox.add(scrl_restrictions);
