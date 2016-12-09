@@ -12,13 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import model.Restriction;
+import model.Restrictor;
 
 public class RestrictionComponent extends JComponent {
 	
 	private static final long serialVersionUID = -7694510080532419887L;
 
-	public RestrictionComponent(Component parent, Restriction r) {
+	public RestrictionComponent(Component parent, Restrictor r) {
 		this.setLayout(new BorderLayout());
 		Box box_layout = new Box(BoxLayout.Y_AXIS);
 		Box box_name = new Box(BoxLayout.X_AXIS);

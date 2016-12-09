@@ -4,7 +4,7 @@ import java.util.List;
 
 import model.scala.Tree;
 
-public class LeafNumRestrictor extends AbstractRestriction {
+public class LeafNumRestrictor extends AbstractRestrictor {
 
 	public LeafNumRestrictor(String name) {
 		super(name);
@@ -19,9 +19,11 @@ public class LeafNumRestrictor extends AbstractRestriction {
 	}
 
 	@Override
-	public List<Tree> applyRestriction(List<Tree> trees) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean restrict(Tree t) {
+		if(t.getNumLeaves(t) >= min && t.getNumLeaves(t) <= max) {
+			return true;
+		}
+		return false;
 	}
 
 

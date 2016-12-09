@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -19,7 +20,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import model.LeafNumRestrictor;
@@ -91,6 +91,11 @@ public class DescriptionTreeView implements Observer {
 		box_node.add(lbl_toMax);
 		box_node.add(spnr_nodeMax);
 		
+		Box box_btns = new Box(BoxLayout.X_AXIS);
+		JButton btn_print = new JButton("Print");
+		JButton btn_run = new JButton("Calculate");
+		box_btns.add(btn_run);
+		box_btns.add(btn_print);
 		JLabel lbl_totalTrees = new JLabel("<html>Total Number of Trees:</html>");
 		JLabel lbl_numTrees = new JLabel();
 		
@@ -126,6 +131,7 @@ public class DescriptionTreeView implements Observer {
 		Box box_output = new Box(BoxLayout.Y_AXIS);
 		box_output.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_output.setBorder(paramBorder);
+		box_output.add(box_btns);
 		box_output.add(lbl_totalTrees);
 		box_output.add(lbl_numTrees);
 		box_output.add(lbl_numTreeSeqDesc);		
