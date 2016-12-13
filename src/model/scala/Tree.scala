@@ -10,16 +10,22 @@ sealed abstract class Tree {
     case Node(n, xs) => Node(n, xs ++ (Leaf(0) :: Nil))
   }
   
+  def getNodes() : List[Tree] = this match {
+    case Leaf(n) => Nil
+    case Node(n, Nil) => Nil
+    case Node(n, xs) => xs
+  }  
   
   def getNumLeaves(t : Tree) : Int = this match {
     case Leaf(n) => 1
     case Node(n, xs) => numLeaves(xs)
   }
   
-  def numLeaves(ts : List[Tree]) : Int = ts match {
+  private def numLeaves(ts : List[Tree]) : Int = ts match {
     case Nil => 0
     case t :: ts => getNumLeaves(t) + numLeaves(ts)
   }
+  
 }
 
 case class Leaf(n : Int) extends Tree
