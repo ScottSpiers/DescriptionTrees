@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import model.scala.Node;
+import model.scala.Tree;
+
 
 public class DescriptionTreeModel extends Observable {
 	private List<DescriptionTree> trees;
@@ -21,13 +22,35 @@ public class DescriptionTreeModel extends Observable {
 		}
 		trees.add(tree1);
 		
-		DescriptionTree midTrees;
+		DescriptionTree midTree = null;
 		while(n - 1 > 0) {
-			midTrees = root;
-			midTrees.addLeaf();
+			midTree = root;
+			midTree.addLeaf();
 		}
-		for(Node node : midTree) {
-			
+		for(Tree node : midTree.getNodes()) {
+			genTrees(midTree, n-2);
+		}
+		this.hasChanged();
+		this.notifyObservers(trees);
+		
+	}
+	
+	public void genSimpleTree(DescriptionTree t, int n) {
+		DescriptionTree tree = t;
+		
+		if(n > 0) {
+			tree.addLeaf();
+			DescriptionTree child;
+			if(t instanceof AlphaTree) {
+				child = new AlphaTree(tree.getChild(0));
+			}
+			else {
+				child = new BetaTree(tree.getChild(0));
+			}
+			genSimpleTree(child, n -1);			
+		}
+		else {
+			trees.add(tree);			
 		}
 	}
 }

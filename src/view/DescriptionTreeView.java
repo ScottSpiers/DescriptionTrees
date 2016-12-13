@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,11 +24,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 
 import model.LeafNumRestrictor;
+import model.scala.Tree;
 
 public class DescriptionTreeView implements Observer {
 
 	private JFrame frame;
-	
+	private JLabel lbl_numTrees;
 	
 	public void display() {
 		frame = new JFrame("Description Trees");
@@ -97,7 +99,7 @@ public class DescriptionTreeView implements Observer {
 		box_btns.add(btn_run);
 		box_btns.add(btn_print);
 		JLabel lbl_totalTrees = new JLabel("<html>Total Number of Trees:</html>");
-		JLabel lbl_numTrees = new JLabel();
+		lbl_numTrees = new JLabel();
 		
 		JLabel lbl_numTreeSeqDesc = new JLabel("<html>Number of Trees sequence:</html>");
 		JLabel lbl_numTreeSeq = new JLabel();
@@ -156,7 +158,10 @@ public class DescriptionTreeView implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		
+		if(arg instanceof List<?>) {
+			List<Tree> trees = (List<Tree>) arg;
+			lbl_numTrees.setText(Integer.toString(trees.size()));
+		}
 		
 	}
 }
