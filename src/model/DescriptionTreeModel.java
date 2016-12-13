@@ -17,7 +17,8 @@ public class DescriptionTreeModel extends Observable {
 	public void genTrees(DescriptionTree t, int n) {
 		DescriptionTree root = t;
 		DescriptionTree tree1 = root;
-		while(n > 0) {
+		
+		while(n > 0) { //change to if
 			tree1.addLeaf();
 		}
 		trees.add(tree1);
@@ -52,5 +53,7 @@ public class DescriptionTreeModel extends Observable {
 		else {
 			trees.add(tree);			
 		}
+		this.hasChanged();
+		this.notifyObservers();
 	}
 }

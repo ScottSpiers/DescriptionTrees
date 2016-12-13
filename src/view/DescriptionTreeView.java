@@ -23,11 +23,14 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 
+import listeners.CalcNumTreesListener;
+import model.DescriptionTreeModel;
 import model.LeafNumRestrictor;
 import model.scala.Tree;
 
 public class DescriptionTreeView implements Observer {
 
+	private DescriptionTreeModel model = new DescriptionTreeModel();
 	private JFrame frame;
 	private JLabel lbl_numTrees;
 	
@@ -96,6 +99,7 @@ public class DescriptionTreeView implements Observer {
 		Box box_btns = new Box(BoxLayout.X_AXIS);
 		JButton btn_print = new JButton("Print");
 		JButton btn_run = new JButton("Calculate");
+		btn_run.addActionListener(new CalcNumTreesListener(this, model));
 		box_btns.add(btn_run);
 		box_btns.add(btn_print);
 		JLabel lbl_totalTrees = new JLabel("<html>Total Number of Trees:</html>");
