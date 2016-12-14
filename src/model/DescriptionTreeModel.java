@@ -15,28 +15,42 @@ public class DescriptionTreeModel extends Observable {
 	}
 	
 	public void genTrees(DescriptionTree t, int n) {
+		trees.clear();
 		DescriptionTree root = t;
 		DescriptionTree tree1 = root;
 		
-		while(n > 0) { //change to if
+		if(n > 0) { //change to if
 			tree1.addLeaf();
 		}
 		trees.add(tree1);
 		
 		DescriptionTree midTree = null;
-		while(n - 1 > 0) {
+		if(n - 1 > 0) {
 			midTree = root;
 			midTree.addLeaf();
+			
+			if(midTree.getNodes() != null) {		
+				for(Tree node : midTree.getNodes()) {
+					DescriptionTree tree;
+					if(t instanceof AlphaTree) {
+						tree = new AlphaTree(node);
+					}
+					else {
+						tree = new BetaTree(node);
+					}
+					genTrees(tree, n-2);
+				}
+			}
+			trees.add(midTree);
 		}
-		for(Tree node : midTree.getNodes()) {
-			genTrees(midTree, n-2);
-		}
-		this.hasChanged();
+		genSimpleTree(t, n);
+		
+		this.setChanged();
 		this.notifyObservers(trees);
 		
 	}
 	
-	public void genSimpleTree(DescriptionTree t, int n) {
+	private void genSimpleTree(DescriptionTree t, int n) {
 		DescriptionTree tree = t;
 		
 		if(n > 0) {
@@ -53,7 +67,5 @@ public class DescriptionTreeModel extends Observable {
 		else {
 			trees.add(tree);			
 		}
-		this.hasChanged();
-		this.notifyObservers();
 	}
 }

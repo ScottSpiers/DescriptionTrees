@@ -30,9 +30,14 @@ import model.scala.Tree;
 
 public class DescriptionTreeView implements Observer {
 
-	private DescriptionTreeModel model = new DescriptionTreeModel();
+	private DescriptionTreeModel model;
 	private JFrame frame;
 	private JLabel lbl_numTrees;
+	
+	public DescriptionTreeView() {
+		model = new DescriptionTreeModel();
+		model.addObserver(this);
+	}
 	
 	public void display() {
 		frame = new JFrame("Description Trees");
@@ -159,12 +164,17 @@ public class DescriptionTreeView implements Observer {
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	public void setNumTrees(int n) {
+		lbl_numTrees.setText(Integer.toString(n));
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		if(arg instanceof List<?>) {
 			List<Tree> trees = (List<Tree>) arg;
 			lbl_numTrees.setText(Integer.toString(trees.size()));
+			System.out.println(trees.size());
 		}
 		
 	}
