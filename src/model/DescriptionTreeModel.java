@@ -14,36 +14,36 @@ public class DescriptionTreeModel extends Observable {
 		trees = new ArrayList<DescriptionTree>();
 	}
 	
-	public void genTrees(DescriptionTree t, int n) {
+	public void resetTrees() {
 		trees.clear();
-		DescriptionTree root = t;
-		DescriptionTree tree1 = root;
-		
-		if(n > 0) { //change to if
-			tree1.addLeaf();
-		}
-		trees.add(tree1);
-		
-		DescriptionTree midTree = null;
-		if(n - 1 > 0) {
-			midTree = root;
-			midTree.addLeaf();
-			
-			if(midTree.getNodes() != null) {		
-				for(Tree node : midTree.getNodes()) {
-					DescriptionTree tree;
-					if(t instanceof AlphaTree) {
-						tree = new AlphaTree(node);
-					}
-					else {
-						tree = new BetaTree(node);
-					}
-					genTrees(tree, n-2);
+	}
+	
+	public void genTrees(DescriptionTree t, int n) {
+		/*if(n == 1) {
+			t.addLeaf();
+			trees.add(t);
+		}*/
+		for(int i = n -1; i > 0; i--) {
+			DescriptionTree newTree = t;
+			int j = i;
+			while(j > 0) {
+				newTree.addLeaf();
+				j--;
+			}
+			int k = (n-1) - i;
+			if(k > 0) {
+				for(Tree t1 : newTree.getNodes()) {
+					DescriptionTree t2 = new AlphaTree(t1);
+					genTrees(t2, k);
 				}
 			}
-			trees.add(midTree);
+			else {
+				if(!trees.contains(newTree)) {
+					trees.add(newTree);					
+				}
+			}			
 		}
-		genSimpleTree(t, n);
+		
 		
 		this.setChanged();
 		this.notifyObservers(trees);

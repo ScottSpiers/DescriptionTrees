@@ -2,6 +2,7 @@ package model;
 
 import java.util.List;
 
+import model.scala.Empty;
 import model.scala.Leaf;
 import model.scala.Tree;
 
@@ -10,7 +11,7 @@ public abstract class DescriptionTree {
 	private Tree descriptionTree;
 	
 	public DescriptionTree() {
-		descriptionTree = new Leaf(0);
+		descriptionTree = new Empty();
 	}
 	
 	public DescriptionTree(Tree t) {
@@ -18,7 +19,8 @@ public abstract class DescriptionTree {
 	}
 	
 	public List<Tree> getNodes() {
-		return null;
+		//System.out.println(descriptionTree.getNodes());
+		return descriptionTree.getNodes();
 	}
 	
 	public Tree getChild(int i) {
@@ -26,7 +28,15 @@ public abstract class DescriptionTree {
 	}
 	
 	public void addLeaf() {
-		descriptionTree.addLeaf();
+		descriptionTree = descriptionTree.addLeaf();
+	}
+	
+	@Override
+	public boolean equals(Object t) {
+		if(t instanceof DescriptionTree) {
+			return (descriptionTree.getNodes().equals(((DescriptionTree) t).getNodes()));
+		}
+		return false;
 	}
 	
 }

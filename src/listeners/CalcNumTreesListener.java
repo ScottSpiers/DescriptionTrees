@@ -19,7 +19,8 @@ public class CalcNumTreesListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		model.genTrees(new AlphaTree(), 2);
+		model.resetTrees();
+		model.genTrees(new AlphaTree(), 4);
 		
 	}
 

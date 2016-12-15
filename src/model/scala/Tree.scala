@@ -1,6 +1,6 @@
 package model.scala
 
-import collection.JavaConverters.bufferAsJavaListConverter;
+import collection.JavaConverters._;
 
 sealed abstract class Tree {
   
@@ -13,15 +13,15 @@ sealed abstract class Tree {
     case Node(n, xs) => Node(n, xs ++ (Leaf(0) :: Nil))
   }
   
-  def getNodes() : List[Tree] = this match {
-    case Empty() => Nil
-    case Leaf(n) => Nil
-    case Node(n, Nil) => Nil
-    case Node(n, xs) => xs
+  def getNodes() : java.util.List[Tree] = this match {
+    case Empty() => Nil.asJava
+    case Leaf(n) => Nil.asJava
+    case Node(n, Nil) => Nil.asJava
+    case Node(n, xs) => xs.asJava
   }  
   
   def getChild(i : Int) : Tree = {
-    var nodes = getNodes();
+    var nodes = getNodes().asScala;
     if(!nodes.isEmpty) {
     	val node = nodes(i);
     	return node;      
