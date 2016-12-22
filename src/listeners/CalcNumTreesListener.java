@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import model.AlphaTree;
 import model.DescriptionTreeModel;
+import model.scala.Leaf;
 import view.DescriptionTreeView;
 
 public class CalcNumTreesListener implements ActionListener {
@@ -20,7 +21,7 @@ public class CalcNumTreesListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		model.resetTrees();
-		model.genTrees(new AlphaTree(), 4);
+		model.genTrees(new AlphaTree(new Leaf(0)), 4);
 		
 	}
 

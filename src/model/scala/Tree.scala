@@ -9,8 +9,23 @@ sealed abstract class Tree {
   def addLeaf() : Tree = this match {
     case Empty() => Leaf(0)
     case Leaf(n) => Node(n , Leaf(0) :: Nil)
-    case Node(n, Nil) => Node(n, Leaf(0) :: Nil)
     case Node(n, xs) => Node(n, xs ++ (Leaf(0) :: Nil))
+  }
+  
+  def addNode(t : Tree) : Tree = this match {
+    case Empty() => t
+    case Leaf(n) => Node(n, t :: Nil)
+    case Node(n, ns) => Node(n, ns ++ (t :: Nil))
+  }
+  
+  def addSubtrees(t : Tree) : Tree = (this, t) match {
+    case (Empty() , t) => t
+    case (Leaf(n), Node(m, xs)) => Node(n, xs)
+    case (Leaf(n), Leaf(m)) => Node(n, Leaf(m) :: Nil)
+    case (Leaf(n), Empty()) => Leaf(n)
+    case (Node(n, xs), Node(m, ys)) => Node(n, xs ++ ys)
+    case (Node(n, xs), Leaf(m)) => Node(n, xs ++ (Leaf(m) :: Nil))
+    case (Node(n, xs), Empty()) => Node(n, xs)
   }
   
   def getNodes() : java.util.List[Tree] = this match {

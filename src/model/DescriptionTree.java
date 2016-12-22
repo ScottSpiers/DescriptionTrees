@@ -3,10 +3,9 @@ package model;
 import java.util.List;
 
 import model.scala.Empty;
-import model.scala.Leaf;
 import model.scala.Tree;
 
-public abstract class DescriptionTree {
+public abstract class DescriptionTree implements Cloneable {
 	
 	private Tree descriptionTree;
 	
@@ -29,6 +28,24 @@ public abstract class DescriptionTree {
 	
 	public void addLeaf() {
 		descriptionTree = descriptionTree.addLeaf();
+	}
+	
+	public void addNode(DescriptionTree t) {
+		descriptionTree = descriptionTree.addNode(t.descriptionTree);
+	}
+	
+	public void addSubtrees(DescriptionTree t) {
+		descriptionTree = descriptionTree.addSubtrees(t.descriptionTree);
+	}
+	
+	@Override
+	public Object clone() {		
+		try {
+			return super.clone();		
+		}
+		catch (CloneNotSupportedException ex) {
+			return null;
+		}
 	}
 	
 	@Override
