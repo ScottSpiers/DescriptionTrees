@@ -6,6 +6,12 @@ sealed abstract class Tree {
   
   def apply() = new Leaf(0)
   
+  def addRoot() : Tree = this match {
+    case Empty() => Leaf(0)
+    case Leaf(n) => Node(0, Leaf(n) :: Nil)
+    case Node(n, xs) => Node(0, (Node(n, xs) :: Nil))
+  }
+  
   def addLeaf() : Tree = this match {
     case Empty() => Leaf(0)
     case Leaf(n) => Node(n , Leaf(0) :: Nil)
@@ -26,6 +32,10 @@ sealed abstract class Tree {
     case (Node(n, xs), Node(m, ys)) => Node(n, xs ++ ys)
     case (Node(n, xs), Leaf(m)) => Node(n, xs ++ (Leaf(m) :: Nil))
     case (Node(n, xs), Empty()) => Node(n, xs)
+  }
+  
+  def getLeaves(l : List[Tree]) : java.util.List[Tree] = this match {
+     
   }
   
   def getNodes() : java.util.List[Tree] = this match {

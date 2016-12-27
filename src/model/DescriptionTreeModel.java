@@ -19,7 +19,7 @@ public class DescriptionTreeModel extends Observable {
 	}
 	
 	public List<DescriptionTree> genTrees(DescriptionTree t, int n) {
-		if(n == 1) {
+		/*if(n == 1) {
 			t.addLeaf();
 			trees.add(t);
 		}
@@ -56,14 +56,49 @@ public class DescriptionTreeModel extends Observable {
 		}		
 		
 		this.setChanged();
-		this.notifyObservers(trees);
+		this.notifyObservers(trees);*/
 		return trees;
 		
 	}
 	
-	private List<DescriptionTree> genRestTrees(int n) {
-		//List<DescriptionTree> trees = new ArrayList<DescriptionTree>();
-		DescriptionTree root = new AlphaTree(new Leaf(0));
-		return genTrees(root, n);		
+	private List<DescriptionTree> genTrees(int n) {
+		List<DescriptionTree> treeList = new ArrayList<DescriptionTree>();
+		if(n == 1) {
+			DescriptionTree root = new AlphaTree();
+			treeList.add(root);
+			return treeList;
+		}
+		else {
+			List<DescriptionTree> prevTrees = genTrees(n-1);
+			for(DescriptionTree t : prevTrees) {
+				DescriptionTree cln_t = (DescriptionTree) t.clone();
+				//cln_t.addRoot();
+				treeList.add(cln_t);
+				
+				DescriptionTree cln2_t = (DescriptionTree) t.clone();
+				//cln2_t.getRoot().addLeaf();
+				treeList.add(cln2_t);
+				
+				//need to make sure we have clean copy of t every time we do this
+				DescriptionTree cln3_t = (DescriptionTree) t.clone();
+				//for(DescriptionTree l : cln3_t.getLeaves()) {
+				//	l.addLeaf();
+				//  treeList.add(cln3_t);
+				//}
+				
+				//again make sure we have clean copy of t every time we do this
+				DescriptionTree cln4_t = (DescriptionTree)	t.clone();
+				//for(DescriptionTree n : cln4_t.getNodes()) {
+				//	n.addLeaf();
+				//treeList.add(cln4_t);
+				//}				
+			}
+			return treeList;
+				
+		}
+		//add root to genTrees(n-1)
+		//add leaf to root of all genTrees(n-1)
+		//forall leaves in genTrees(n-1): addLeaf()
+		//forall nodes in genTrees(n-1); addLeaf()
 	}
 }
