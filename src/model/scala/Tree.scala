@@ -34,16 +34,28 @@ sealed abstract class Tree {
     case (Node(n, xs), Empty()) => Node(n, xs)
   }
   
-  def getLeaves(l : List[Tree]) : java.util.List[Tree] = this match {
-     
+  def getLeaves() : java.util.List[Tree] = this match {
+    case Empty() => Nil.asJava
+    case Leaf(n) => (Leaf(n) :: getLeaves(Nil)).asJava
+    case Node(n, xs) => getLeaves(xs).asJava
+  }
+  
+  def getLeaves(l : List[Tree]) : List[Tree] = l match {
+    case Nil => Nil
+    case Leaf(n) :: xs => Leaf(n) :: getLeaves(xs)
+    case Node(n, xs) :: ls => getLeaves(xs) ++ getLeaves(ls)
   }
   
   def getNodes() : java.util.List[Tree] = this match {
     case Empty() => Nil.asJava
     case Leaf(n) => Nil.asJava
-    case Node(n, Nil) => Nil.asJava
-    case Node(n, xs) => xs.asJava
+    case Node(n, xs) => (Node(n, xs) :: getNodes(xs)).asJava
   }  
+  
+  def getNodes(xs : List[Tree]) : List[Tree] = xs match {
+    case Nil => Nil
+    case t :: ts => getNodes(ts) ++ t.getNodes().asScala
+  }
   
   def getChild(i : Int) : Tree = {
     var nodes = getNodes().asScala;
