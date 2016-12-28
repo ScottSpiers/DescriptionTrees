@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import model.scala.Leaf;
+import model.scala.Tree;
 
 
 public class DescriptionTreeModel extends Observable {
@@ -61,10 +61,11 @@ public class DescriptionTreeModel extends Observable {
 		
 	}
 	
-	private List<DescriptionTree> genTrees(int n) {
+	public List<DescriptionTree> genTrees(int n) {
 		List<DescriptionTree> treeList = new ArrayList<DescriptionTree>();
 		if(n == 1) {
 			DescriptionTree root = new AlphaTree();
+			root.addLeaf();
 			treeList.add(root);
 			return treeList;
 		}
@@ -72,27 +73,40 @@ public class DescriptionTreeModel extends Observable {
 			List<DescriptionTree> prevTrees = genTrees(n-1);
 			for(DescriptionTree t : prevTrees) {
 				DescriptionTree cln_t = (DescriptionTree) t.clone();
-				//cln_t.addRoot();
-				treeList.add(cln_t);
+				cln_t.addRoot();
+				if(!treeList.contains(cln_t)) {
+					treeList.add(cln_t);						
+				}
 				
 				DescriptionTree cln2_t = (DescriptionTree) t.clone();
-				//cln2_t.getRoot().addLeaf();
-				treeList.add(cln2_t);
+				cln2_t.addLeaf();
+				if(!treeList.contains(cln2_t)) {
+					treeList.add(cln2_t);						
+				}
 				
 				//need to make sure we have clean copy of t every time we do this
 				DescriptionTree cln3_t = (DescriptionTree) t.clone();
-				//for(DescriptionTree l : cln3_t.getLeaves()) {
-				//	l.addLeaf();
-				//  treeList.add(cln3_t);
-				//}
+				for(Tree l : cln3_t.getLeaves()) {
+					l.addLeaf();
+					if(!treeList.contains(cln3_t)) {
+						treeList.add(cln3_t);						
+					}
+				    cln3_t = (DescriptionTree) t.clone();
+				}
 				
 				//again make sure we have clean copy of t every time we do this
 				DescriptionTree cln4_t = (DescriptionTree)	t.clone();
-				//for(DescriptionTree n : cln4_t.getNodes()) {
-				//	n.addLeaf();
-				//treeList.add(cln4_t);
-				//}				
+				for(Tree node : cln4_t.getNodes()) {
+					node.addLeaf();
+					if(!treeList.contains(cln4_t)) {
+						treeList.add(cln4_t);						
+					}
+				    cln4_t = (DescriptionTree) t.clone();
+				}				
 			}
+			trees.addAll(treeList);
+			this.setChanged();
+			this.notifyObservers(trees);
 			return treeList;
 				
 		}

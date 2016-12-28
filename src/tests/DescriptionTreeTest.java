@@ -66,7 +66,19 @@ public class DescriptionTreeTest {
 	
 	@Test
 	public void testNotEqualTree() {
-		
+		DescriptionTree tree1 = new AlphaTree();
+		tree1.addLeaf();
+		tree1.addLeaf();
+		tree1.addLeaf();
+		tree1.getChild(0).addLeaf();
+		System.out.println(tree1);
+		DescriptionTree tree2 = new AlphaTree();
+		tree2.addLeaf();
+		tree2.addLeaf();
+		tree2.addLeaf();
+		tree2.getChild(1).addLeaf();
+		System.out.println(tree2);
+		assertFalse(tree1.equals(tree2));
 	}
 
 }

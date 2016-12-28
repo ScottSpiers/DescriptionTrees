@@ -17,6 +17,10 @@ public abstract class DescriptionTree implements Cloneable {
 		descriptionTree = t;
 	}
 	
+	public List<Tree> getLeaves() {
+		return descriptionTree.getLeaves();
+	}
+	
 	public List<Tree> getNodes() {
 		//System.out.println(descriptionTree.getNodes());
 		return descriptionTree.getNodes();
@@ -24,6 +28,10 @@ public abstract class DescriptionTree implements Cloneable {
 	
 	public Tree getChild(int i) {
 		return descriptionTree.getChild(0);
+	}
+	
+	public void addRoot() {
+		descriptionTree = descriptionTree.addRoot();
 	}
 	
 	public void addLeaf() {
@@ -54,6 +62,11 @@ public abstract class DescriptionTree implements Cloneable {
 			return (descriptionTree.getNodes().equals(((DescriptionTree) t).getNodes()));
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return descriptionTree.toString();
 	}
 	
 }

@@ -34,6 +34,7 @@ sealed abstract class Tree {
     case (Node(n, xs), Empty()) => Node(n, xs)
   }
   
+  
   def getLeaves() : java.util.List[Tree] = this match {
     case Empty() => Nil.asJava
     case Leaf(n) => (Leaf(n) :: getLeaves(Nil)).asJava
