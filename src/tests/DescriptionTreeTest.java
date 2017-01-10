@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import model.AlphaTree;
 import model.DescriptionTree;
+import model.scala.Tree;
 
 public class DescriptionTreeTest {
 
@@ -70,14 +71,19 @@ public class DescriptionTreeTest {
 		tree1.addLeaf();
 		tree1.addLeaf();
 		tree1.addLeaf();
-		tree1.getChild(0).addLeaf();
+		Tree c1 = tree1.getChild(0);
+		c1 = c1.addLeaf();
 		System.out.println(tree1);
+		System.out.println(tree1.getNodes());
 		DescriptionTree tree2 = new AlphaTree();
 		tree2.addLeaf();
 		tree2.addLeaf();
 		tree2.addLeaf();
-		tree2.getChild(1).addLeaf();
+		Tree c2 = tree2.getChild(1);
+		c2 = c2.addLeaf();
+		//tree2.getChild(1).addLeaf();
 		System.out.println(tree2);
+		System.out.println(tree2.getNodes());
 		assertFalse(tree1.equals(tree2));
 	}
 

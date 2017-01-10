@@ -86,28 +86,48 @@ public class DescriptionTreeModel extends Observable {
 				
 				//need to make sure we have clean copy of t every time we do this
 				DescriptionTree cln3_t = (DescriptionTree) t.clone();
-				for(Tree l : cln3_t.getLeaves()) {
-					l.addLeaf();
+				List<Tree> leaves = cln3_t.getLeaves();
+				for(int i = 0; i < leaves.size(); i++) {
+					cln3_t.addLeafToLeaf(i);
 					if(!treeList.contains(cln3_t)) {
-						treeList.add(cln3_t);						
+						treeList.add(cln3_t);
+					}
+					cln3_t = (DescriptionTree) t.clone();
+				}
+				/*for(Tree l : cln3_t.getLeaves()) {
+					System.out.println("Pre change: " + cln3_t);
+					l = l.addLeaf();
+					System.out.println("Post change: " + cln3_t);
+					if(!treeList.contains(cln3_t)) {
+						treeList.add(cln3_t);
 					}
 				    cln3_t = (DescriptionTree) t.clone();
-				}
+				}*/
 				
 				//again make sure we have clean copy of t every time we do this
 				DescriptionTree cln4_t = (DescriptionTree)	t.clone();
 				for(Tree node : cln4_t.getNodes()) {
-					node.addLeaf();
+					//System.out.println(node);
+					node = node.addLeaf();
+					//System.out.println(node);
 					if(!treeList.contains(cln4_t)) {
 						treeList.add(cln4_t);						
 					}
 				    cln4_t = (DescriptionTree) t.clone();
 				}				
 			}
+			
 			trees.addAll(treeList);
+			for(int i = 0; i < trees.size(); i++) {
+				if(trees.get(i).getNumVertices() != n) {
+					trees.remove(trees.get(i));
+					i--;
+				}
+			}
+			
 			this.setChanged();
 			this.notifyObservers(trees);
-			return treeList;
+			return trees;
 				
 		}
 		//add root to genTrees(n-1)
