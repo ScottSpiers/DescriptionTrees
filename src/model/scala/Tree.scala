@@ -4,6 +4,23 @@ import collection.JavaConverters._;
 
 sealed abstract class Tree {
   
+  
+  def setValue(n : Int, i : Int) : Tree = (this, i) match {
+    case (Empty(), i) => Empty()
+    case (Leaf(m), 0) => Leaf(n)
+    case (Leaf(m), i) => setValue(n, i-1)
+    case (Node(m, xs), 0) => Node(n, xs)
+    case (Node(m, xs), i) => Node(m, setValue(n, i-1, xs))
+  }
+  
+  private def setValue(n : Int, i : Int, xs : List[Tree]) : List[Tree] = (xs, i) match {
+    case (Nil, i) => Nil
+    case (Leaf(m) :: xs, 0) => Leaf(n) :: xs
+    case (Node(m, ys) :: xs, 0) => Node(n, ys) :: xs
+    case(Node(m, ys) :: xs, i) => Node(m, setValue(n, i, ys)) :: xs
+    case (x :: xs, i) => x :: setValue(n, i -1, xs)
+  }
+  
   def addRoot() : Tree = this match {
     case Empty() => Leaf(0)
     case Leaf(n) => Node(0, Leaf(n) :: Nil)
@@ -113,6 +130,4 @@ sealed abstract class Tree {
 
 case class Empty() extends Tree
 case class Leaf(n : Int) extends Tree
-case class Node(n : Int, ns : List[Tree]) extends Tree {
-  
-}
+case class Node(n : Int, ns : List[Tree]) extends Tree

@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -25,6 +26,7 @@ import javax.swing.border.Border;
 
 import listeners.CalcNumTreesListener;
 import model.DescriptionTreeModel;
+import model.InternalNodeRestrictor;
 import model.LeafNumRestrictor;
 import model.scala.Tree;
 
@@ -33,6 +35,10 @@ public class DescriptionTreeView implements Observer {
 	private DescriptionTreeModel model;
 	private JFrame frame;
 	private JLabel lbl_numTrees;
+	private JRadioButton rdo_alpha;
+	private JRadioButton rdo_beta;
+	private JSpinner spnr_a;
+	private JSpinner spnr_b;
 	
 	public DescriptionTreeView() {
 		model = new DescriptionTreeModel();
@@ -58,8 +64,8 @@ public class DescriptionTreeView implements Observer {
 		
 		JLabel lbl_treeChoiceInstr = new JLabel("<html>Please choose a description tree:</html>");
 		ButtonGroup grp_trees = new ButtonGroup();
-		JRadioButton rdo_alpha = new JRadioButton("Alpha(a, b)");
-		JRadioButton rdo_beta = new JRadioButton("Beta(a, b)");
+		rdo_alpha = new JRadioButton("Alpha(a, b)");
+		rdo_beta = new JRadioButton("Beta(a, b)");
 		grp_trees.add(rdo_alpha);
 		grp_trees.add(rdo_beta);
 		
@@ -69,11 +75,11 @@ public class DescriptionTreeView implements Observer {
 		JLabel lbl_a = new JLabel("a = ");
 		JLabel lbl_b = new JLabel("b = ");
 		
-		JSpinner spnr_a = new JSpinner();
+		spnr_a = new JSpinner();
 		spnr_a.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnr_a.setMaximumSize(spnrSize);
 		
-		JSpinner spnr_b = new JSpinner();
+		spnr_b = new JSpinner();
 		spnr_b.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_b.setMaximumSize(spnrSize);
 		
@@ -115,7 +121,11 @@ public class DescriptionTreeView implements Observer {
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
-		pnl_restrictions.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));		
+		Box box_scrl= new Box(BoxLayout.Y_AXIS);
+		//pnl_restrictions.setLayout(new BoxLayout(pnl_restrictions, BoxLayout.Y_AXIS));
+		pnl_restrictions.add(box_scrl);
+		box_scrl.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves")));
+		box_scrl.add(new RestrictionComponent(frame, new InternalNodeRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excluding root)")));
 		
 		Border paramBorder = BorderFactory.createEmptyBorder(10, 0, 10, 0);
 		
@@ -165,8 +175,28 @@ public class DescriptionTreeView implements Observer {
 		frame.setVisible(true);
 	}
 	
+	public void displayError(String title, String msg) {
+		JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.ERROR_MESSAGE);
+	}
+	
 	public void setNumTrees(int n) {
 		lbl_numTrees.setText(Integer.toString(n));
+	}
+	
+	public boolean isAlphaChecked() {
+		return rdo_alpha.isSelected();
+	}
+	
+	public boolean isBetaChecked() {
+		return rdo_beta.isSelected();
+	}
+	
+	public int getParamA() {
+		return (int) spnr_a.getValue();
+	}
+	
+	public int getParamB() {
+		return (int) spnr_b.getValue();
 	}
 
 	@Override

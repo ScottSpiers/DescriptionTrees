@@ -18,59 +18,16 @@ public class DescriptionTreeModel extends Observable {
 		trees.clear();
 	}
 	
-	public List<DescriptionTree> genTrees(DescriptionTree t, int n) {
-		/*if(n == 1) {
-			t.addLeaf();
-			trees.add(t);
-		}
-		
-		int i = 0;
-		for(i = n -1; i > 0; i--) {
-			DescriptionTree newTree = (DescriptionTree) t.clone();
-			int j = i;
-			while(j > 0) {
-				newTree.addLeaf();
-				j--;
-			}
-			int k = (n-1) - i;
-			if(k > 0) {
-				List<DescriptionTree> ts = genRestTrees(k);
-				for(int m = 0; m < ts.size(); m++) {
-					//for every new gen'd tree
-					//for each child of the root
-					for(int l = ((n - 1) - k) - 1; l >= 0; l--) {
-						DescriptionTree nt = (DescriptionTree) newTree.clone();
-						DescriptionTree child = new AlphaTree(nt.getChild(l));
-						child.addSubtrees(ts.get(m));
-						if(!trees.contains(nt)) {
-							trees.add(nt);					
-						}
-					}
-				}				
-			}
-			else {
-				if(!trees.contains(newTree)) {
-					trees.add(newTree);					
-				}
-			}			
-		}		
-		
-		this.setChanged();
-		this.notifyObservers(trees);*/
-		return trees;
-		
-	}
-	
-	public List<DescriptionTree> genTrees(int n) {
+	public List<DescriptionTree> genTrees(DescriptionTree tree, int n) {
 		List<DescriptionTree> treeList = new ArrayList<DescriptionTree>();
 		if(n == 1) {
-			DescriptionTree root = new AlphaTree();
+			DescriptionTree root = tree;
 			root.addLeaf();
 			treeList.add(root);
 			return treeList;
 		}
 		else {
-			List<DescriptionTree> prevTrees = genTrees(n-1);
+			List<DescriptionTree> prevTrees = genTrees(tree, n-1);
 			for(DescriptionTree t : prevTrees) {
 				DescriptionTree cln_t = (DescriptionTree) t.clone();
 				cln_t.addRoot();

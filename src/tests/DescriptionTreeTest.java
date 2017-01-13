@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import model.AlphaTree;
+import model.BetaTree;
 import model.DescriptionTree;
 import model.scala.Tree;
 
@@ -65,7 +66,7 @@ public class DescriptionTreeTest {
 		
 	}
 	
-	@Test
+	/*@Test
 	public void testNotEqualTree() {
 		DescriptionTree tree1 = new AlphaTree();
 		tree1.addLeaf();
@@ -85,6 +86,22 @@ public class DescriptionTreeTest {
 		System.out.println(tree2);
 		System.out.println(tree2.getNodes());
 		assertFalse(tree1.equals(tree2));
+	}*/
+	
+	@Test
+	public void testEval() {
+		DescriptionTree bTree = new BetaTree();
+		bTree.addLeaf();
+		bTree.addLeaf();
+		bTree.addLeaf();
+		bTree.addLeafToLeaf(1);
+		System.out.println(bTree);
+		bTree.setValue(1, 0);
+		bTree.setValue(2, 1);
+		bTree.setValue(3, 2);
+		bTree.setValue(4, 3);
+		System.out.println(bTree);
+		assertTrue(bTree.equals(bTree));
 	}
 
 }
