@@ -5,20 +5,43 @@ import collection.JavaConverters._;
 sealed abstract class Tree {
   
   
-  def setValue(n : Int, i : Int) : Tree = (this, i) match {
-    case (Empty(), i) => Empty()
-    case (Leaf(m), 0) => Leaf(n)
-    case (Leaf(m), i) => setValue(n, i-1)
-    case (Node(m, xs), 0) => Node(n, xs)
-    case (Node(m, xs), i) => Node(m, setValue(n, i-1, xs))
+  def setAllLeafValues(n : Int) : Tree = this match {
+    case (Empty()) => Empty()
+    case (Leaf(m)) => Leaf(n)
+    case (Node(m, xs)) => Node(m, setAllLeafValues(n, xs))
   }
   
-  private def setValue(n : Int, i : Int, xs : List[Tree]) : List[Tree] = (xs, i) match {
+  private def setAllLeafValues(n : Int, xs : List[Tree]) : List[Tree] = xs match {
+    case Nil => Nil
+    case Leaf(m) :: xs => Leaf(n) :: setAllLeafValues(n, xs)
+    case Node(m, ys) :: xs => Node(m, setAllLeafValues(n, ys)) :: setAllLeafValues(n, xs)
+    case x :: xs => x :: setAllLeafValues(n, xs)
+  }
+  
+  def setNodeValue(n : Int, i : Int) : Tree = (this, i) match {
+    case (Empty(), i) => Empty()
+    case (Leaf(m), i) => Leaf(m)
+    case (Node(m, xs), 0) => Node(n, xs)
+    case (Node(m, xs), i) => Node(m, setNodeValue(n, i-1, xs))
+  }
+  
+  private def setNodeValue(n : Int, i : Int, xs : List[Tree]) : List[Tree] = (xs, i) match {
     case (Nil, i) => Nil
-    case (Leaf(m) :: xs, 0) => Leaf(n) :: xs
-    case (Node(m, ys) :: xs, 0) => Node(n, ys) :: xs
-    case(Node(m, ys) :: xs, i) => Node(m, setValue(n, i, ys)) :: xs
-    case (x :: xs, i) => x :: setValue(n, i -1, xs)
+    case (Leaf(m) :: xs, i) => (Leaf(m) :: setNodeValue(n, i, xs))
+    case (Node(m, ys) :: xs, 0) => (Node(n, ys) :: xs)
+    case (Node(m, ys) :: xs, i) => if (i <= numNodes(ys)) {
+      (Node (m, setNodeValue(n, i- 1, ys)) :: xs)
+    }
+    else {
+      (Node(m, ys) :: setNodeValue(n, i- numNodes(ys) -1, xs))
+    }
+  }
+  
+  private def numNodes(xs : List[Tree]) : Int = xs match {
+    case Nil => 0
+    case Empty() :: xs => 0 + numNodes(xs)
+    case Leaf(n) :: xs => 0 + numNodes(xs)
+    case Node(n, ys) :: xs => 1 + numNodes(ys) + numNodes(xs)
   }
   
   def addRoot() : Tree = this match {
@@ -36,20 +59,46 @@ sealed abstract class Tree {
   def addLeafToLeaf(i : Int) : Tree = (this, i) match  {
     case (Empty(), i) => Empty()
     case (Leaf(n), 0) => Node(n, (Leaf(0) :: Nil))
-    case (Leaf(n), i) => Empty()
-    case (Node(n, Leaf(m) :: xs), 0) => Node(n, Node(m, (Leaf(0) :: Nil)) :: xs)
-    case (Node(n, Leaf(m) :: xs), i) => Node(n, (Leaf(m) :: addLeafToLeaf(xs, i -1)))
-    case (Node(n, Node(m, ys) :: xs), i) => Node(n, (Node(m, ys) :: addLeafToLeaf(xs, i)))
+    case (Leaf(n), i) => Leaf(n)
+    case (Node(n, xs), i) => Node(n, addLeafToLeaf(xs, i))
   }
   
   private def addLeafToLeaf(xs : List[Tree], i : Int) : List[Tree] = (xs, i) match {
     case (Nil, i) => Nil
     case (Leaf(n) :: xs, 0) => Node(n, (Leaf(0) :: Nil)) :: xs
     case (Leaf(n) :: xs, i) => Leaf(n) :: addLeafToLeaf(xs, i-1)
-    case (Node(n, (Leaf(m) :: xs)) :: ys, 0) => Node(n, Node(m, Leaf(0) :: Nil) :: xs) :: ys
-    case (Node(n, (Leaf(m) :: xs)) :: ys, i) => Node(n, (Leaf(m) :: xs)) :: addLeafToLeaf(ys, i-1)
-    case (Node(n, Node(m, xs) :: ys) :: zs, i) => Node(n, Node(m, xs) :: ys) :: addLeafToLeaf(zs, i)
+    case ((Node(n, ys) :: xs), i) => if(i < numLeaves(ys)) {
+      (Node(n, addLeafToLeaf(ys, i)) :: xs)
+    }
+    else {
+      (Node(n, ys) :: addLeafToLeaf(xs, i- numLeaves(ys)))
+    }
   }
+  
+  def addLeafToNode(i : Int) : Tree = (this, i) match {
+    case (Empty(), i) => Empty()
+    case (Leaf(n), i) => Leaf(n)
+    case (Node(n, xs), 0) => Node(n, xs ++ (Leaf(0) :: Nil))
+    case (Node(n, xs), i) => Node(n, addLeafToNode(xs, i-1))
+  }
+  
+  private def addLeafToNode(xs : List[Tree], i : Int) : List[Tree] = (xs, i) match {
+    case (Nil, i) => Nil
+    case ((Leaf(n) :: xs), i) => Leaf(n) :: addLeafToNode(xs, i)
+    case ((Node(n, ys) :: xs), 0) => Node(n, ys ++ (Leaf(0) :: Nil)) :: xs
+    case ((Node(n, ys) :: xs), i) => if(i < numNodes(ys)) {
+      (Node(n, addLeafToNode(ys, i-1)) :: xs)
+    }
+    else {
+      (Node(n, ys) :: addLeafToNode(xs, i - numNodes(ys) - 1))
+    }
+  }
+  
+  /*private def numLeaves(xs : List[Tree]) : Int = xs match {
+    case Nil => 0
+    case Leaf(n) :: xs => 1 + numLeaves(xs)
+    case Node(n, ys) :: xs => 0 + numLeaves(ys) + numLeaves(xs)
+  }*/
   
   def addNode(t : Tree) : Tree = this match {
     case Empty() => t
@@ -74,7 +123,7 @@ sealed abstract class Tree {
     case Node(n, xs) => getLeaves(xs).asJava
   }
   
-  def getLeaves(l : List[Tree]) : List[Tree] = l match {
+  private def getLeaves(l : List[Tree]) : List[Tree] = l match {
     case Nil => Nil
     case Leaf(n) :: xs => Leaf(n) :: getLeaves(xs)
     case Node(n, xs) :: ls => getLeaves(xs) ++ getLeaves(ls)

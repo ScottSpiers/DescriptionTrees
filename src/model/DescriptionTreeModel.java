@@ -51,27 +51,17 @@ public class DescriptionTreeModel extends Observable {
 					}
 					cln3_t = (DescriptionTree) t.clone();
 				}
-				/*for(Tree l : cln3_t.getLeaves()) {
-					System.out.println("Pre change: " + cln3_t);
-					l = l.addLeaf();
-					System.out.println("Post change: " + cln3_t);
-					if(!treeList.contains(cln3_t)) {
-						treeList.add(cln3_t);
-					}
-				    cln3_t = (DescriptionTree) t.clone();
-				}*/
 				
 				//again make sure we have clean copy of t every time we do this
 				DescriptionTree cln4_t = (DescriptionTree)	t.clone();
-				for(Tree node : cln4_t.getNodes()) {
-					//System.out.println(node);
-					node = node.addLeaf();
-					//System.out.println(node);
+				List<Tree> nodes = cln4_t.getNodes();
+				for(int i = 1; i < nodes.size(); i++) {
+					cln4_t.addLeafToNode(i);
 					if(!treeList.contains(cln4_t)) {
-						treeList.add(cln4_t);						
+						treeList.add(cln4_t);
 					}
-				    cln4_t = (DescriptionTree) t.clone();
-				}				
+					cln4_t = (DescriptionTree) t.clone();
+				}		
 			}
 			
 			trees.addAll(treeList);

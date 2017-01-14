@@ -90,16 +90,38 @@ public class DescriptionTreeTest {
 	
 	@Test
 	public void testEval() {
-		DescriptionTree bTree = new BetaTree();
+		System.out.println("Eval 1:\n");
+		DescriptionTree bTree = new BetaTree(1, 0);
 		bTree.addLeaf();
 		bTree.addLeaf();
 		bTree.addLeaf();
 		bTree.addLeafToLeaf(1);
+		bTree.addLeafToLeaf(1);
+		bTree.addLeafToLeaf(0);
 		System.out.println(bTree);
-		bTree.setValue(1, 0);
-		bTree.setValue(2, 1);
-		bTree.setValue(3, 2);
-		bTree.setValue(4, 3);
+		bTree.setAllLeafValues();
+		bTree.setNodeValue(2, 0);
+		bTree.setNodeValue(3, 1);
+		bTree.setNodeValue(4, 2);
+		bTree.setNodeValue(5, 3);
+		System.out.println(bTree);
+		assertTrue(bTree.equals(bTree));
+	}
+	
+	@Test
+	public void testEval2() {
+		System.out.println("Eval 2\n");
+		DescriptionTree bTree = new BetaTree(1, 0);
+		bTree.addLeaf();
+		bTree.addLeaf();
+		bTree.addLeaf();
+		bTree.addLeafToLeaf(0);
+		bTree.addLeafToLeaf(1);
+		bTree.addLeafToNode(1);
+		bTree.addLeafToLeaf(1);
+		System.out.println(bTree);
+		bTree.setAllLeafValues();
+		bTree.setNodeValue(2, 2);
 		System.out.println(bTree);
 		assertTrue(bTree.equals(bTree));
 	}

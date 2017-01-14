@@ -27,4 +27,10 @@ public class AlphaTree extends DescriptionTree {
 	public void evaluateTree() {
 		
 	}
+
+	@Override
+	public void setAllLeafValues() {
+		descriptionTree = descriptionTree.setAllLeafValues(beta);
+		
+	}
 }

@@ -7,7 +7,7 @@ import model.scala.Tree;
 
 public abstract class DescriptionTree implements Cloneable {
 	
-	private Tree descriptionTree;
+	protected Tree descriptionTree;
 	protected int alpha;
 	protected int beta;
 	
@@ -25,9 +25,6 @@ public abstract class DescriptionTree implements Cloneable {
 		beta = b;
 	}
 	
-	public void setValue(int n, int i) {
-		descriptionTree = descriptionTree.setValue(n, i);
-	}
 	
 	public List<Tree> getLeaves() {
 		return descriptionTree.getLeaves();
@@ -58,15 +55,21 @@ public abstract class DescriptionTree implements Cloneable {
 		descriptionTree = descriptionTree.addLeafToLeaf(i);
 	}
 	
+	public void addLeafToNode(int i) {
+		descriptionTree = descriptionTree.addLeafToNode(i);
+	}
+	
 	public void addNode(DescriptionTree t) {
 		descriptionTree = descriptionTree.addNode(t.descriptionTree);
 	}
 	
-	public void addSubtrees(DescriptionTree t) {
-		descriptionTree = descriptionTree.addSubtrees(t.descriptionTree);
-	}
 	
 	public abstract void evaluateTree();
+	public abstract void setAllLeafValues();
+	
+	public void setNodeValue(int n, int i) {
+		descriptionTree = descriptionTree.setNodeValue(n, i);
+	}
 	
 	@Override
 	public Object clone() {		
