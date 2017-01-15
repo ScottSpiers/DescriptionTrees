@@ -25,6 +25,9 @@ public abstract class DescriptionTree implements Cloneable {
 		beta = b;
 	}
 	
+	public int getValue() {
+		return descriptionTree.getValue();
+	}
 	
 	public List<Tree> getLeaves() {
 		return descriptionTree.getLeaves();
@@ -39,8 +42,16 @@ public abstract class DescriptionTree implements Cloneable {
 		return descriptionTree.getChild(i);
 	}
 	
+	public List<Tree> getAllChildren() {
+		return descriptionTree.getAllChildren();
+	}
+	
 	public int getNumVertices() {
 		return descriptionTree.getNumVertices(descriptionTree);
+	}
+	
+	public int getNumChildren() {
+		return descriptionTree.getNumChildren();
 	}
 	
 	public void addRoot() {
@@ -57,6 +68,14 @@ public abstract class DescriptionTree implements Cloneable {
 	
 	public void addLeafToNode(int i) {
 		descriptionTree = descriptionTree.addLeafToNode(i);
+	}
+	
+	public void addLeafAsFirstChild() {
+		descriptionTree = descriptionTree.addLeafAsFirstChild();
+	}
+	
+	public void addChildToChildAt(int i) {
+		descriptionTree = descriptionTree.addLeafAsChildAt(i);
 	}
 	
 	public void addNode(DescriptionTree t) {
@@ -89,9 +108,31 @@ public abstract class DescriptionTree implements Cloneable {
 		return false;
 	}
 	
+	private String toStringHelper(Tree t, int level) {
+		String str_out = "";
+		String indent = "  ";
+		for(int i = 0; i < level; i++) {
+			indent += "  ";
+		}
+		for(Tree child : t.getAllChildren()) {
+			str_out += indent;
+			str_out += child.getValue() + "\n";
+			str_out += toStringHelper(child, level + 1);
+		}
+		return str_out;
+	}
+	
 	@Override
 	public String toString() {
-		return descriptionTree.toString();
+		String str_out = "";
+		String indent = "  ";
+		str_out += getValue() + "\n";
+		for(Tree t : getAllChildren()) {
+			str_out += indent + t.getValue() + "\n";
+			str_out += toStringHelper(t, 1);
+		}
+		str_out += "\n";
+		return str_out;
 	}
 	
 }

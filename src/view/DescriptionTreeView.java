@@ -39,6 +39,8 @@ public class DescriptionTreeView implements Observer {
 	private JRadioButton rdo_beta;
 	private JSpinner spnr_a;
 	private JSpinner spnr_b;
+	private JSpinner spnr_nodeMin;
+	private JSpinner spnr_nodeMax;
 	
 	public DescriptionTreeView() {
 		model = new DescriptionTreeModel();
@@ -89,11 +91,11 @@ public class DescriptionTreeView implements Observer {
 		box_b.add(spnr_b);
 		
 		
-		JSpinner spnr_nodeMin = new JSpinner();
+		spnr_nodeMin = new JSpinner();
 		spnr_nodeMin.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_nodeMin.setMaximumSize(spnrSize);
 		
-		JSpinner spnr_nodeMax = new JSpinner();
+		spnr_nodeMax = new JSpinner();
 		spnr_nodeMax.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_nodeMax.setMaximumSize(spnrSize);
 		
@@ -197,6 +199,14 @@ public class DescriptionTreeView implements Observer {
 	
 	public int getParamB() {
 		return (int) spnr_b.getValue();
+	}
+	
+	public int getNodeMin() {
+		return (int) spnr_nodeMin.getValue();
+	}
+	
+	public int getNodeMax() {
+		return (int) spnr_nodeMax.getValue();
 	}
 
 	@Override

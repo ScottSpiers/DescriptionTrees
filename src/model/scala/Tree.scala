@@ -94,6 +94,25 @@ sealed abstract class Tree {
     }
   }
   
+  def addLeafAsFirstChild() : Tree = this match {
+    case Empty() => Leaf(0)
+    case Leaf(n) => Node(n, (Leaf(0) :: Nil))
+    case Node(n, xs) => Node(n, Leaf(0) :: xs)
+  }
+  
+  def addLeafAsChildAt(i : Int) : Tree = (this, i) match {
+    case (Empty(), i) => Leaf(0)
+    case (Leaf(n), i) => Node(n, (Leaf(0) :: Nil))
+    case (Node(n, xs), 0) => Node(n, (Leaf(0) :: xs))
+    case (Node(n, x :: xs), i) => Node(n, x :: addLeafToChildAt(xs, i-1))
+  }
+  
+  private def addLeafToChildAt(xs : List[Tree], i : Int) : List[Tree] = (xs, i) match {
+    case (Nil, i) => Nil
+    case ((ts), 0) => (Leaf(0) ::  ts)
+    case ((t :: ts), i) => t :: addLeafToChildAt(xs, i-1)
+  }
+  
   /*private def numLeaves(xs : List[Tree]) : Int = xs match {
     case Nil => 0
     case Leaf(n) :: xs => 1 + numLeaves(xs)
@@ -140,6 +159,12 @@ sealed abstract class Tree {
     case t :: ts => getNodes(ts) ++ t.getNodes().asScala
   }
   
+  def getAllChildren() : java.util.List[Tree] = this match {
+    case Empty() => Nil.asJava
+    case Leaf(n) => Nil.asJava
+    case Node(n, xs) => xs.asJava
+  }
+  
   def getChild(i : Int) : Tree = (this, i) match {
     case (Empty(), i) => Empty()
     case (Leaf(n), i) => Empty()
@@ -173,6 +198,18 @@ sealed abstract class Tree {
   private def numLeaves(ts : List[Tree]) : Int = ts match {
     case Nil => 0
     case t :: ts => getNumLeaves(t) + numLeaves(ts)
+  }
+  
+  def getNumChildren() : Int = this match {
+    case Empty() => 0
+    case Leaf(n) => 0
+    case Node(n, xs) => xs.size
+  }
+  
+  def getValue() : Int = this match {
+    case Empty() => 0
+    case Leaf(n) => n
+    case Node(n, xs) => n
   }
   
 }

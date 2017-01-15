@@ -23,6 +23,15 @@ public class CalcNumTreesListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		model.resetTrees();
 		
+		int nodeMin = view.getNodeMin();
+		int nodeMax = view.getNodeMax();
+		//temp int
+		int nodes = 0;
+		//temp check
+		if(nodeMin == nodeMax) {
+			nodes = nodeMin;
+		}
+		
 		DescriptionTree tree = null;
 		int paramA = view.getParamA();
 		int paramB = view.getParamB();
@@ -37,7 +46,7 @@ public class CalcNumTreesListener implements ActionListener {
 			view.displayError("Select a Tree Type", "Please Select either Alpha Tree or Beta Tree");
 			return;
 		}
-		model.genTrees(tree, 4);
+		model.genTrees(tree, nodes);
 		
 	}
 
