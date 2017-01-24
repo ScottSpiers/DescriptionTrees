@@ -83,8 +83,8 @@ public abstract class DescriptionTree implements Cloneable {
 	}
 	
 	
-	public abstract void evaluateTree();
-	public abstract void setAllLeafValues();
+	public abstract List<DescriptionTree> evaluateTree(int n);
+	protected abstract void setAllLeafValues();
 	
 	public void setNodeValue(int n, int i) {
 		descriptionTree = descriptionTree.setNodeValue(n, i);

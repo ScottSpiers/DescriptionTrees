@@ -99,7 +99,6 @@ public class DescriptionTreeTest {
 		bTree.addLeafToLeaf(1);
 		bTree.addLeafToLeaf(0);
 		System.out.println(bTree);
-		bTree.setAllLeafValues();
 		bTree.setNodeValue(2, 0);
 		bTree.setNodeValue(3, 1);
 		bTree.setNodeValue(4, 2);
@@ -120,7 +119,6 @@ public class DescriptionTreeTest {
 		bTree.addLeafToNode(1);
 		bTree.addLeafToLeaf(1);
 		System.out.println(bTree);
-		bTree.setAllLeafValues();
 		bTree.setNodeValue(2, 2);
 		System.out.println(bTree);
 		assertTrue(bTree.equals(bTree));

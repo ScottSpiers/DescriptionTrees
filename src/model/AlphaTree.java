@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 import model.scala.Tree;
 
 public class AlphaTree extends DescriptionTree {
@@ -24,12 +26,12 @@ public class AlphaTree extends DescriptionTree {
 	 * (including root)
 	 */
 	@Override
-	public void evaluateTree() {
-		
+	public List<DescriptionTree> evaluateTree(int n) {
+		return null;
 	}
 
 	@Override
-	public void setAllLeafValues() {
+	protected void setAllLeafValues() {
 		descriptionTree = descriptionTree.setAllLeafValues(beta);
 		
 	}

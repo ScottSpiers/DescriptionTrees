@@ -109,7 +109,7 @@ sealed abstract class Tree {
   
   private def addLeafToChildAt(xs : List[Tree], i : Int) : List[Tree] = (xs, i) match {
     case (Nil, i) => Nil
-    case ((ts), 0) => (Leaf(0) ::  ts)
+    case ((t :: ts), 0) => (Leaf(0) :: t ::  ts)
     case ((t :: ts), i) => t :: addLeafToChildAt(xs, i-1)
   }
   

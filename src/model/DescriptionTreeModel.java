@@ -14,6 +14,24 @@ public class DescriptionTreeModel extends Observable {
 		trees = new ArrayList<DescriptionTree>();
 	}
 	
+	public void addTrees(List<DescriptionTree> ts) {
+		trees.addAll(trees.size(), ts);
+		this.setChanged();
+		this.notifyObservers(trees);
+	}
+	
+	public void removeTree(int i) {
+		trees.remove(i);
+		this.setChanged();
+		this.notifyObservers(trees);
+	}
+	
+	public void removeTree(DescriptionTree t) {
+		trees.remove(t);
+		this.setChanged();
+		this.notifyObservers(trees);
+	}
+	
 	public void resetTrees() {
 		trees.clear();
 	}
