@@ -82,9 +82,7 @@ public class AlphaTree extends DescriptionTree {
 						newTrees.addAll(cln_t.evaluateTree(i-1));
 						cln_t = (DescriptionTree) this.clone();
 					}
-					if(i == 1) {
-						i--;
-					}
+					i = 0;
 				}
 			}			
 		}

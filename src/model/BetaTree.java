@@ -48,6 +48,7 @@ public class BetaTree extends DescriptionTree {
 		else {
 			for(int i = n; i >= 0; i--) {			
 				nodeMax = beta;
+				nodes = descriptionTree.getNodes();
 				for(Tree t : nodes.get(i).getAllChildren()) {
 					nodeMax += t.getValue();
 				}
@@ -68,9 +69,7 @@ public class BetaTree extends DescriptionTree {
 						newTrees.addAll(cln_t.evaluateTree(i-1));
 						cln_t = (DescriptionTree) this.clone();
 					}
-					if(i == 1) {
-						i--;
-					}
+					i = 0;
 				}
 			}			
 		}
