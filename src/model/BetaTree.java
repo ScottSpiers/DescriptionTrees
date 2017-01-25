@@ -34,23 +34,29 @@ public class BetaTree extends DescriptionTree {
 		int nodeMax = beta;
 		List<Tree> nodes = descriptionTree.getNodes();
 		
+		
 		if(n <= 0) {
-			int sum = beta;
-			for(Tree child : nodes.get(0).getAllChildren()) {
-				sum += child.getValue();
+			for(Tree t : nodes.get(0).getAllChildren()) {
+				nodeMax += t.getValue();
 			}
-			this.setNodeValue(sum, 0);
+			this.setNodeValue(nodeMax, 0);
 			if(!newTrees.contains(this)) {
 				newTrees.add(this);				
 			}
 		}
 		else {
-			for(int i = n; i > 0; i--) {			
+			for(int i = n; i >= 0; i--) {			
 				for(Tree t : nodes.get(i).getAllChildren()) {
 					nodeMax += t.getValue();
 				}
 				
-				if(nodeMin == nodeMax) {
+				if(i == 0) {
+					this.setNodeValue(nodeMax, 0);
+					if(!newTrees.contains(this)) {
+						newTrees.add(this);				
+					}
+				}
+				else if(nodeMin == nodeMax) {
 					this.setNodeValue(nodeMin, i);
 				}
 				else {
@@ -59,7 +65,10 @@ public class BetaTree extends DescriptionTree {
 						cln_t.setNodeValue(j, i);
 						newTrees.addAll(cln_t.evaluateTree(i-1));
 						cln_t = (DescriptionTree) this.clone();
-					}				
+					}
+					if(i == 1) {
+						i--;
+					}
 				}
 			}			
 		}

@@ -3,6 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -13,12 +14,15 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import model.Restrictor;
+import model.scala.Tree;
 
 public class RestrictionComponent extends JComponent {
 	
 	private static final long serialVersionUID = -7694510080532419887L;
 
+	private Restrictor restrictor;
 	public RestrictionComponent(Component parent, Restrictor r) {
+		restrictor = r;
 		this.setLayout(new BorderLayout());
 		Box box_layout = new Box(BoxLayout.Y_AXIS);
 		Box box_name = new Box(BoxLayout.X_AXIS);
@@ -54,5 +58,9 @@ public class RestrictionComponent extends JComponent {
 		btn_remove.setToolTipText("Remove this restriction");
 		btn_remove.setText("Remove");
 		return btn_remove;
+	}
+	
+	public Restrictor getRestrictor() {
+		return restrictor;
 	}
 }

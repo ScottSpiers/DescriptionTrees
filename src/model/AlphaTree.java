@@ -34,13 +34,16 @@ public class AlphaTree extends DescriptionTree {
 		int nodeMax = beta;
 		List<Tree> nodes = descriptionTree.getNodes();
 		
-		for(int i = 0; i <= nodes.get(n).getNumChildren()-2; i++) {
+		for(int i = 0; i < nodes.get(n).getNumChildren()-1; i++) {
 			nodeMin += nodes.get(n).getChild(i).getValue();
-			nodeMax += nodes.get(n).getChild(i).getValue();
+			
 		}
-		nodeMax += nodes.get(n).getChild(nodes.get(n).getNumChildren()-1).getValue();
+		//nodeMax += nodes.get(n).getChild(nodes.get(n).getNumChildren()-1).getValue();
 		
 		if(n <= 0) {
+			for(Tree t : nodes.get(0).getAllChildren()) {
+				nodeMax += t.getValue();
+			}
 			for(int j = nodeMin; j <= nodeMax; j++) {
 				DescriptionTree cln_t = (DescriptionTree) this.clone();
 				cln_t.setNodeValue(j, 0);
@@ -49,9 +52,9 @@ public class AlphaTree extends DescriptionTree {
 		}
 		else {
 			for(int i = n; i > 0; i--) {			
-				/*for(Tree t : nodes.get(i).getAllChildren()) {
+				for(Tree t : nodes.get(i).getAllChildren()) {
 					nodeMax += t.getValue();
-				}*/
+				}
 				
 				if(nodeMin == nodeMax) {
 					this.setNodeValue(nodeMin, i);
