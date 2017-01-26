@@ -63,10 +63,11 @@ public class CalcNumTreesListener implements ActionListener {
 		
 		model.resetTrees();
 		model.addTrees(newTrees);
+		model.restrictTrees();
 		
 		//test output
 		System.out.println("\nThe Trees:");
-		for(DescriptionTree t : newTrees) {
+		for(DescriptionTree t : model.getTrees()) {
 			System.out.println("\n" + t);
 		}
 	}

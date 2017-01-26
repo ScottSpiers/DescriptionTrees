@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 import model.scala.Tree;
 
 public class InternalNodeRestrictor extends AbstractRestrictor {
@@ -17,8 +19,11 @@ public class InternalNodeRestrictor extends AbstractRestrictor {
 	}
 
 	@Override
-	public boolean restrict(Tree t) {
-		// TODO Auto-generated method stub
+	public boolean restrict(DescriptionTree t) {
+		List<Tree> nodes = t.getNodes();
+		if(nodes.size()-1 >= min && nodes.size()-1 <= max) {
+			return true;
+		}
 		return false;
 	}
 

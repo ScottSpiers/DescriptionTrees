@@ -28,6 +28,7 @@ import listeners.CalcNumTreesListener;
 import model.DescriptionTreeModel;
 import model.InternalNodeRestrictor;
 import model.LeafNumRestrictor;
+import model.Restrictor;
 import model.scala.Tree;
 
 public class DescriptionTreeView implements Observer {
@@ -41,6 +42,7 @@ public class DescriptionTreeView implements Observer {
 	private JSpinner spnr_b;
 	private JSpinner spnr_nodeMin;
 	private JSpinner spnr_nodeMax;
+	private Box box_scrl;
 	
 	public DescriptionTreeView() {
 		model = new DescriptionTreeModel();
@@ -56,7 +58,7 @@ public class DescriptionTreeView implements Observer {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setPreferredSize(new Dimension(screenSize.width / 2, screenSize.height / 2)); 
 		
-		JMenuBar menu = new DescriptionTreeMenuBar();
+		JMenuBar menu = new DescriptionTreeMenuBar(model);
 		frame.setJMenuBar(menu);
 		
 		Box westBox = new Box(BoxLayout.Y_AXIS);
@@ -123,11 +125,11 @@ public class DescriptionTreeView implements Observer {
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
-		Box box_scrl= new Box(BoxLayout.Y_AXIS);
+		box_scrl= new Box(BoxLayout.Y_AXIS);
 		//pnl_restrictions.setLayout(new BoxLayout(pnl_restrictions, BoxLayout.Y_AXIS));
 		pnl_restrictions.add(box_scrl);
-		box_scrl.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves")));
-		box_scrl.add(new RestrictionComponent(frame, new InternalNodeRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excluding root)")));
+		/*box_scrl.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves")));
+		box_scrl.add(new RestrictionComponent(frame, new InternalNodeRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excluding root)")));*/
 		
 		Border paramBorder = BorderFactory.createEmptyBorder(10, 0, 10, 0);
 		
@@ -208,14 +210,27 @@ public class DescriptionTreeView implements Observer {
 	public int getNodeMax() {
 		return (int) spnr_nodeMax.getValue();
 	}
+	
+	public void removeRestriction(Restrictor r) {
+		model.removeRestrictor(r);
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(arg instanceof List<?>) {
-			List<Tree> trees = (List<Tree>) arg;
-			lbl_numTrees.setText(Integer.toString(trees.size()));
-			System.out.println(trees.size());
+		if(arg instanceof Boolean) {
+			if((Boolean) arg) {
+				lbl_numTrees.setText(Integer.toString(model.getNumTrees()));
+				System.out.println(model.getNumTrees());
+			}
+			else if (!(Boolean) arg){
+				box_scrl.removeAll();
+				List<Restrictor> restrictors = model.getRestrictors();
+				for(Restrictor r : restrictors) {
+					box_scrl.add(new RestrictionComponent(frame, r, this));
+					System.out.println(r);
+				}
+				frame.pack();
+			}
 		}
-		
 	}
 }

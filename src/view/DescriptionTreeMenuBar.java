@@ -4,6 +4,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import listeners.AddRestrictionListener;
+import model.DescriptionTreeModel;
+
 /**
  * 
  * @author Scott Spiers
@@ -16,7 +19,10 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 	
 	private static final long serialVersionUID = -7933268113368431375L;
 
-	public DescriptionTreeMenuBar() {
+	private DescriptionTreeModel model;
+	
+	public DescriptionTreeMenuBar(DescriptionTreeModel model) {
+		this.model = model;
 		this.add(createFileMenu());
 		this.add(createEditMenu());
 		this.add(createHelpMenu());		
@@ -35,6 +41,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		JMenu edit = new JMenu("Edit");
 		JMenuItem shape = new JMenuItem("Provide Shape");
 		JMenuItem restrict = new JMenuItem("Add Restriction");
+		restrict.addActionListener(new AddRestrictionListener(model));
 		edit.add(shape);
 		edit.add(restrict);
 		return edit;		

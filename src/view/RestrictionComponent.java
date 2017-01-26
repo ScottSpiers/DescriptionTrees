@@ -3,7 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,17 +13,21 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import model.Restrictor;
-import model.scala.Tree;
 
 public class RestrictionComponent extends JComponent {
 	
 	private static final long serialVersionUID = -7694510080532419887L;
+	
+	private DescriptionTreeView view;
+	private Restrictor r;
 
-	private Restrictor restrictor;
-	public RestrictionComponent(Component parent, Restrictor r) {
-		restrictor = r;
+	public RestrictionComponent(Component parent, Restrictor r, DescriptionTreeView view) {
+		this.view = view;
+		this.r = r;
 		this.setLayout(new BorderLayout());
 		Box box_layout = new Box(BoxLayout.Y_AXIS);
 		Box box_name = new Box(BoxLayout.X_AXIS);
@@ -49,18 +54,68 @@ public class RestrictionComponent extends JComponent {
 	
 	private JSpinner createSpinner(int n) {
 		JSpinner spnr_limit = new JSpinner(new SpinnerNumberModel(n, 0, null, 1));
+		spnr_limit.addChangeListener(new SpinnerUpdateListener());
 		return spnr_limit;
 	}
 	
 	private JButton createRemove() {
 		JButton btn_remove = new JButton();
-		//btn_remove.addActionListener(new RemoveRestrictionListener());
+		btn_remove.addActionListener(new RemoveRestrictionListener());
 		btn_remove.setToolTipText("Remove this restriction");
 		btn_remove.setText("Remove");
 		return btn_remove;
 	}
 	
-	public Restrictor getRestrictor() {
-		return restrictor;
+	private boolean isMinSpinner(JSpinner s) {
+		this.getTreeLock();
+		Component child = this.getComponent(0);
+		Box box_layout = (Box) child;
+		Box box_details = (Box) box_layout.getComponent(1);
+		Component[] children = box_details.getComponents();
+		boolean minSpnrFound = false;
+		for(int i = 0; i < children.length; i++) {
+			if(children[i] instanceof JSpinner) {
+				if(((JSpinner) children[i]).equals(s)) {
+					if(!minSpnrFound) {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				else {
+					minSpnrFound = true;
+				}
+			}
+		}
+		return false;
 	}
+	
+	private class RemoveRestrictionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			view.removeRestriction(r);
+			
+		}		
+	}
+	
+	private class SpinnerUpdateListener implements ChangeListener {
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			JSpinner s = (JSpinner) e.getSource();
+			if(isMinSpinner(s)) {
+				r.setMin((int) s.getValue());
+				System.out.println("min set to: " + s.getValue());
+			}
+			else {
+				r.setMax((int) s.getValue()); 
+				System.out.println("max set to: " + s.getValue());
+			}			
+		}
+		
+	}
+	
+	
 }

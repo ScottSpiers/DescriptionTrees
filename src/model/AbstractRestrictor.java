@@ -41,6 +41,14 @@ public abstract class AbstractRestrictor implements Restrictor {
 		return desc;
 	}
 	
+	public void setMin(int n) {
+		min = n;
+	}
+	
+	public void setMax(int n) {
+		max = n;
+	}
+	
 	public int getMin() {
 		return min;
 	}
@@ -49,15 +57,26 @@ public abstract class AbstractRestrictor implements Restrictor {
 		return max;
 	}
 	
-	public List<Tree> applyRestriction(List<Tree> trees) {
-		List<Tree> newTreeList = new ArrayList<Tree>();
-		
-		for(Tree t : trees) {
-			if (restrict(t)) {
-				newTreeList.add(t);
+	public List<DescriptionTree> applyRestriction(List<DescriptionTree> trees) {
+		List<DescriptionTree> newTreeList = new ArrayList<DescriptionTree>();
+		newTreeList.addAll(trees);
+		for(DescriptionTree t : trees) {
+			if (!restrict(t)) {
+				newTreeList.remove(t);
 			}
 		}
 		return newTreeList;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Restrictor) {
+			if(name.equals(((Restrictor) o).getName())) {
+				if(desc.equals(((Restrictor) o).getDesc())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

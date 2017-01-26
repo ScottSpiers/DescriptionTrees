@@ -9,31 +9,75 @@ import model.scala.Tree;
 
 public class DescriptionTreeModel extends Observable {
 	private List<DescriptionTree> trees;
+	private List<Restrictor> restrictors;
 	
 	public DescriptionTreeModel() {
 		trees = new ArrayList<DescriptionTree>();
+		restrictors = new ArrayList<Restrictor>();
+	}
+	
+	/**
+	 * TESTING PURPOSES ONLY
+	 * DELETE AFTER TESTING COMPLETE
+	 * @return
+	 */
+	public List<DescriptionTree> getTrees() {
+		return trees;
+	}
+	
+	public void addRestrictor(Restrictor r) {
+		if(!restrictors.contains(r)) {
+			restrictors.add(r);
+			this.setChanged();
+			this.notifyObservers(false);			
+		}
+	}
+	
+	public void removeRestrictor(Restrictor r) {
+		restrictors.remove(r);
+		this.setChanged();
+		this.notifyObservers(false);
 	}
 	
 	public void addTrees(List<DescriptionTree> ts) {
 		trees.addAll(trees.size(), ts);
 		this.setChanged();
-		this.notifyObservers(trees);
+		this.notifyObservers(true);
 	}
 	
 	public void removeTree(int i) {
 		trees.remove(i);
 		this.setChanged();
-		this.notifyObservers(trees);
+		this.notifyObservers(true);
 	}
 	
 	public void removeTree(DescriptionTree t) {
 		trees.remove(t);
 		this.setChanged();
-		this.notifyObservers(trees);
+		this.notifyObservers(true);
 	}
 	
 	public void resetTrees() {
 		trees.clear();
+	}
+	
+	public int getNumTrees() {
+		return trees.size();
+	}
+	
+	public List<Restrictor> getRestrictors() {
+		return restrictors;		
+	}
+	
+	public void restrictTrees() {
+		List<DescriptionTree> newTrees = new ArrayList<DescriptionTree>();
+		newTrees.addAll(trees);
+		for(Restrictor r : restrictors) {
+			newTrees = r.applyRestriction(newTrees);
+		}
+		trees = newTrees;
+		this.setChanged();
+		this.notifyObservers(true);
 	}
 	
 	public List<DescriptionTree> genTrees(DescriptionTree tree, int n) {

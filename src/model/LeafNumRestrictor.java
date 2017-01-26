@@ -19,8 +19,8 @@ public class LeafNumRestrictor extends AbstractRestrictor {
 	}
 
 	@Override
-	public boolean restrict(Tree t) {
-		if(t.getNumLeaves(t) >= min && t.getNumLeaves(t) <= max) {
+	public boolean restrict(DescriptionTree t) {
+		if(t.getNumLeaves() >= min && t.getNumLeaves() <= max) {
 			return true;
 		}
 		return false;
