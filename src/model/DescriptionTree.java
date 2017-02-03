@@ -1,6 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import model.scala.Empty;
 import model.scala.Tree;
@@ -47,7 +50,7 @@ public abstract class DescriptionTree implements Cloneable {
 	}
 	
 	public int getNumVertices() {
-		return descriptionTree.getNumVertices(descriptionTree);
+		return descriptionTree.getNumVertices();
 	}
 	
 	public int getNumChildren() {
@@ -93,6 +96,26 @@ public abstract class DescriptionTree implements Cloneable {
 		return descriptionTree.getNumLeaves(descriptionTree);
 	}
 	
+	public int getWidth(int i) {
+		return descriptionTree.getWidth(i);
+	}
+	
+	public int getDepth() {
+		return descriptionTree.getDepth();
+	}
+	
+	public int getMaxWidth() {
+		int width = getWidth(0);
+		int max = 0;
+		for(int i = 1; i <= getDepth(); i++) {
+			max = getWidth(i);
+			if(max > width) {
+				width = max;
+			}
+		}
+		return width;
+	}
+	
 	@Override
 	public Object clone() {		
 		try {
@@ -109,6 +132,57 @@ public abstract class DescriptionTree implements Cloneable {
 			return (descriptionTree.getNodes().equals(((DescriptionTree) t).getNodes()));
 		}
 		return false;
+	}
+	
+	public String printString() {
+		int numStrings = (getDepth() * 2) + 1;
+		StringBuilder[] strings = new StringBuilder[numStrings];
+		int startIndex = 0;
+		int numVertices = getNumVertices();
+		boolean oddChildren = numVertices % 2 == 1;
+		int level = 0;
+		int stringLength = 0;
+		
+		if(oddChildren) {
+			stringLength = numVertices + 2;
+		}
+		else {
+			stringLength = numVertices + 1;
+		}
+		
+		for(int i = 0; i < strings.length; i++) {
+			strings[i] = new StringBuilder();
+			strings[i].setLength(stringLength);
+		}
+		
+		strings[0].setCharAt((stringLength / 2) + 1, Integer.toString(getValue()).charAt(0));
+		
+		for(Tree t : getAllChildren()) {
+			printString(t, level + 2, startIndex, strings, numVertices);
+		}
+		
+		System.out.println("      __________6__________\n     /      /   |   \\      \\\n  __3__    4  __5__  6      7\n / / \\ \\     / / \\ \\       /|\\\n1 2   3 4   1 2   3 4     1 2 3\n       /|\\\n      1 2 3");
+		String str_out = "";
+		for(StringBuilder s : strings) {
+			str_out += s + "\n";
+		}
+		return str_out;
+	}
+	
+	private void printString(Tree t, int level, int startIndex, StringBuilder[] strings, int numVertices) {
+		int numVerts = numVertices;
+		int indexStart = startIndex;
+		
+		int divide = t.getNumVertices() * ((strings[0].length() - startIndex) / numVerts);
+		int index = startIndex + (divide / 2);
+		strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));
+		indexStart += divide;
+		numVerts -= t.getNumVertices();
+		
+		for(Tree child : t.getAllChildren()) {
+			printString(child, level + 2, indexStart, strings, numVerts);
+		}
+		
 	}
 	
 	private String toStringHelper(Tree t, int level) {

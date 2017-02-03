@@ -86,7 +86,7 @@ sealed abstract class Tree {
     case (Nil, i) => Nil
     case ((Leaf(n) :: xs), i) => Leaf(n) :: addLeafToNode(xs, i)
     case ((Node(n, ys) :: xs), 0) => Node(n, ys ++ (Leaf(0) :: Nil)) :: xs
-    case ((Node(n, ys) :: xs), i) => if(i < numNodes(ys)) {
+    case ((Node(n, ys) :: xs), i) => if((i - 1) < numNodes(ys)) {
       (Node(n, addLeafToNode(ys, i-1)) :: xs)
     }
     else {
@@ -178,7 +178,7 @@ sealed abstract class Tree {
      case (i, t :: ts) => getChild(i-1, ts)
    }
   
-  def getNumVertices(t : Tree) : Int = t match {
+  def getNumVertices() : Int = this match {
     case Empty() => 0
     case Leaf(n) => 1
     case Node(n, xs) => 1 + getNumVertices(xs)
@@ -186,7 +186,7 @@ sealed abstract class Tree {
   
   private def getNumVertices(l : List[Tree]) : Int = l match {
     case Nil => 0
-    case t :: ts => getNumVertices(t) + getNumVertices(ts)
+    case t :: ts => t.getNumVertices() + getNumVertices(ts)
   }
   
   def getNumLeaves(t : Tree) : Int = t match {
@@ -212,6 +212,35 @@ sealed abstract class Tree {
     case Node(n, xs) => n
   }
   
+  def getWidth(i : Int) : Int = (this, i) match {
+    case (Empty(), i) => 0
+    case (Leaf(n), 0) => 1
+    case (Leaf(n), i) => 0
+    case (Node(n, xs), 0) => 1
+    case (Node(n, xs), i) => getWidth(xs, i-1)
+  }
+  
+  private def getWidth(xs : List[Tree], i : Int) : Int = (xs, i) match {
+    case (Nil, i) => 0
+    case (Empty() :: xs, i) => getWidth(xs, i)
+    case ((Leaf(n) :: xs), 0) => 1 + getWidth(xs, 0)
+    case ((Leaf(n) :: xs), i) => getWidth(xs, i)
+    case ((Node(n, ys) :: xs), 0) => 1 + getWidth(xs, 0)
+    case ((Node(n, ys) :: xs), i) => getWidth(ys, i-1) + getWidth(xs, i)
+  }
+  
+  def getDepth() : Int = this match {
+    case Empty() => 0
+    case Leaf(n) => 0
+    case Node(n, xs) => 1 + getDepth(xs)
+  }
+  
+  private def getDepth(xs : List[Tree]) : Int = xs match {
+    case Nil => 0
+    case Empty() :: xs => getDepth(xs)
+    case Leaf(n) :: xs => getDepth(xs)
+    case Node(n, ys) :: xs => 1 + math.max(getDepth(ys), getDepth(xs))
+  }  
 }
 
 case class Empty() extends Tree

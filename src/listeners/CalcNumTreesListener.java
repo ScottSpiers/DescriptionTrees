@@ -66,10 +66,10 @@ public class CalcNumTreesListener implements ActionListener {
 		model.restrictTrees();
 		
 		//test output
-		System.out.println("\nThe Trees:");
+		/*System.out.println("\nThe Trees:");
 		for(DescriptionTree t : model.getTrees()) {
 			System.out.println("\n" + t);
-		}
+		}*/
 	}
 
 }

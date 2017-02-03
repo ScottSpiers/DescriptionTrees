@@ -9,7 +9,6 @@ import org.junit.Test;
 import model.AlphaTree;
 import model.BetaTree;
 import model.DescriptionTree;
-import model.scala.Tree;
 
 public class DescriptionTreeTest {
 
@@ -26,7 +25,6 @@ public class DescriptionTreeTest {
 		leaf.addLeaf();
 		node = new AlphaTree();
 		node.addLeaf();
-		node.getChild(0).addLeaf();
 	}	
 	
 	@Test
@@ -45,11 +43,11 @@ public class DescriptionTreeTest {
 		assertTrue(t.equals(leaf));
 	}
 	
-	@Test
+	/*@Test
 	public void testEqualNode() {
 		t.getChild(0).addLeaf();
 		assertTrue(t.equals(node));
-	}
+	}*/
 	
 	@Test
 	public void testEqualTree() {
@@ -63,6 +61,84 @@ public class DescriptionTreeTest {
 	
 	@Test
 	public void testNotEqualNode() {
+		
+	}
+	
+	@Test
+	public void testGetWidth() {
+		DescriptionTree node2 = (DescriptionTree) node.clone();
+		node2.addLeaf();
+		node2.addLeaf();
+		node2.addLeafToLeaf(0);
+		node2.addLeafToNode(1);
+		node2.addLeafToNode(1);
+		node2.addLeafToNode(1);
+		node2.addLeafToNode(1);
+		node2.addLeafToLeaf(5);
+		node2.addLeafToNode(2);
+		System.out.println(node2);
+		node2.printString();
+		assertTrue(node2.getWidth(1) == 2 && node2.getWidth(2) == 7);
+	}
+	
+	@Test
+	public void testGetDepth() {
+		DescriptionTree node3 = (DescriptionTree) node.clone();
+		node3.addLeaf();
+		node3.addLeafToLeaf(0);
+		node3.addLeafToLeaf(1);
+		node3.addLeafToLeaf(0);
+		assertTrue(node3.getDepth() == 3);
+	}
+	
+	@Test
+	public void testMaxWidth() {
+		DescriptionTree node4 = (DescriptionTree) node.clone();
+		node4.addLeaf();
+		node4.addLeaf();
+		node4.addLeafToLeaf(0);
+		node4.addLeafToNode(1);
+		node4.addLeafToNode(1);
+		node4.addLeafToNode(1);
+		node4.addLeafToNode(1);
+		node4.addLeafToLeaf(5);
+		node4.addLeafToNode(2);
+		System.out.println(node4);
+		assertTrue(node4.getMaxWidth() == 7);
+	}
+	
+	@Test
+	public void testPrint() {
+		DescriptionTree node5 = new BetaTree();
+		node5.addLeaf(); //root
+		node5.addLeaf(); //node 1
+		node5.addLeaf(); //leaf 6
+		node5.addLeaf(); // node 3
+		node5.addLeaf(); // leaf 11
+		node5.addLeaf(); //node 4
+		
+		node5.addLeafToLeaf(0);
+		node5.addLeafToNode(1);
+		node5.addLeafToNode(1);
+		node5.addLeafToNode(1); //node 2
+		
+		node5.addLeafToLeaf(3);
+		node5.addLeafToNode(2);
+		node5.addLeafToNode(2);
+		
+		node5.addLeafToLeaf(7);
+		node5.addLeafToNode(3);
+		node5.addLeafToNode(3);
+		node5.addLeafToNode(3);
+		
+		node5.addLeafToLeaf(12);
+		node5.addLeafToNode(4);
+		node5.addLeafToNode(4);
+		System.out.println("Testing print");
+		System.out.println(node5.getNumVertices());
+		System.out.println(node5.printString());
+		System.out.println(node5);
+		
 		
 	}
 	
