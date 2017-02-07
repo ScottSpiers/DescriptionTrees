@@ -172,9 +172,9 @@ public abstract class DescriptionTree implements Cloneable {
 	private void printString(Tree t, int level, int startIndex, StringBuilder[] strings, int numVertices) {
 		int numVerts = numVertices;
 		int indexStart = startIndex;
-		
 		int divide = t.getNumVertices() * ((strings[0].length() - startIndex) / numVerts);
 		int index = startIndex + (divide / 2);
+		
 		strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));
 		indexStart += divide;
 		numVerts -= t.getNumVertices();
