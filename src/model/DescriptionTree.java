@@ -1,9 +1,10 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.Queue;
 
 import model.scala.Empty;
 import model.scala.Tree;
@@ -132,6 +133,72 @@ public abstract class DescriptionTree implements Cloneable {
 			return (descriptionTree.getNodes().equals(((DescriptionTree) t).getNodes()));
 		}
 		return false;
+	}
+	
+	public String printTree() {
+		int numStrings = (getDepth() * 2) + 1;
+		StringBuilder[] strings = new StringBuilder[numStrings];
+		int startIndex = 0;
+		int numVertices = getNumVertices() - 1;
+		boolean oddChildren = numVertices % 2 == 1;
+		int level = 0;
+		int stringLength = 0;
+		int fullDepth = getDepth();
+		
+		if(oddChildren) {
+			stringLength = numVertices + 2;
+		}
+		else {
+			stringLength = numVertices + 1;
+		}
+		
+		for(int i = 0; i < strings.length; i++) {
+			strings[i] = new StringBuilder();
+			strings[i].setLength(stringLength);
+		}
+		
+		strings[0].setCharAt((stringLength / 2) + 1, Integer.toString(getValue()).charAt(0));
+		level += 2;
+		
+		Map<Tree, Integer> divisions = new HashMap<Tree, Integer>();
+		Map<Tree, Integer> endIndices = new HashMap<Tree, Integer>();
+		Queue<Tree> q_vertices = new LinkedList<Tree>();
+		
+		for(Tree t : getAllChildren()) {	
+			int divide = t.getNumVertices() * ((stringLength - startIndex) / numVertices);
+			int endIndex = startIndex + divide;
+			endIndices.put(t, endIndex);
+			divisions.put(t, divide);
+			numVertices -= t.getNumVertices();
+			startIndex += divide;
+			q_vertices.add(t);	
+		}
+		
+		while(!q_vertices.isEmpty()) {
+			Tree t = q_vertices.remove();
+			
+			numVertices = t.getNumVertices() - 1;
+			startIndex = endIndices.get(t) - divisions.get(t);
+			for(Tree child : t.getAllChildren()) {
+				int divide = child.getNumVertices() * ((stringLength - startIndex) / numVertices);
+				int endIndex = startIndex + divide;
+				endIndices.put(child, endIndex);
+				divisions.put(child, divide);
+				numVertices -= child.getNumVertices();
+				startIndex += divide;
+				q_vertices.add(child);
+			}
+			
+			startIndex = endIndices.get(t) - divisions.get(t);
+			level = (fullDepth - t.getDepth()) * 2;
+			int index = (endIndices.get(t) - startIndex) / 2;
+			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));			
+		}
+		String str_out = "";
+		for(StringBuilder s : strings) {
+			str_out += s + "\n";
+		}
+		return str_out;
 	}
 	
 	public String printString() {

@@ -135,8 +135,7 @@ public class DescriptionTreeTest {
 		node5.addLeafToNode(4);
 		node5.addLeafToNode(4);
 		System.out.println("Testing print");
-		System.out.println(node5.getNumVertices());
-		System.out.println(node5.printString());
+		System.out.println(node5.printTree());
 		System.out.println(node5);
 		
 		
