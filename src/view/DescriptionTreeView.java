@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -11,23 +12,42 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
+import listeners.CalcNumTreesListener;
+import model.DescriptionTreeModel;
+import model.InternalNodeRestrictor;
 import model.LeafNumRestrictor;
+import model.Restrictor;
+import model.scala.Tree;
 
 public class DescriptionTreeView implements Observer {
 
+	private DescriptionTreeModel model;
 	private JFrame frame;
+	private JLabel lbl_numTrees;
+	private JRadioButton rdo_alpha;
+	private JRadioButton rdo_beta;
+	private JSpinner spnr_a;
+	private JSpinner spnr_b;
+	private JSpinner spnr_nodeMin;
+	private JSpinner spnr_nodeMax;
+	private Box box_scrl;
 	
+	public DescriptionTreeView() {
+		model = new DescriptionTreeModel();
+		model.addObserver(this);
+	}
 	
 	public void display() {
 		frame = new JFrame("Description Trees");
@@ -38,7 +58,7 @@ public class DescriptionTreeView implements Observer {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setPreferredSize(new Dimension(screenSize.width / 2, screenSize.height / 2)); 
 		
-		JMenuBar menu = new DescriptionTreeMenuBar();
+		JMenuBar menu = new DescriptionTreeMenuBar(model);
 		frame.setJMenuBar(menu);
 		
 		Box westBox = new Box(BoxLayout.Y_AXIS);
@@ -48,8 +68,8 @@ public class DescriptionTreeView implements Observer {
 		
 		JLabel lbl_treeChoiceInstr = new JLabel("<html>Please choose a description tree:</html>");
 		ButtonGroup grp_trees = new ButtonGroup();
-		JRadioButton rdo_alpha = new JRadioButton("Alpha(a, b)");
-		JRadioButton rdo_beta = new JRadioButton("Beta(a, b)");
+		rdo_alpha = new JRadioButton("Alpha(a, b)");
+		rdo_beta = new JRadioButton("Beta(a, b)");
 		grp_trees.add(rdo_alpha);
 		grp_trees.add(rdo_beta);
 		
@@ -59,11 +79,11 @@ public class DescriptionTreeView implements Observer {
 		JLabel lbl_a = new JLabel("a = ");
 		JLabel lbl_b = new JLabel("b = ");
 		
-		JSpinner spnr_a = new JSpinner();
+		spnr_a = new JSpinner();
 		spnr_a.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnr_a.setMaximumSize(spnrSize);
 		
-		JSpinner spnr_b = new JSpinner();
+		spnr_b = new JSpinner();
 		spnr_b.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_b.setMaximumSize(spnrSize);
 		
@@ -73,11 +93,11 @@ public class DescriptionTreeView implements Observer {
 		box_b.add(spnr_b);
 		
 		
-		JSpinner spnr_nodeMin = new JSpinner();
+		spnr_nodeMin = new JSpinner();
 		spnr_nodeMin.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_nodeMin.setMaximumSize(spnrSize);
 		
-		JSpinner spnr_nodeMax = new JSpinner();
+		spnr_nodeMax = new JSpinner();
 		spnr_nodeMax.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_nodeMax.setMaximumSize(spnrSize);
 		
@@ -91,15 +111,25 @@ public class DescriptionTreeView implements Observer {
 		box_node.add(lbl_toMax);
 		box_node.add(spnr_nodeMax);
 		
+		Box box_btns = new Box(BoxLayout.X_AXIS);
+		JButton btn_print = new JButton("Print");
+		JButton btn_run = new JButton("Calculate");
+		btn_run.addActionListener(new CalcNumTreesListener(this, model));
+		box_btns.add(btn_run);
+		box_btns.add(btn_print);
 		JLabel lbl_totalTrees = new JLabel("<html>Total Number of Trees:</html>");
-		JLabel lbl_numTrees = new JLabel();
+		lbl_numTrees = new JLabel();
 		
 		JLabel lbl_numTreeSeqDesc = new JLabel("<html>Number of Trees sequence:</html>");
 		JLabel lbl_numTreeSeq = new JLabel();
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
-		pnl_restrictions.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves:", "Restricts the number of leaves")));		
+		box_scrl= new Box(BoxLayout.Y_AXIS);
+		//pnl_restrictions.setLayout(new BoxLayout(pnl_restrictions, BoxLayout.Y_AXIS));
+		pnl_restrictions.add(box_scrl);
+		/*box_scrl.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves")));
+		box_scrl.add(new RestrictionComponent(frame, new InternalNodeRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excluding root)")));*/
 		
 		Border paramBorder = BorderFactory.createEmptyBorder(10, 0, 10, 0);
 		
@@ -126,6 +156,7 @@ public class DescriptionTreeView implements Observer {
 		Box box_output = new Box(BoxLayout.Y_AXIS);
 		box_output.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_output.setBorder(paramBorder);
+		box_output.add(box_btns);
 		box_output.add(lbl_totalTrees);
 		box_output.add(lbl_numTrees);
 		box_output.add(lbl_numTreeSeqDesc);		
@@ -147,10 +178,59 @@ public class DescriptionTreeView implements Observer {
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	public void displayError(String title, String msg) {
+		JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void setNumTrees(int n) {
+		lbl_numTrees.setText(Integer.toString(n));
+	}
+	
+	public boolean isAlphaChecked() {
+		return rdo_alpha.isSelected();
+	}
+	
+	public boolean isBetaChecked() {
+		return rdo_beta.isSelected();
+	}
+	
+	public int getParamA() {
+		return (int) spnr_a.getValue();
+	}
+	
+	public int getParamB() {
+		return (int) spnr_b.getValue();
+	}
+	
+	public int getNodeMin() {
+		return (int) spnr_nodeMin.getValue();
+	}
+	
+	public int getNodeMax() {
+		return (int) spnr_nodeMax.getValue();
+	}
+	
+	public void removeRestriction(Restrictor r) {
+		model.removeRestrictor(r);
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		
-		
+		if(arg instanceof Boolean) {
+			if((Boolean) arg) {
+				lbl_numTrees.setText(Integer.toString(model.getNumTrees()));
+				System.out.println(model.getNumTrees());
+			}
+			else if (!(Boolean) arg){
+				box_scrl.removeAll();
+				List<Restrictor> restrictors = model.getRestrictors();
+				for(Restrictor r : restrictors) {
+					box_scrl.add(new RestrictionComponent(frame, r, this));
+					System.out.println(r);
+				}
+				frame.pack();
+			}
+		}
 	}
 }
