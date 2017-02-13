@@ -169,8 +169,9 @@ public abstract class DescriptionTree implements Cloneable {
 		Queue<Tree> q_vertices = new LinkedList<Tree>();
 		
 		for(Tree t : getAllChildren()) {
-			int divide = t.getNumVertices() * ((stringLength - startIndex) / numVertices);
-			int endIndex = startIndex + divide;
+			float initDiv = (float) t.getNumVertices() * (((float) stringLength - (float) startIndex) / (float) numVertices);
+			int divide = Math.round(initDiv);
+			int endIndex = startIndex + (divide - 1);
 			endIndices[depthIndex] = endIndex;
 			divisions[depthIndex] = divide;
 			depths[depthIndex] = 1;
@@ -185,12 +186,13 @@ public abstract class DescriptionTree implements Cloneable {
 			Tree t = q_vertices.remove();
 			
 			numVertices = t.getNumVertices() - 1;
-			startIndex = endIndices[curIndex] - divisions[curIndex];
+			startIndex = endIndices[curIndex] - (divisions[curIndex] - 1);
 			
 			int prevDepth = depths[curIndex];
 			for(Tree child : t.getAllChildren()) {
-				int divide = child.getNumVertices() * ((divisions[curIndex] - startIndex) / numVertices);
-				int endIndex = startIndex + divide;
+				float initDiv = (float) child.getNumVertices() * (((float) endIndices[curIndex] - startIndex) / (float) numVertices);
+				int divide = Math.round(initDiv);
+				int endIndex = startIndex + (divide - 1);
 				endIndices[depthIndex] = endIndex;
 				divisions[depthIndex] = divide;
 				depths[depthIndex] = prevDepth + 1;
@@ -200,7 +202,7 @@ public abstract class DescriptionTree implements Cloneable {
 				q_vertices.add(child);
 			}
 			
-			startIndex = endIndices[curIndex] - divisions[curIndex];
+			startIndex = endIndices[curIndex] - (divisions[curIndex] - 1);
 			level = depths[curIndex] * 2;
 			int index = (startIndex + endIndices[curIndex]) / 2;
 			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));	
