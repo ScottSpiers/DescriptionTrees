@@ -143,7 +143,6 @@ public abstract class DescriptionTree implements Cloneable {
 		boolean oddChildren = numVertices % 2 == 1;
 		int level = 0;
 		int stringLength = 0;
-		int fullDepth = getDepth();
 		
 		if(oddChildren) {
 			stringLength = numVertices + 2;
@@ -160,39 +159,52 @@ public abstract class DescriptionTree implements Cloneable {
 		strings[0].setCharAt((stringLength / 2) + 1, Integer.toString(getValue()).charAt(0));
 		level += 2;
 		
-		Map<Tree, Integer> divisions = new HashMap<Tree, Integer>();
-		Map<Tree, Integer> endIndices = new HashMap<Tree, Integer>();
+		int[] depths = new int[numVertices + 1];
+		depths[0] = 0;
+		int depthIndex = 1;
+		int[] endIndices = new int[numVertices + 1];
+		endIndices[0] = stringLength - 1;
+		int[] divisions = new int[numVertices + 1];
+		divisions[0] = stringLength;
 		Queue<Tree> q_vertices = new LinkedList<Tree>();
 		
-		for(Tree t : getAllChildren()) {	
+		for(Tree t : getAllChildren()) {
 			int divide = t.getNumVertices() * ((stringLength - startIndex) / numVertices);
 			int endIndex = startIndex + divide;
-			endIndices.put(t, endIndex);
-			divisions.put(t, divide);
+			endIndices[depthIndex] = endIndex;
+			divisions[depthIndex] = divide;
+			depths[depthIndex] = 1;
+			depthIndex += 1;
 			numVertices -= t.getNumVertices();
-			startIndex += divide;
-			q_vertices.add(t);	
+			startIndex = endIndex + 1;
+			q_vertices.add(t);
 		}
 		
+		int curIndex = 1;
 		while(!q_vertices.isEmpty()) {
 			Tree t = q_vertices.remove();
 			
 			numVertices = t.getNumVertices() - 1;
-			startIndex = endIndices.get(t) - divisions.get(t);
+			startIndex = endIndices[curIndex] - divisions[curIndex];
+			
+			int prevDepth = depths[curIndex];
 			for(Tree child : t.getAllChildren()) {
-				int divide = child.getNumVertices() * ((stringLength - startIndex) / numVertices);
+				int divide = child.getNumVertices() * ((divisions[curIndex] - startIndex) / numVertices);
 				int endIndex = startIndex + divide;
-				endIndices.put(child, endIndex);
-				divisions.put(child, divide);
+				endIndices[depthIndex] = endIndex;
+				divisions[depthIndex] = divide;
+				depths[depthIndex] = prevDepth + 1;
+				depthIndex += 1;
 				numVertices -= child.getNumVertices();
-				startIndex += divide;
+				startIndex = endIndex + 1;
 				q_vertices.add(child);
 			}
 			
-			startIndex = endIndices.get(t) - divisions.get(t);
-			level = (fullDepth - t.getDepth()) * 2;
-			int index = (endIndices.get(t) - startIndex) / 2;
-			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));			
+			startIndex = endIndices[curIndex] - divisions[curIndex];
+			level = depths[curIndex] * 2;
+			int index = (startIndex + endIndices[curIndex]) / 2;
+			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));	
+			curIndex++;
 		}
 		String str_out = "";
 		for(StringBuilder s : strings) {

@@ -179,6 +179,7 @@ public class DescriptionTreeTest {
 		bTree.setNodeValue(4, 2);
 		bTree.setNodeValue(5, 3);
 		System.out.println(bTree);
+		System.out.println(bTree.printTree());
 		assertTrue(bTree.equals(bTree));
 	}
 	
