@@ -1,10 +1,10 @@
 package model;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import model.scala.Empty;
 import model.scala.Tree;
@@ -208,6 +208,27 @@ public abstract class DescriptionTree implements Cloneable {
 			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));	
 			curIndex++;
 		}
+		
+		curIndex = 1;
+		int curDiv = divisions[curIndex];
+		level = 2;
+		numVertices = getNumVertices();
+		int[] indices = new int[numVertices];
+		
+		Matcher m = Pattern.compile("\\d+").matcher(strings[0]);
+		m.find();
+		int prevIndex = Integer.valueOf(m.group());
+		indices[0] = prevIndex;
+		
+		m = Pattern.compile("\\d+").matcher(strings[2].substring(endIndices[curIndex] - (divisions[curIndex] - 1), divisions[curIndex]));
+		int index = curIndex;
+		while(m.find()) {
+			indices[index] = Integer.valueOf(m.group());
+			index++;
+		}
+		
+		
+		
 		String str_out = "";
 		for(StringBuilder s : strings) {
 			str_out += s + "\n";
