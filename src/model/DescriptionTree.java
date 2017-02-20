@@ -209,24 +209,30 @@ public abstract class DescriptionTree implements Cloneable {
 			curIndex++;
 		}
 		
-		curIndex = 1;
+		curIndex = 0;
 		int curDiv = divisions[curIndex];
 		level = 2;
 		numVertices = getNumVertices();
 		int[] indices = new int[numVertices];
 		
 		Matcher m = Pattern.compile("\\d+").matcher(strings[0]);
-		m.find();
-		int prevIndex = Integer.valueOf(m.group());
-		indices[0] = prevIndex;
-		
-		m = Pattern.compile("\\d+").matcher(strings[2].substring(endIndices[curIndex] - (divisions[curIndex] - 1), divisions[curIndex]));
 		int index = curIndex;
-		while(m.find()) {
-			indices[index] = Integer.valueOf(m.group());
-			index++;
+		int i = 0;
+		while(i < numVertices) {
+			m = Pattern.compile("\\d+").matcher(strings[depths[i]].substring(endIndices[i] - (divisions[i] - 1), divisions[i]));
+			m.find();
+			indices[i] = Integer.valueOf(m.group());
+			i++;			
 		}
 		
+		i = 1;
+		while(i < numVertices) {
+			int gap = indices[i-1] - indices[i];
+			//get num children for node
+			//use this as limiting value
+			// do connections app.
+			//continue
+		}
 		
 		
 		String str_out = "";
