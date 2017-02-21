@@ -166,6 +166,8 @@ public abstract class DescriptionTree implements Cloneable {
 		endIndices[0] = stringLength - 1;
 		int[] divisions = new int[numVertices + 1];
 		divisions[0] = stringLength;
+		int[] parents = new int[numVertices + 1];
+		parents[0] = 0;
 		Queue<Tree> q_vertices = new LinkedList<Tree>();
 		
 		for(Tree t : getAllChildren()) {
@@ -190,12 +192,13 @@ public abstract class DescriptionTree implements Cloneable {
 			
 			int prevDepth = depths[curIndex];
 			for(Tree child : t.getAllChildren()) {
-				float initDiv = (float) child.getNumVertices() * (((float) endIndices[curIndex] - startIndex) / (float) numVertices);
+				float initDiv = (float) child.getNumVertices() * ((((float) endIndices[curIndex] - startIndex) + 1) / (float) numVertices);
 				int divide = Math.round(initDiv);
 				int endIndex = startIndex + (divide - 1);
 				endIndices[depthIndex] = endIndex;
 				divisions[depthIndex] = divide;
 				depths[depthIndex] = prevDepth + 1;
+				parents[depthIndex] = curIndex;
 				depthIndex += 1;
 				numVertices -= child.getNumVertices();
 				startIndex = endIndex + 1;
@@ -205,35 +208,72 @@ public abstract class DescriptionTree implements Cloneable {
 			startIndex = endIndices[curIndex] - (divisions[curIndex] - 1);
 			level = depths[curIndex] * 2;
 			int index = (startIndex + endIndices[curIndex]) / 2;
-			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));	
+			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));
 			curIndex++;
 		}
 		
-		curIndex = 0;
+		curIndex = 1;
 		int curDiv = divisions[curIndex];
 		level = 2;
 		numVertices = getNumVertices();
 		int[] indices = new int[numVertices];
 		
 		Matcher m = Pattern.compile("\\d+").matcher(strings[0]);
-		int index = curIndex;
-		int i = 0;
-		while(i < numVertices) {
-			m = Pattern.compile("\\d+").matcher(strings[depths[i]].substring(endIndices[i] - (divisions[i] - 1), divisions[i]));
-			m.find();
-			indices[i] = Integer.valueOf(m.group());
-			i++;			
-		}
+		m.find();
+		indices[0] = m.start();
 		
-		i = 1;
-		while(i < numVertices) {
-			int gap = indices[i-1] - indices[i];
-			//get num children for node
-			//use this as limiting value
-			// do connections app.
-			//continue
+		int curNode = 1;
+		while(curNode < numVertices) {
+			level = depths[curNode] * 2;
+			int parentNode = parents[curNode];
+			System.out.println(parentNode);
+			System.out.println(level);
+			System.out.println(endIndices[parentNode]);
+			System.out.println(divisions[parentNode] + "\n");
+			m = Pattern.compile("\\d+").matcher(strings[level].substring(endIndices[parentNode] - (divisions[parentNode] - 1), endIndices[parentNode]));
+			while(m.find()) {
+				int index = m.start();
+				indices[curIndex] = index;
+				int gap = index - indices[0];
+				level = (depths[curIndex] * 2) - 1;
+				
+				if(gap == 0) {
+					strings[level].setCharAt(index, '|');
+				}
+				else if(gap == 2) {
+					strings[level].setCharAt(index - 1, '\\');
+				}
+				else if(gap == -2) {
+					strings[level].setCharAt(index + 1, '/');
+				}
+				else if(gap == 1) {
+					strings[level - 1].setCharAt(index, '_');
+					strings[level].setCharAt(index, '|');
+				}
+				else if(gap == -1) {
+					strings[level - 1].setCharAt(index, '_');
+					strings[level].setCharAt(index, '|');
+				}
+				else if(gap > 2) {
+					int count = 1;
+					for(int i = 0; i < gap-2; i++) {
+						strings[level - 1].setCharAt(index - (gap - count), '_');
+						count++;
+					}
+					strings[level].setCharAt(index - 1, '\\');
+				}
+				else if(gap < -2) {
+					int count = 1;
+					for(int i = 0; i < Math.abs(gap) - 2; i++) {
+						strings[level - 1].setCharAt(index + (Math.abs(gap) - count), '_');
+						count++;
+					}
+					strings[level].setCharAt(index + 1, '/');
+				}
+				curIndex++;
+				curNode++;
+			}
 		}
-		
 		
 		String str_out = "";
 		for(StringBuilder s : strings) {

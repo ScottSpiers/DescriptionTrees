@@ -3,6 +3,11 @@ package tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -198,6 +203,15 @@ public class DescriptionTreeTest {
 		bTree.setNodeValue(2, 2);
 		System.out.println(bTree);
 		assertTrue(bTree.equals(bTree));
+	}
+	
+	//removethis once implemented
+	@Test
+	public void testBrowse() throws IOException, URISyntaxException {
+		Desktop desktop = Desktop.getDesktop();
+		if(desktop.isDesktopSupported()) {
+			desktop.browse(new URI("www.oeis.org/search?q=1,1,2,5,14,42,143"));
+		}
 	}
 
 }
