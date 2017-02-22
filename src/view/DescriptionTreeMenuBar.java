@@ -5,6 +5,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import listeners.AddRestrictionListener;
+import listeners.ProvideShapeListener;
 import model.DescriptionTreeModel;
 
 /**
@@ -42,6 +43,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		JMenuItem shape = new JMenuItem("Provide Shape");
 		JMenuItem restrict = new JMenuItem("Add Restriction");
 		restrict.addActionListener(new AddRestrictionListener(model));
+		shape.addActionListener(new ProvideShapeListener());
 		edit.add(shape);
 		edit.add(restrict);
 		return edit;		
