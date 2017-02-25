@@ -43,7 +43,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		JMenuItem shape = new JMenuItem("Provide Shape");
 		JMenuItem restrict = new JMenuItem("Add Restriction");
 		restrict.addActionListener(new AddRestrictionListener(model));
-		shape.addActionListener(new ProvideShapeListener());
+		shape.addActionListener(new ProvideShapeListener(model));
 		edit.add(shape);
 		edit.add(restrict);
 		return edit;		
