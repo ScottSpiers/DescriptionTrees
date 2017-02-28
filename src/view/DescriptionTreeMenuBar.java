@@ -21,9 +21,11 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 	private static final long serialVersionUID = -7933268113368431375L;
 
 	private DescriptionTreeModel model;
+	private DescriptionTreeView view;
 	
-	public DescriptionTreeMenuBar(DescriptionTreeModel model) {
+	public DescriptionTreeMenuBar(DescriptionTreeModel model, DescriptionTreeView view) {
 		this.model = model;
+		this.view = view;
 		this.add(createFileMenu());
 		this.add(createEditMenu());
 		this.add(createHelpMenu());		
@@ -43,7 +45,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		JMenuItem shape = new JMenuItem("Provide Shape");
 		JMenuItem restrict = new JMenuItem("Add Restriction");
 		restrict.addActionListener(new AddRestrictionListener(model));
-		shape.addActionListener(new ProvideShapeListener(model));
+		shape.addActionListener(new ProvideShapeListener(model, view));
 		edit.add(shape);
 		edit.add(restrict);
 		return edit;		

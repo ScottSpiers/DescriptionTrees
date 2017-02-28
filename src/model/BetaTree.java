@@ -19,6 +19,10 @@ public class BetaTree extends DescriptionTree {
 		super(a, b);
 	}
 	
+	public BetaTree(Tree t, int a , int b) {
+		super(t, a, b);
+	}
+	
 	/**
 	 * Evaluate leaves as a
 	 * Evaluate nodes as:

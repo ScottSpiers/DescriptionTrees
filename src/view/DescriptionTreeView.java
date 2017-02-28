@@ -13,6 +13,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -26,10 +27,7 @@ import javax.swing.border.Border;
 
 import listeners.CalcNumTreesListener;
 import model.DescriptionTreeModel;
-import model.InternalNodeRestrictor;
-import model.LeafNumRestrictor;
 import model.Restrictor;
-import model.scala.Tree;
 
 public class DescriptionTreeView implements Observer {
 
@@ -42,6 +40,7 @@ public class DescriptionTreeView implements Observer {
 	private JSpinner spnr_b;
 	private JSpinner spnr_nodeMin;
 	private JSpinner spnr_nodeMax;
+	private JCheckBox chkbx_useProvided;
 	private Box box_scrl;
 	
 	public DescriptionTreeView() {
@@ -58,7 +57,7 @@ public class DescriptionTreeView implements Observer {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setPreferredSize(new Dimension(screenSize.width / 2, screenSize.height / 2)); 
 		
-		JMenuBar menu = new DescriptionTreeMenuBar(model);
+		JMenuBar menu = new DescriptionTreeMenuBar(model, this);
 		frame.setJMenuBar(menu);
 		
 		Box westBox = new Box(BoxLayout.Y_AXIS);
@@ -153,9 +152,12 @@ public class DescriptionTreeView implements Observer {
 		box_numNodes.add(lbl_numNodes);
 		box_numNodes.add(box_node);
 		
+		chkbx_useProvided = new JCheckBox("Use Provided Tree");
+		
 		Box box_output = new Box(BoxLayout.Y_AXIS);
 		box_output.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_output.setBorder(paramBorder);
+		box_output.add(chkbx_useProvided);
 		box_output.add(box_btns);
 		box_output.add(lbl_totalTrees);
 		box_output.add(lbl_numTrees);
@@ -209,6 +211,10 @@ public class DescriptionTreeView implements Observer {
 	
 	public int getNodeMax() {
 		return (int) spnr_nodeMax.getValue();
+	}
+	
+	public boolean getChecked() {
+		return chkbx_useProvided.isSelected();
 	}
 	
 	public void removeRestriction(Restrictor r) {

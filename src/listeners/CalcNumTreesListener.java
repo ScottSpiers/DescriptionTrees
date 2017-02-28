@@ -23,35 +23,55 @@ public class CalcNumTreesListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		model.resetTrees();
-		
-		int nodeMin = view.getNodeMin();
-		int nodeMax = view.getNodeMax();
-		//temp int
-		int nodes = 0;
-		//temp check
-		if(nodeMin == nodeMax) {
-			nodes = nodeMin;
-		}
-		
+		List<DescriptionTree> newTrees = new ArrayList<DescriptionTree>();
 		DescriptionTree tree = null;
-		int paramA = view.getParamA();
-		int paramB = view.getParamB();
-		
-		if(view.isAlphaChecked()) {
-			tree = new AlphaTree(paramA, paramB);
-		}
-		else if(view.isBetaChecked()) {
-			tree = new BetaTree(paramA, paramB);
+		if(view.getChecked()) {
+			if(model.getProvidedTree() != null) {
+				int paramA = view.getParamA();
+				int paramB = view.getParamB();
+				if(view.isAlphaChecked()) {
+					tree = new AlphaTree(model.getProvidedTree(), paramA, paramB);
+				}
+				else if(view.isBetaChecked()) {
+					tree = new BetaTree(model.getProvidedTree(), paramA, paramB);
+				}
+				else {
+					view.displayError("Select a Tree Type", "Please Select either Alpha Tree or Beta Tree");
+					return;
+				}
+			}
+			newTrees.addAll(tree.evaluateTree(tree.getNodes().size()-1));
 		}
 		else {
-			view.displayError("Select a Tree Type", "Please Select either Alpha Tree or Beta Tree");
-			return;
+			model.resetTrees();
+			
+			int nodeMin = view.getNodeMin();
+			int nodeMax = view.getNodeMax();
+			//temp int
+			int nodes = 0;
+			//temp check
+			if(nodeMin == nodeMax) {
+				nodes = nodeMin;
+			}
+			
+			
+			int paramA = view.getParamA();
+			int paramB = view.getParamB();
+			if(view.isAlphaChecked()) {
+				tree = new AlphaTree(paramA, paramB);
+			}
+			else if(view.isBetaChecked()) {
+				tree = new BetaTree(paramA, paramB);
+			}
+			else {
+				view.displayError("Select a Tree Type", "Please Select either Alpha Tree or Beta Tree");
+				return;
+			}
+			for(DescriptionTree dt : model.genTrees(tree, nodes)){
+				newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
+			}
 		}
-		List<DescriptionTree> newTrees = new ArrayList<DescriptionTree>();
-		for(DescriptionTree dt : model.genTrees(tree, nodes)){
-			newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
-		}
+		
 		
 		for(int i = 0; i < newTrees.size(); i++) {
 			for(int j = 0; j < newTrees.size(); j++) {
@@ -66,10 +86,10 @@ public class CalcNumTreesListener implements ActionListener {
 		model.restrictTrees();
 		
 		//test output
-		/*System.out.println("\nThe Trees:");
+		System.out.println("\nThe Trees:");
 		for(DescriptionTree t : model.getTrees()) {
 			System.out.println("\n" + t);
-		}*/
+		}
 	}
 
 }

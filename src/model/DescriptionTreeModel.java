@@ -10,6 +10,7 @@ import model.scala.Tree;
 public class DescriptionTreeModel extends Observable {
 	private List<DescriptionTree> trees;
 	private List<Restrictor> restrictors;
+	private Tree providedTree;
 	
 	public DescriptionTreeModel() {
 		trees = new ArrayList<DescriptionTree>();
@@ -67,6 +68,14 @@ public class DescriptionTreeModel extends Observable {
 	
 	public List<Restrictor> getRestrictors() {
 		return restrictors;		
+	}
+	
+	public void setProvidedTree(Tree t) {
+		providedTree = t;
+	}
+	
+	public Tree getProvidedTree() {
+		return providedTree;
 	}
 	
 	public void restrictTrees() {

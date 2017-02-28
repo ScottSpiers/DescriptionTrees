@@ -29,6 +29,12 @@ public abstract class DescriptionTree implements Cloneable {
 		beta = b;
 	}
 	
+	public DescriptionTree(Tree t, int a, int b) {
+		descriptionTree = t;
+		alpha = a;
+		beta = b;
+	}
+	
 	public int getValue() {
 		return descriptionTree.getValue();
 	}

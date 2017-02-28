@@ -19,6 +19,10 @@ public class AlphaTree extends DescriptionTree {
 		super(a, b);
 	}
 	
+	public AlphaTree(Tree t, int a, int b) {
+		super(t, a , b);
+	}
+	
 	/**
 	 * Evaluate leaves as b
 	 * Evaluate Internal nodes as:
