@@ -68,6 +68,7 @@ public class SetDrawingListener implements ActionListener {
 		
 		
 		for(NodeFigure n : nodeFigs) {
+			isRoot = true;
 			for(ConnectionFigure conn : connFigs) {
 				if(conn.end().owner().equals(n)) {
 					isRoot = false;
@@ -84,6 +85,10 @@ public class SetDrawingListener implements ActionListener {
 		
 		if(rootCount > 1) {
 			JOptionPane.showMessageDialog(null, "More than one root node found.");
+			return;
+		}
+		else if(rootCount == 0) {
+			JOptionPane.showMessageDialog(null, "No Root Node Found");
 			return;
 		}
 		else {
@@ -108,16 +113,18 @@ public class SetDrawingListener implements ActionListener {
 			
 			int curNode = 0;
 			int numLeaves = 1;
+			int numNodes = 0;
 			int childCount = 0;
 			while(!figStack.isEmpty()) {
 				Figure node = figStack.pop();
 				for(Figure child : figMap.get(node)) {
 					if(childCount == 0) {
-						tree = tree.addLeafToLeaf(numLeaves - 1);
+						tree = tree.addLeafToLeaf(numLeaves - (tree.getNumVertices() - curNode));
+						numNodes++;
 						childCount++;
 					}
 					else {
-						tree = tree.addLeafToNode(curNode);
+						tree = tree.addLeafToNode(numNodes - 1);
 						numLeaves++;
 					}
 				}
@@ -134,6 +141,8 @@ public class SetDrawingListener implements ActionListener {
 		System.out.println(tree);
 		System.out.println(tree.getNodes().size());
 		model.setProvidedTree(tree);
+		
+		view.setImage(drawingApp.createImage(drawingApp.getWidth(), drawingApp.getHeight()));
 		
 		drawingApp.exit();
 	}

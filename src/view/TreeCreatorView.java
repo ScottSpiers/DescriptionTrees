@@ -1,9 +1,14 @@
 package view;
 
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import CH.ifa.draw.application.DrawApplication;
 import CH.ifa.draw.framework.Tool;
@@ -37,9 +42,19 @@ public class TreeCreatorView extends DrawApplication {
 	public void open() {
 		super.open();
 		Container c = this.getContentPane();
+		
+		Component statusLine = c.getComponent(2);
+		c.remove(statusLine);
+		
+		Box bottomBox = new Box(BoxLayout.Y_AXIS);
+		
 		JButton btn_setDrawing = new JButton("Set Drawing");
 		btn_setDrawing.addActionListener(new SetDrawingListener(model, view,  this));
-		c.add("South", btn_setDrawing);
+		
+		bottomBox.add(statusLine);
+		bottomBox.add(btn_setDrawing);
+		c.add("South", bottomBox);			
+		pack();
 	}
 	
 	/**

@@ -3,6 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.List;
 import java.util.Observable;
@@ -42,6 +44,7 @@ public class DescriptionTreeView implements Observer {
 	private JSpinner spnr_nodeMax;
 	private JCheckBox chkbx_useProvided;
 	private Box box_scrl;
+	private JPanel pnl_img;
 	
 	public DescriptionTreeView() {
 		model = new DescriptionTreeModel();
@@ -173,6 +176,9 @@ public class DescriptionTreeView implements Observer {
 		eastBox.add(scrl_restrictions);
 		eastBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
 		
+		pnl_img = new JPanel();
+		
+		
 		background.add(BorderLayout.WEST, westBox);
 		background.add(BorderLayout.EAST, eastBox);
 		
@@ -219,6 +225,12 @@ public class DescriptionTreeView implements Observer {
 	
 	public void removeRestriction(Restrictor r) {
 		model.removeRestrictor(r);
+	}
+	
+	public void setImage(Image i) {
+		pnl_img.removeAll();
+		Graphics g = pnl_img.getGraphics();
+		g.drawImage(i, 0, 0, pnl_img);
 	}
 
 	@Override
