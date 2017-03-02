@@ -6,17 +6,17 @@ import model.AbstractRestrictor;
 import model.DescriptionTree;
 import model.scala.Tree;
 
-public class InternalNodeRestrictor extends AbstractRestrictor {
+public class InternalNodeNumRestrictor extends AbstractRestrictor {
 
-	public InternalNodeRestrictor(String name) {
+	public InternalNodeNumRestrictor(String name) {
 		super(name);
 	}
 	
-	public InternalNodeRestrictor(String name, String desc) {
+	public InternalNodeNumRestrictor(String name, String desc) {
 		super(name, desc);
 	}
 	
-	public InternalNodeRestrictor(String name, String desc, int  min, int max) {
+	public InternalNodeNumRestrictor(String name, String desc, int  min, int max) {
 		super(name, desc, min, max);
 	}
 
