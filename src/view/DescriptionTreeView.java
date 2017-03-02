@@ -3,8 +3,6 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.List;
 import java.util.Observable;
@@ -44,7 +42,6 @@ public class DescriptionTreeView implements Observer {
 	private JSpinner spnr_nodeMax;
 	private JCheckBox chkbx_useProvided;
 	private Box box_scrl;
-	private JPanel pnl_img;
 	
 	public DescriptionTreeView() {
 		model = new DescriptionTreeModel();
@@ -127,9 +124,10 @@ public class DescriptionTreeView implements Observer {
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
-		box_scrl= new Box(BoxLayout.Y_AXIS);
+		box_scrl = new Box(BoxLayout.Y_AXIS);
 		//pnl_restrictions.setLayout(new BoxLayout(pnl_restrictions, BoxLayout.Y_AXIS));
 		pnl_restrictions.add(box_scrl);
+		pnl_restrictions.setPreferredSize(new Dimension(400, background.getHeight()));
 		/*box_scrl.add(new RestrictionComponent(frame, new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves")));
 		box_scrl.add(new RestrictionComponent(frame, new InternalNodeRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excluding root)")));*/
 		
@@ -175,8 +173,6 @@ public class DescriptionTreeView implements Observer {
 		
 		eastBox.add(scrl_restrictions);
 		eastBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
-		
-		pnl_img = new JPanel();
 		
 		
 		background.add(BorderLayout.WEST, westBox);
@@ -226,12 +222,7 @@ public class DescriptionTreeView implements Observer {
 	public void removeRestriction(Restrictor r) {
 		model.removeRestrictor(r);
 	}
-	
-	public void setImage(Image i) {
-		pnl_img.removeAll();
-		Graphics g = pnl_img.getGraphics();
-		g.drawImage(i, 0, 0, pnl_img);
-	}
+
 
 	@Override
 	public void update(Observable o, Object arg) {
