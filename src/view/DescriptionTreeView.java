@@ -42,6 +42,7 @@ public class DescriptionTreeView implements Observer {
 	private JSpinner spnr_nodeMax;
 	private JCheckBox chkbx_useProvided;
 	private Box box_scrl;
+	private JLabel lbl_numTreeSeq;
 	
 	public DescriptionTreeView() {
 		model = new DescriptionTreeModel();
@@ -120,7 +121,7 @@ public class DescriptionTreeView implements Observer {
 		lbl_numTrees = new JLabel();
 		
 		JLabel lbl_numTreeSeqDesc = new JLabel("<html>Number of Trees sequence:</html>");
-		JLabel lbl_numTreeSeq = new JLabel();
+		lbl_numTreeSeq = new JLabel();
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
@@ -223,6 +224,9 @@ public class DescriptionTreeView implements Observer {
 		model.removeRestrictor(r);
 	}
 
+	public String getSequence() {
+		return lbl_numTreeSeq.getText();
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {

@@ -41,14 +41,15 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 	}
 	
 	private JMenu createEditMenu() {
-		JMenu edit = new JMenu("Edit");
+		JMenu tool = new JMenu("Tool");
 		JMenuItem shape = new JMenuItem("Provide Shape");
 		JMenuItem restrict = new JMenuItem("Add Restriction");
+		JMenuItem oeis = new JMenuItem("OEIS Search");
 		restrict.addActionListener(new AddRestrictionListener(model));
 		shape.addActionListener(new ProvideShapeListener(model, view));
-		edit.add(shape);
-		edit.add(restrict);
-		return edit;		
+		tool.add(shape);
+		tool.add(restrict);
+		return tool;		
 	}
 	
 	private JMenu createHelpMenu() {

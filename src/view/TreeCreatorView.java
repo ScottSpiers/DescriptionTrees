@@ -2,13 +2,11 @@ package view;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import CH.ifa.draw.application.DrawApplication;
 import CH.ifa.draw.framework.Tool;
