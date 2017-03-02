@@ -89,6 +89,13 @@ public class DescriptionTreeModel extends Observable {
 		this.notifyObservers(true);
 	}
 	
+	public List<DescriptionTree> applyRestrictions(List<DescriptionTree> ts) {
+		for(Restrictor r : restrictors) {
+			ts = r.applyRestriction(ts);
+		}
+		return ts;
+	}
+	
 	public List<DescriptionTree> genTrees(DescriptionTree tree, int n) {
 		List<DescriptionTree> treeList = new ArrayList<DescriptionTree>();
 		if(n == 1) {

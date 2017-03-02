@@ -25,6 +25,8 @@ public class CalcNumTreesListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		List<DescriptionTree> newTrees = new ArrayList<DescriptionTree>();
 		DescriptionTree tree = null;
+		model.resetTrees();
+		
 		if(view.getChecked()) {
 			if(model.getProvidedTree() != null) {
 				int paramA = view.getParamA();
@@ -40,11 +42,13 @@ public class CalcNumTreesListener implements ActionListener {
 					return;
 				}
 			}
+			else {
+				view.displayError("No Tree Provided", "You must provide a tree shape before calculating");
+				return;
+			}
 			newTrees.addAll(tree.evaluateTree(tree.getNodes().size()-1));
 		}
-		else {
-			model.resetTrees();
-			
+		else {			
 			int nodeMin = view.getNodeMin();
 			int nodeMax = view.getNodeMax();
 			//temp int
@@ -53,7 +57,6 @@ public class CalcNumTreesListener implements ActionListener {
 			if(nodeMin == nodeMax) {
 				nodes = nodeMin;
 			}
-			
 			
 			int paramA = view.getParamA();
 			int paramB = view.getParamB();
@@ -67,23 +70,48 @@ public class CalcNumTreesListener implements ActionListener {
 				view.displayError("Select a Tree Type", "Please Select either Alpha Tree or Beta Tree");
 				return;
 			}
-			for(DescriptionTree dt : model.genTrees(tree, nodes)){
-				newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
-			}
-		}
-		
-		
-		for(int i = 0; i < newTrees.size(); i++) {
-			for(int j = 0; j < newTrees.size(); j++) {
-				if(i != j && newTrees.get(i).equals(newTrees.get(j))) {
-					newTrees.remove(j);
+			
+			
+			int[] nodeSeq = new int[(nodeMax - nodeMin) + 1];
+			for(int i = nodeMin; i <= nodeMax; i++) {
+				System.out.println(tree);
+				
+				for(DescriptionTree dt : model.genTrees(tree, i)){
+					newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
 				}
+				
+				for(int j = 0; j < newTrees.size(); j++) {
+					for(int k = 0; k < newTrees.size(); k++) {
+						if(j != k && newTrees.get(j).equals(newTrees.get(k))) {
+							newTrees.remove(k);
+						}
+					}
+				}
+				
+				newTrees = model.applyRestrictions(newTrees);
+				
+				if((i - nodeMin) > 0) {
+					nodeSeq[i - nodeMin] = newTrees.size() - nodeSeq[(i - nodeMin) - 1];
+				}
+				else {
+					nodeSeq[i - nodeMin] = newTrees.size();
+				}
+				
 			}
-		}
+			
+			String seq = "";
+			for(int i = 0; i < nodeSeq.length - 1 ; i++) {
+				seq += nodeSeq[i] + ",";				
+			}
+			
+			seq += nodeSeq[nodeSeq.length - 1];
+			view.setSequence(seq);
+		}		
+		
 		
 		model.resetTrees();
 		model.addTrees(newTrees);
-		model.restrictTrees();
+		//model.restrictTrees();
 		
 		//test output
 		System.out.println("\nThe Trees:");

@@ -3,6 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.List;
 import java.util.Observable;
@@ -26,6 +27,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 
 import listeners.CalcNumTreesListener;
+import listeners.UseProvidedListener;
 import model.DescriptionTreeModel;
 import model.Restrictor;
 
@@ -155,6 +157,7 @@ public class DescriptionTreeView implements Observer {
 		box_numNodes.add(box_node);
 		
 		chkbx_useProvided = new JCheckBox("Use Provided Tree");
+		chkbx_useProvided.addActionListener(new UseProvidedListener(this));
 		
 		Box box_output = new Box(BoxLayout.Y_AXIS);
 		box_output.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -223,9 +226,22 @@ public class DescriptionTreeView implements Observer {
 	public void removeRestriction(Restrictor r) {
 		model.removeRestrictor(r);
 	}
+	
+	public void setSequence(String seq) {
+		lbl_numTreeSeq.setText(seq);
+	}
 
 	public String getSequence() {
 		return lbl_numTreeSeq.getText();
+	}
+	
+	public void toggleNodesEnabled() {
+		spnr_nodeMin.setEnabled(!spnr_nodeMin.isEnabled());
+		spnr_nodeMax.setEnabled(!spnr_nodeMax.isEnabled());
+	}
+	
+	public Rectangle frameBounds() {
+		return frame.getBounds();
 	}
 
 	@Override

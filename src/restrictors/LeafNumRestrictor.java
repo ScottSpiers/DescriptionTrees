@@ -1,7 +1,9 @@
-package model;
+package restrictors;
 
 import java.util.List;
 
+import model.AbstractRestrictor;
+import model.DescriptionTree;
 import model.scala.Tree;
 
 public class LeafNumRestrictor extends AbstractRestrictor {

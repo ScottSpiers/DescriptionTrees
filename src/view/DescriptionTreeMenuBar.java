@@ -5,6 +5,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import listeners.AddRestrictionListener;
+import listeners.OEISListener;
 import listeners.ProvideShapeListener;
 import model.DescriptionTreeModel;
 
@@ -27,7 +28,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		this.model = model;
 		this.view = view;
 		this.add(createFileMenu());
-		this.add(createEditMenu());
+		this.add(createToolMenu());
 		this.add(createHelpMenu());		
 	}
 	
@@ -40,15 +41,17 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		return file;
 	}
 	
-	private JMenu createEditMenu() {
+	private JMenu createToolMenu() {
 		JMenu tool = new JMenu("Tool");
 		JMenuItem shape = new JMenuItem("Provide Shape");
 		JMenuItem restrict = new JMenuItem("Add Restriction");
 		JMenuItem oeis = new JMenuItem("OEIS Search");
-		restrict.addActionListener(new AddRestrictionListener(model));
+		restrict.addActionListener(new AddRestrictionListener(model, view));
 		shape.addActionListener(new ProvideShapeListener(model, view));
+		oeis.addActionListener(new OEISListener(model, view));
 		tool.add(shape);
 		tool.add(restrict);
+		tool.add(oeis);
 		return tool;		
 	}
 	

@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -12,12 +14,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import model.DescriptionTreeModel;
-import model.InternalNodeRestrictor;
-import model.LeafNumRestrictor;
 import model.Restrictor;
+import restrictors.InternalNodeRestrictor;
+import restrictors.LeafNumRestrictor;
+import restrictors.RootValueRestrictor;
 
 public class RestrictionPane extends JFrame {
 	
@@ -28,36 +32,48 @@ public class RestrictionPane extends JFrame {
 	private JList<String> lst_restrictions;
 	private JPanel pnl_list;
 	
-	public RestrictionPane(DescriptionTreeModel model) {
+	public RestrictionPane(DescriptionTreeModel model, DescriptionTreeView view) {
 		this.model = model;
 		restrictions = new HashMap<String, Restrictor>();
 		initRestrictorList();
-		display();
+		display(view.frameBounds());
 	}
 	
-	private void display() {
+	private void display(Rectangle bounds) {
+		Container contentPane = this.getContentPane();
+		contentPane.setLayout(new BorderLayout());
+		
 		pnl_list = new JPanel();
 		pnl_list.setLayout(new BorderLayout());
+		JScrollPane scrl_restrictions = new JScrollPane(pnl_list);		
 		lst_restrictions = new JList<String>();
+		
 		String[] restrictors = new String[restrictions.keySet().size()];
 		int i = 0;
 		for(String key : restrictions.keySet()) {
 			restrictors[i] = key;
 			i++;
 		}
+		
 		lst_restrictions.setListData(restrictors);
 		lst_restrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		
 		JButton btn_add = new JButton("Add");
 		btn_add.addActionListener(new AddRestrictorListener());
 		JButton btn_cancel = new JButton("Cancel");
 		btn_cancel.addActionListener(new CancelAddListener());
+		
 		pnl_list.add(lst_restrictions, BorderLayout.NORTH);
 		
 		Box box_btns = new Box(BoxLayout.X_AXIS);
 		box_btns.add(btn_add);
 		box_btns.add(btn_cancel);
-		pnl_list.add(box_btns, BorderLayout.SOUTH);
-		this.add(pnl_list);
+		
+		contentPane.add(BorderLayout.CENTER, scrl_restrictions);
+		contentPane.add(BorderLayout.SOUTH, box_btns);
+		
+		this.setBounds(bounds);
+		this.add(scrl_restrictions);
 		this.pack();
 		this.setVisible(true);
 		
@@ -68,8 +84,9 @@ public class RestrictionPane extends JFrame {
 	}
 	
 	private void initRestrictorList() {
-		restrictions.put("Number of Leaves", new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves"));
+		restrictions.put("Number of Leaves", new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves", 1, 1));
 		restrictions.put("Number of Nodes", new InternalNodeRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excluding root)"));
+		restrictions.put("Root Value", new RootValueRestrictor("Root Value", "Restricts the value of the Root node only"));
 	}
 	
 	private class AddRestrictorListener implements ActionListener {
