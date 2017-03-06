@@ -141,6 +141,49 @@ public abstract class DescriptionTree implements Cloneable {
 		return false;
 	}
 	
+	/*public String printTree() {
+		String strOut = "";
+		
+		int numStrings = (getDepth() * 2) + 1;
+		StringBuilder[] strings = new StringBuilder[numStrings];
+		
+		for(int i = 0; i < strings.length; i ++) {
+			strings[i] = new StringBuilder();
+		}
+		
+		printCurNode(strings);
+		
+		for(StringBuilder s : strings) {
+			strOut += s + "\n";
+		}
+		
+		return strOut;
+	}*/
+	
+	private void printCurNode(StringBuilder[] strings) {
+		float stringLength = 0;
+		int numVertices = getNumVertices();
+		boolean oddChildren = numVertices % 2 == 1;
+		
+		if(oddChildren) {
+			stringLength = numVertices + 2;
+		}
+		else {
+			stringLength = numVertices + 1;
+		}
+		
+		
+		float length = stringLength;
+		for(Tree child : getAllChildren()) {
+			length = printNode(child, length, strings);			
+		}
+	}
+	
+	private int printNode(Tree t, float startIndex, StringBuilder[] strings) {
+		return 0;
+	}
+	
+	
 	public String printTree() {
 		int numStrings = (getDepth() * 2) + 1;
 		StringBuilder[] strings = new StringBuilder[numStrings];
@@ -159,10 +202,10 @@ public abstract class DescriptionTree implements Cloneable {
 		
 		for(int i = 0; i < strings.length; i++) {
 			strings[i] = new StringBuilder();
-			strings[i].setLength(stringLength);
+			strings[i].setLength(stringLength);			
 		}
 		
-		strings[0].setCharAt((stringLength / 2) + 1, Integer.toString(getValue()).charAt(0));
+		strings[0].insert((stringLength / 2) + 1, Integer.toString(getValue()));
 		level += 2;
 		
 		int[] depths = new int[numVertices + 1];
@@ -174,6 +217,9 @@ public abstract class DescriptionTree implements Cloneable {
 		divisions[0] = stringLength;
 		int[] parents = new int[numVertices + 1];
 		parents[0] = 0;
+		int[] indices = new int[numVertices + 1];
+		indices[0] = (stringLength / 2) + 1;
+		
 		Queue<Tree> q_vertices = new LinkedList<Tree>();
 		
 		for(Tree t : getAllChildren()) {
@@ -214,71 +260,83 @@ public abstract class DescriptionTree implements Cloneable {
 			startIndex = endIndices[curIndex] - (divisions[curIndex] - 1);
 			level = depths[curIndex] * 2;
 			int index = (startIndex + endIndices[curIndex]) / 2;
-			strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));
-			curIndex++;
-		}
-		
-		curIndex = 1;
-		int curDiv = divisions[curIndex];
-		level = 2;
-		numVertices = getNumVertices();
-		int[] indices = new int[numVertices];
-		
-		Matcher m = Pattern.compile("\\d+").matcher(strings[0]);
-		m.find();
-		indices[0] = m.start();
-		
-		int curNode = 1;
-		while(curNode < numVertices) {
-			level = depths[curNode] * 2;
-			int parentNode = parents[curNode];
-			System.out.println(parentNode);
-			System.out.println(level);
-			System.out.println(endIndices[parentNode]);
-			System.out.println(divisions[parentNode] + "\n");
-			m = Pattern.compile("\\d+").matcher(strings[level].substring(endIndices[parentNode] - (divisions[parentNode] - 1), endIndices[parentNode]));
-			while(m.find()) {
-				int index = m.start();
-				indices[curIndex] = index;
-				int gap = index - indices[0];
-				level = (depths[curIndex] * 2) - 1;
-				
-				if(gap == 0) {
-					strings[level].setCharAt(index, '|');
-				}
-				else if(gap == 2) {
-					strings[level].setCharAt(index - 1, '\\');
-				}
-				else if(gap == -2) {
-					strings[level].setCharAt(index + 1, '/');
-				}
-				else if(gap == 1) {
-					strings[level - 1].setCharAt(index, '_');
-					strings[level].setCharAt(index, '|');
-				}
-				else if(gap == -1) {
-					strings[level - 1].setCharAt(index, '_');
-					strings[level].setCharAt(index, '|');
-				}
-				else if(gap > 2) {
-					int count = 1;
-					for(int i = 0; i < gap-2; i++) {
-						strings[level - 1].setCharAt(index - (gap - count), '_');
-						count++;
-					}
-					strings[level].setCharAt(index - 1, '\\');
-				}
-				else if(gap < -2) {
-					int count = 1;
-					for(int i = 0; i < Math.abs(gap) - 2; i++) {
-						strings[level - 1].setCharAt(index + (Math.abs(gap) - count), '_');
-						count++;
-					}
-					strings[level].setCharAt(index + 1, '/');
-				}
-				curIndex++;
-				curNode++;
+			int parentNode = parents[curIndex];
+			
+			int numSpaces = Integer.toString(t.getValue()).length() - 1;
+			
+			if(index > 0) {
+				if(Character.isDigit(strings[level].charAt(index - 1))) {
+					strings[level].insert(index, " " + t.getValue());
+					index += 1;
+					endIndices[parentNode] += 1;
+					divisions[parentNode] += 1;
+				}				
+				else {
+					strings[level].insert(index, t.getValue() + " ");						
+				}				
 			}
+			else {				
+				strings[level].insert(index, t.getValue() + " ");						
+				
+			}
+			String spaces = "";
+			for(int i = numSpaces; i > 0; i--) {
+				spaces += " ";
+			}
+			for(int i = 0; i < strings.length; i++) {
+				if(i > level) {
+					strings[i].insert(index, spaces);				
+				}
+			}
+			
+			indices[curIndex] = index;
+			int gap = index - indices[parentNode];
+			
+			if(gap == 0) {
+				strings[level -1].insert(index, '|');
+			}
+			else if(gap == 2) {
+				strings[level - 1].setCharAt(index - 1, '\\');
+			}
+			else if(gap == -2) {
+				strings[level - 1].setCharAt(index + 1, '/');
+			}
+			else if(gap == 1) {
+				if(!Character.isDigit(strings[level-2].charAt(index))) {
+					strings[level - 2].setCharAt(index, '_');						
+				}
+				strings[level - 1].setCharAt(index, '|');
+			}
+			else if(gap == -1) {
+				if(!Character.isDigit(strings[level-2].charAt(index))) {
+					strings[level - 2].setCharAt(index, '_');						
+				}
+				strings[level - 1].setCharAt(index, '|');
+			}
+			else if(gap > 2) {
+				int count = 1;
+				for(int i = 0; i < gap-2; i++) {
+					if(!Character.isDigit(strings[level - 2].charAt(index - (gap - count)))) {
+						strings[level-2].setCharAt(index - (gap - count), '_');					
+					}
+					
+					count++;
+				}
+				strings[level - 1].setCharAt(index - 1, '\\');
+			}
+			else if(gap < -2) {
+				int count = 1;
+				for(int i = 0; i < Math.abs(gap) - 2; i++) {
+					if(!Character.isDigit(strings[level - 2].charAt(index + (Math.abs(gap) - count)))) {
+						strings[level - 2].setCharAt(index + (Math.abs(gap) - count), '_');				
+					}
+					
+					count++;
+				}
+				strings[level - 1].setCharAt(index + 1, '/');
+			}
+		
+			curIndex++;
 		}
 		
 		String str_out = "";
@@ -287,6 +345,7 @@ public abstract class DescriptionTree implements Cloneable {
 		}
 		return str_out;
 	}
+	
 	
 	public String printString() {
 		int numStrings = (getDepth() * 2) + 1;

@@ -16,10 +16,18 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
 
 import model.DescriptionTreeModel;
 import model.Restrictor;
-import restrictors.*;
+import restrictors.InternalNodeChildrenNumRestrictor;
+import restrictors.InternalNodeNumRestrictor;
+import restrictors.InternalNodeValueRestrictor;
+import restrictors.LeafNumRestrictor;
+import restrictors.PathLengthRestrictor;
+import restrictors.RootChildrenNumRestrictor;
+import restrictors.RootValueRestrictor;
 
 public class RestrictionPane extends JFrame {
 	
