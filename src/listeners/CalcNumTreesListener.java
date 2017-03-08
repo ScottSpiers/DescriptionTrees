@@ -116,7 +116,7 @@ public class CalcNumTreesListener implements ActionListener {
 		//test output
 		System.out.println("\nThe Trees:");
 		for(DescriptionTree t : model.getTrees()) {
-			System.out.println("\n" + t);
+			System.out.println("\n" + t.printTree());
 		}
 	}
 

@@ -3,6 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.List;
@@ -23,13 +24,19 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 import listeners.CalcNumTreesListener;
 import listeners.UseProvidedListener;
+import model.AlphaTree;
+import model.DescriptionTree;
 import model.DescriptionTreeModel;
 import model.Restrictor;
+import model.scala.Tree;
 
 public class DescriptionTreeView implements Observer {
 
@@ -45,6 +52,7 @@ public class DescriptionTreeView implements Observer {
 	private JCheckBox chkbx_useProvided;
 	private Box box_scrl;
 	private JLabel lbl_numTreeSeq;
+	private JTextPane txt_providedShape;
 	
 	public DescriptionTreeView() {
 		model = new DescriptionTreeModel();
@@ -169,6 +177,17 @@ public class DescriptionTreeView implements Observer {
 		box_output.add(lbl_numTreeSeqDesc);		
 		box_output.add(lbl_numTreeSeq);
 		
+		JPanel pnl_providedShape = new JPanel();
+		txt_providedShape = new JTextPane();
+		
+		SimpleAttributeSet att = new SimpleAttributeSet();
+		//StyleConstants.setAlignment(att, StyleConstants.ALIGN_CENTER);	
+		StyleConstants.setFontSize(att, 30);
+		txt_providedShape.setParagraphAttributes(att, true);
+		txt_providedShape.setPreferredSize(new Dimension(400, 400));
+		txt_providedShape.setEditable(false);
+		pnl_providedShape.add(txt_providedShape);
+		
 		westBox.add(box_treeChoice);
 		westBox.add(box_params);
 		westBox.add(box_numNodes);
@@ -178,7 +197,7 @@ public class DescriptionTreeView implements Observer {
 		eastBox.add(scrl_restrictions);
 		eastBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
 		
-		
+		background.add(BorderLayout.CENTER, pnl_providedShape);
 		background.add(BorderLayout.WEST, westBox);
 		background.add(BorderLayout.EAST, eastBox);
 		
@@ -246,7 +265,11 @@ public class DescriptionTreeView implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(arg instanceof Boolean) {
+		if(arg instanceof Tree) {
+			DescriptionTree t = new AlphaTree((Tree) arg);
+			txt_providedShape.setText(t.printTree());
+		}		
+		else if(arg instanceof Boolean) {
 			if((Boolean) arg) {
 				lbl_numTrees.setText(Integer.toString(model.getNumTrees()));
 				System.out.println(model.getNumTrees());

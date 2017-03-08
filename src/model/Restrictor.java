@@ -1,10 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 
-import model.scala.Tree;
-
-public interface Restrictor {
+public interface Restrictor extends Serializable {
 
 	public String getName();
 	public String getDesc();

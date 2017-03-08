@@ -189,7 +189,7 @@ public abstract class DescriptionTree implements Cloneable {
 		StringBuilder[] strings = new StringBuilder[numStrings];
 		int startIndex = 0;
 		int numVertices = getNumVertices() - 1;
-		boolean oddChildren = numVertices % 2 == 1;
+		boolean oddChildren = (numVertices + 1) % 2 == 1;
 		int level = 0;
 		int stringLength = 0;
 		
@@ -202,7 +202,11 @@ public abstract class DescriptionTree implements Cloneable {
 		
 		for(int i = 0; i < strings.length; i++) {
 			strings[i] = new StringBuilder();
-			strings[i].setLength(stringLength);			
+			strings[i].setLength(stringLength * 2);
+	
+			for(int j = 0; j < stringLength * 2; j++) {
+				strings[i].setCharAt(j, ' ');
+			}
 		}
 		
 		strings[0].insert((stringLength / 2) + 1, Integer.toString(getValue()));
@@ -270,6 +274,19 @@ public abstract class DescriptionTree implements Cloneable {
 					index += 1;
 					endIndices[parentNode] += 1;
 					divisions[parentNode] += 1;
+					for(int i = 0; i < indices.length; i++) {
+						if(((endIndices[i] - (divisions[i] - 1)) + endIndices[i]) / 2 > indices[curIndex]) {
+							if(i > curIndex) {
+								endIndices[i] += numSpaces;						
+							}
+							
+						}
+						/*if(parents[i] == parentNode) {
+							if(i > curIndex) {
+								endIndices[i] += 1;
+							}
+						}	*/
+					}
 				}				
 				else {
 					strings[level].insert(index, t.getValue() + " ");						
@@ -289,51 +306,115 @@ public abstract class DescriptionTree implements Cloneable {
 				}
 			}
 			
-			indices[curIndex] = index;
-			int gap = index - indices[parentNode];
+			for(int i = 0; i < indices.length; i++) {
+				if(((endIndices[i] - (divisions[i] - 1)) + endIndices[i]) / 2 > indices[curIndex]) {
+					if(i > curIndex) {
+						endIndices[i] += numSpaces;						
+					}
+					
+				}
+				/*if(parents[i] == parentNode) {
+					if(i > curIndex) {
+						
+					}
+				}*/
+			}
 			
-			if(gap == 0) {
-				strings[level -1].insert(index, '|');
+			indices[curIndex] = index;
+			
+			int parentIndex = indices[parentNode];
+			int left = parentIndex;
+			int right = parentIndex;
+			int gap = 0;
+			boolean isLeft = false;
+			boolean isRight = false;
+			
+			if(Integer.toString(t.getValue()).length() > 1) {
+				if(parentIndex > 0) {
+					while(Character.isDigit(strings[level - 2].charAt(left - 1))) {
+						left--;
+						if(left <= 0) {
+							break;
+						}
+					}
+				}
+				while(Character.isDigit(strings[level - 2].charAt(right + 1))) {
+					right++;
+				}				
 			}
-			else if(gap == 2) {
-				strings[level - 1].setCharAt(index - 1, '\\');
+			
+			for(int i = left; i <= right; i++) {
+				if(left == right) {
+					isLeft = true;
+					isRight = true;
+					gap = index - i;
+				}
+				else if(i == left) {
+					isLeft = true;
+					isRight = false;
+					gap = index - left;
+				}
+				else if(i == right) {
+					isLeft = false;
+					isRight = true;
+					gap = index - right;
+				}
+				else {
+					isLeft = false;
+					isRight = false;
+					gap = index - i;
+				}
+				
+				if(gap == 0) {
+					strings[level -1].setCharAt(index, '|');
+					break;
+				}
+				else if(gap == 2) {
+					strings[level - 1].setCharAt(index - 1, '\\');
+					break;
+				}
+				else if(gap == -2) {
+					strings[level - 1].setCharAt(index + 1, '/');
+					break;
+				}
+				else if(gap > 2) {
+					int count = 1;
+					for(int j = 0; j < gap-2; j++) {
+						if(!Character.isDigit(strings[level - 2].charAt(index - (gap - count)))) {
+							strings[level-2].setCharAt(index - (gap - count), '_');					
+						}
+						
+						count++;
+					}
+					strings[level - 1].setCharAt(index - 1, '\\');
+					break;
+				}
+				else if(gap < -2) {
+					int count = 1;
+					for(int j = 0; j < Math.abs(gap) - 2; j++) {
+						if(!Character.isDigit(strings[level - 2].charAt(index + (Math.abs(gap) - count)))) {
+							strings[level - 2].setCharAt(index + (Math.abs(gap) - count), '_');				
+						}
+						
+						count++;
+					}
+					strings[level - 1].setCharAt(index + 1, '/');
+					break;
+				}		
 			}
-			else if(gap == -2) {
-				strings[level - 1].setCharAt(index + 1, '/');
-			}
-			else if(gap == 1) {
+			
+			if(gap == 1 && isRight) {
 				if(!Character.isDigit(strings[level-2].charAt(index))) {
 					strings[level - 2].setCharAt(index, '_');						
 				}
 				strings[level - 1].setCharAt(index, '|');
+				
 			}
-			else if(gap == -1) {
+			else if(gap == -1 && isLeft) {
 				if(!Character.isDigit(strings[level-2].charAt(index))) {
 					strings[level - 2].setCharAt(index, '_');						
 				}
-				strings[level - 1].setCharAt(index, '|');
-			}
-			else if(gap > 2) {
-				int count = 1;
-				for(int i = 0; i < gap-2; i++) {
-					if(!Character.isDigit(strings[level - 2].charAt(index - (gap - count)))) {
-						strings[level-2].setCharAt(index - (gap - count), '_');					
-					}
-					
-					count++;
-				}
-				strings[level - 1].setCharAt(index - 1, '\\');
-			}
-			else if(gap < -2) {
-				int count = 1;
-				for(int i = 0; i < Math.abs(gap) - 2; i++) {
-					if(!Character.isDigit(strings[level - 2].charAt(index + (Math.abs(gap) - count)))) {
-						strings[level - 2].setCharAt(index + (Math.abs(gap) - count), '_');				
-					}
-					
-					count++;
-				}
-				strings[level - 1].setCharAt(index + 1, '/');
+				strings[level - 1].setCharAt(index, '|');				
 			}
 		
 			curIndex++;

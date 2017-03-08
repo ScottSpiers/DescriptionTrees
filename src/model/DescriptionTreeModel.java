@@ -72,6 +72,8 @@ public class DescriptionTreeModel extends Observable {
 	
 	public void setProvidedTree(Tree t) {
 		providedTree = t;
+		this.setChanged();
+		this.notifyObservers(t);
 	}
 	
 	public Tree getProvidedTree() {
