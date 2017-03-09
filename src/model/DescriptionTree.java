@@ -1,10 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import model.scala.Empty;
 import model.scala.Tree;
@@ -141,8 +140,24 @@ public abstract class DescriptionTree implements Cloneable {
 		return false;
 	}
 	
-	/*public String printTree() {
+	public String printTreeTest() {
+		String treeString = descriptionTree.toString();
 		String strOut = "";
+		int fullDepth = getDepth();
+		int[] depths = new int[getNumVertices()];
+		int width = getMaxWidth();
+		if(width % 2 == 1) {
+			width += 1;
+		}
+		List<ArrayList<Integer>> valueLists = new ArrayList<ArrayList<Integer>>();
+		
+		for(int i = 0; i < fullDepth; i++) {
+			valueLists.add(new ArrayList<Integer>());
+			for(int j = 0; j < width; j++) {
+				valueLists.get(i).add(-1);				
+			}
+		}
+		Tree[] verts = new Tree[getNumVertices()];
 		
 		int numStrings = (getDepth() * 2) + 1;
 		StringBuilder[] strings = new StringBuilder[numStrings];
@@ -151,38 +166,161 @@ public abstract class DescriptionTree implements Cloneable {
 			strings[i] = new StringBuilder();
 		}
 		
-		printCurNode(strings);
+		int depthIndex = 1;
+		depths[0] = 0;
+		int i = 0;
+		int curNode = 0;
+		Queue<Tree> q = new LinkedList<Tree>();
+		q.add(descriptionTree);
+		
+		while(!q.isEmpty()) {
+			Tree t = q.remove();
+			
+			valueLists.get(depths[curNode]).add(i, t.getValue());
+			verts[curNode] = t;
+			i++;
+			
+			int maxDepth = 0;
+			for(Tree child : t.getAllChildren()) {
+				int childDepth = child.getDepth();
+				depths[depthIndex] = depths[curNode] + 1;
+				depthIndex++;
+				
+				q.add(child);
+			}
+			
+			if(curNode < getNumVertices() - 1) {				
+				if(depths[curNode + 1] == depths[curNode]) {
+					valueLists.get(depths[curNode]).add(i, -1);
+					i++;
+				}
+				else {
+					i = 0;
+				}
+			}
+			
+			curNode++;			
+		}
+		
+		int nodeCount = (valueLists.get(valueLists.size() - 1).size() - width) / 2;
+		int count = 0;
+		int vertice = 1;
+		int index = 0;
+		int depth = valueLists.size() - 2;
+		for(int j = 0; j <= valueLists.size() - 3; j++) {
+			vertice += (valueLists.get(j).size() - getMaxWidth()) / 2;
+		}
+		index = vertice - 1;
+		
+		
+		while(nodeCount < getNumVertices()) {
+			int elementCount = 1;
+			int parentIndex = 0;
+			int curIndex = 0;
+			
+			while(elementCount <= (valueLists.get(depth).size() - width) / 2) {
+				Tree curTree = verts[index];
+				
+				if(elementCount == 1) {
+					parentIndex = 0;
+				}
+				
+				int startIndex = 0;
+				int[] indices = new int[curTree.getNumChildren()];
+				int childIndex = 0;
+				int endIndex;
+				
+				while(count < curTree.getNumChildren()) {
+					if(count == 0) {
+						startIndex = curIndex;
+					}
+					if(valueLists.get(depth).get(curIndex) != -1) {
+						indices[count] = curIndex;
+						count++;						
+					}
+					else {
+						curIndex++;
+						continue;
+					}
+				}
+				
+				endIndex = curIndex;
+				if(curTree.getNumChildren() == 0) {
+					//do nothing
+					parentIndex += 2;
+					curIndex = endIndex + 1;
+					elementCount++;
+					vertice++;
+					nodeCount++;
+					index = vertice - 1;
+					continue;
+				}
+				if(curTree.getNumChildren() == 1) {			
+					//do stuff
+					if(parentIndex < endIndex) {
+						for(int j = 0; j < endIndex - parentIndex; j++) {
+							valueLists.get(depth).add(parentIndex, -1);							
+						}
+						parentIndex += endIndex - parentIndex;
+					}
+					else {
+						for(int j = 0; j < parentIndex - endIndex; j++) {
+							valueLists.get(depth).add(indices[0], -1);							
+						}
+						indices[0] += parentIndex - endIndex;
+					}
+					parentIndex += 2;
+					curIndex = endIndex + 1;
+					elementCount++;
+					vertice++;
+					nodeCount++;
+					index = vertice - 1;
+					continue;
+				}
+				else {
+					int locForParent = (indices[0] + endIndex) / 2;
+					if(locForParent < parentIndex) {
+						for(int j = 0; j < locForParent; j++) {
+							valueLists.get(depth + 1).add(indices[0], -1);						
+						}
+						endIndex += locForParent;
+						for(int j = 0; j < curTree.getNumChildren(); j++) {
+							indices[j] += locForParent;
+						}
+					}
+					else {
+						for(int j = 0; j < locForParent; j++) {
+							valueLists.get(depth).add(parentIndex, -1);
+							parentIndex++;
+							
+						}
+						//endIndex += locForParent;					
+					}					
+				}
+				
+				parentIndex += 2;
+				curIndex = endIndex + 1;
+				elementCount++;
+				vertice++;
+				nodeCount++;
+				index = vertice - 1;
+			}
+			
+			depth--;
+			if(depth == -1) {
+				break;
+			}
+			vertice -= (((valueLists.get(depth).size() - width) / 2) + (((valueLists.get(depth + 1).size() - width) / 2) - 1));
+			index = vertice - 1;
+		}
+		System.out.println(valueLists);
 		
 		for(StringBuilder s : strings) {
 			strOut += s + "\n";
 		}
 		
 		return strOut;
-	}*/
-	
-	private void printCurNode(StringBuilder[] strings) {
-		float stringLength = 0;
-		int numVertices = getNumVertices();
-		boolean oddChildren = numVertices % 2 == 1;
-		
-		if(oddChildren) {
-			stringLength = numVertices + 2;
-		}
-		else {
-			stringLength = numVertices + 1;
-		}
-		
-		
-		float length = stringLength;
-		for(Tree child : getAllChildren()) {
-			length = printNode(child, length, strings);			
-		}
 	}
-	
-	private int printNode(Tree t, float startIndex, StringBuilder[] strings) {
-		return 0;
-	}
-	
 	
 	public String printTree() {
 		int numStrings = (getDepth() * 2) + 1;
@@ -277,7 +415,8 @@ public abstract class DescriptionTree implements Cloneable {
 					for(int i = 0; i < indices.length; i++) {
 						if(((endIndices[i] - (divisions[i] - 1)) + endIndices[i]) / 2 > indices[curIndex]) {
 							if(i > curIndex) {
-								endIndices[i] += numSpaces;						
+								endIndices[i] += 1;
+								indices[i] += 1;
 							}
 							
 						}
@@ -309,15 +448,11 @@ public abstract class DescriptionTree implements Cloneable {
 			for(int i = 0; i < indices.length; i++) {
 				if(((endIndices[i] - (divisions[i] - 1)) + endIndices[i]) / 2 > indices[curIndex]) {
 					if(i > curIndex) {
-						endIndices[i] += numSpaces;						
+						endIndices[i] += numSpaces;	
+						indices[i] += numSpaces;
 					}
 					
 				}
-				/*if(parents[i] == parentNode) {
-					if(i > curIndex) {
-						
-					}
-				}*/
 			}
 			
 			indices[curIndex] = index;
@@ -405,16 +540,54 @@ public abstract class DescriptionTree implements Cloneable {
 			
 			if(gap == 1 && isRight) {
 				if(!Character.isDigit(strings[level-2].charAt(index))) {
-					strings[level - 2].setCharAt(index, '_');						
+					if(index < strings[level - 2].length()) {
+						if(Character.isDigit(strings[level - 2].charAt(index + 1))) {
+							strings[level - 2].insert(index + 1, ' ');
+							strings[level - 2].setCharAt(index, '_');
+							/*for(int i = 0; i < strings.length; i++) {
+								if(i % 2 == 0 && i < level - 2) {
+									strings[i].insert(index, '_');
+								}
+								else if(i % 2 == 1 && i < level - 1) {
+									strings[i].insert(index, ' ');
+								}
+							}*/
+						}
+						else {
+							strings[level - 2].setCharAt(index, '_');		
+						}
+					}
+					else {
+						strings[level - 2].setCharAt(index, '_');						
+					}
+					strings[level - 1].setCharAt(index, '|');
 				}
-				strings[level - 1].setCharAt(index, '|');
 				
 			}
 			else if(gap == -1 && isLeft) {
 				if(!Character.isDigit(strings[level-2].charAt(index))) {
-					strings[level - 2].setCharAt(index, '_');						
+					if(index > 0) {
+						if(Character.isDigit(strings[level - 2].charAt(index - 1))) {
+							strings[level - 2].insert(index - 1, ' ');
+							strings[level - 2].setCharAt(index, ' ');
+							/*for(int i = 0; i < strings.length; i++) {
+								if(i % 2 == 0 && i < level - 2) {
+									strings[i].insert(index, '_');
+								}
+								else if(i % 2 == 1 && i < level - 1) {
+									strings[i].insert(index, ' ');
+								}
+							}*/
+						}
+						else {
+							strings[level - 2].setCharAt(index, '_');								
+						}
+					}
+					else {
+						strings[level - 2].setCharAt(index, '_');
+					}
+					strings[level - 1].setCharAt(index, '|');				
 				}
-				strings[level - 1].setCharAt(index, '|');				
 			}
 		
 			curIndex++;

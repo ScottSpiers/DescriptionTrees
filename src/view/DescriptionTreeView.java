@@ -183,6 +183,7 @@ public class DescriptionTreeView implements Observer {
 		SimpleAttributeSet att = new SimpleAttributeSet();
 		//StyleConstants.setAlignment(att, StyleConstants.ALIGN_CENTER);	
 		StyleConstants.setFontSize(att, 30);
+		
 		txt_providedShape.setParagraphAttributes(att, true);
 		txt_providedShape.setPreferredSize(new Dimension(400, 400));
 		txt_providedShape.setEditable(false);

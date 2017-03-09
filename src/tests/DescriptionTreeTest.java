@@ -147,6 +147,7 @@ public class DescriptionTreeTest {
 		node5.setNodeValue(19, 4);
 		System.out.println("Testing print");
 		System.out.println(node5.printTree());
+		node5.printTreeTest();
 		System.out.println(node5);
 		
 		
