@@ -235,12 +235,16 @@ sealed abstract class Tree {
     case Node(n, xs) => 1 + getDepth(xs)
   }
   
-  private def getDepth(xs : List[Tree]) : Int = xs match {
-    case Nil => 0
-    case Empty() :: xs => getDepth(xs)
-    case Leaf(n) :: xs => getDepth(xs)
-    case Node(n, ys) :: xs => 1 + math.max(getDepth(ys), getDepth(xs))
-  }  
+  private def getDepth(xs : List[Tree]) : Int = {
+    var max = 0;
+    for((Node(n, ys)) <- xs) {
+      val cur = 1 + getDepth(ys);
+      if( cur > max) {
+        max = cur;
+      }
+    }
+    return max;  
+  }
 }
 
 case class Empty() extends Tree

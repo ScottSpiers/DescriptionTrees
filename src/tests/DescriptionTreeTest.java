@@ -93,6 +93,7 @@ public class DescriptionTreeTest {
 		node3.addLeafToLeaf(0);
 		node3.addLeafToLeaf(1);
 		node3.addLeafToLeaf(0);
+		System.out.println(node3.printTree());
 		assertTrue(node3.getDepth() == 3);
 	}
 	
@@ -109,6 +110,7 @@ public class DescriptionTreeTest {
 		node4.addLeafToLeaf(5);
 		node4.addLeafToNode(2);
 		System.out.println(node4);
+		System.out.println(node4.printTree());
 		assertTrue(node4.getMaxWidth() == 7);
 	}
 	
@@ -147,7 +149,6 @@ public class DescriptionTreeTest {
 		node5.setNodeValue(19, 4);
 		System.out.println("Testing print");
 		System.out.println(node5.printTree());
-		node5.printTreeTest();
 		System.out.println(node5);
 		
 		
@@ -209,6 +210,7 @@ public class DescriptionTreeTest {
 		System.out.println(bTree);
 		bTree.setNodeValue(2, 2);
 		System.out.println(bTree);
+		System.out.println(bTree.printTree());
 		assertTrue(bTree.equals(bTree));
 	}
 
