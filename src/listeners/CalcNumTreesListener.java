@@ -25,6 +25,7 @@ public class CalcNumTreesListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		List<DescriptionTree> newTrees = new ArrayList<DescriptionTree>();
 		DescriptionTree tree = null;
+		boolean isAlpha = false;
 		model.resetTrees();
 		
 		if(view.getChecked()) {
@@ -61,10 +62,10 @@ public class CalcNumTreesListener implements ActionListener {
 			int paramA = view.getParamA();
 			int paramB = view.getParamB();
 			if(view.isAlphaChecked()) {
-				tree = new AlphaTree(paramA, paramB);
+				isAlpha = true;				
 			}
 			else if(view.isBetaChecked()) {
-				tree = new BetaTree(paramA, paramB);
+				isAlpha = false;				
 			}
 			else {
 				view.displayError("Select a Tree Type", "Please Select either Alpha Tree or Beta Tree");
@@ -74,24 +75,34 @@ public class CalcNumTreesListener implements ActionListener {
 			
 			int[] nodeSeq = new int[(nodeMax - nodeMin) + 1];
 			for(int i = nodeMin; i <= nodeMax; i++) {
-				System.out.println(tree);
+				//System.out.println(tree);
+				if(isAlpha) {
+					tree = new AlphaTree(paramA, paramB);
+				}
+				else {
+					tree = new BetaTree(paramA, paramB);
+				}
 				
 				for(DescriptionTree dt : model.genTrees(tree, i)){
 					newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
 				}
 				
-				for(int j = 0; j < newTrees.size(); j++) {
+				/*for(int j = 0; j < newTrees.size(); j++) {
 					for(int k = 0; k < newTrees.size(); k++) {
 						if(j != k && newTrees.get(j).equals(newTrees.get(k))) {
 							newTrees.remove(k);
 						}
 					}
-				}
+				}*/
 				
 				newTrees = model.applyRestrictions(newTrees);
 				
 				if((i - nodeMin) > 0) {
-					nodeSeq[i - nodeMin] = newTrees.size() - nodeSeq[(i - nodeMin) - 1];
+					int oldTrees = 0;
+					for(int j = 0; j < i - nodeMin; j++) {
+						oldTrees += nodeSeq[j];
+					}
+					nodeSeq[i - nodeMin] = newTrees.size() - oldTrees;
 				}
 				else {
 					nodeSeq[i - nodeMin] = newTrees.size();
@@ -115,7 +126,10 @@ public class CalcNumTreesListener implements ActionListener {
 		
 		//test output
 		System.out.println("\nThe Trees:");
+		int num = 1;
 		for(DescriptionTree t : model.getTrees()) {
+			System.out.println();
+			System.out.println(num++);
 			System.out.println("\n" + t.printTree());
 		}
 	}

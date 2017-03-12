@@ -38,6 +38,10 @@ public class BetaTree extends DescriptionTree {
 		int nodeMax = beta;
 		List<Tree> nodes = descriptionTree.getNodes();
 		
+		if(getNumChildren() < 1) {
+			newTrees.add(this);
+			return newTrees;
+		}
 		
 		if(n <= 0) {
 			nodeMax = beta;

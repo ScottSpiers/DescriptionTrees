@@ -100,6 +100,9 @@ public class DescriptionTreeModel extends Observable {
 	
 	public List<DescriptionTree> genTrees(DescriptionTree tree, int n) {
 		List<DescriptionTree> treeList = new ArrayList<DescriptionTree>();
+		if(n == 0) {
+			return treeList;
+		}
 		if(n == 1) {
 			DescriptionTree root = tree;
 			root.addLeaf();

@@ -259,8 +259,8 @@ public abstract class DescriptionTree implements Cloneable {
 				
 				endIndex = curIndex;
 				if(curTree.getNumChildren() == 0) {
-					//do nothing
-					parentIndex += 2;
+					valueLists.get(depth).add(parentIndex, -1);
+					parentIndex += 3;
 					elementCount++;
 					vertice++;
 					nodeCount++;
@@ -269,7 +269,7 @@ public abstract class DescriptionTree implements Cloneable {
 				}
 				else {
 					int locForParent = (indices[0] + endIndex) / 2;
-					if(locForParent < parentIndex - locForParent) {
+					if(locForParent < parentIndex) {
 						for(int j = 0; j < parentIndex - locForParent; j++) {
 							valueLists.get(depth + 1).add(indices[0], -1);						
 						}
@@ -280,13 +280,20 @@ public abstract class DescriptionTree implements Cloneable {
 						}
 					}
 					else {
+						
 						for(int j = 0; j < locForParent - parentIndex; j++) {
 							valueLists.get(depth).add(parentIndex, -1);
-							
 						}
-						parentIndex += locForParent - parentIndex;
-						shift += locForParent - parentIndex;
-						//endIndex += locForParent;					
+						parentIndex += (locForParent - parentIndex);
+						
+						for(int j = 1; j < curTree.getNumChildren() / 2; j++) {
+							valueLists.get(depth).add(parentIndex + 1, -1);
+							parentIndex++;
+							shift++;
+						}
+						
+						
+						shift += (locForParent - parentIndex);				
 					}					
 				}
 				
@@ -311,10 +318,9 @@ public abstract class DescriptionTree implements Cloneable {
 			System.out.println(l + "\n");
 		}
 		convertAndConnect(valueLists, verts, strings);
-		int stringIndex = 0;
+		
 		for(StringBuilder s : strings) {			
 			strOut += s + "\n";
-			stringIndex++;
 		}
 		
 		return strOut;
@@ -323,26 +329,25 @@ public abstract class DescriptionTree implements Cloneable {
 	private void convertAndConnect(List<ArrayList<Integer>> valueLists, Tree[] verts, StringBuilder[] strings) {
 		int depth = 0;
 		int valueDepth = 0;
-		int index = 0;
 		int childIndex = 0;
 		int parentIndex = 0;
+		int shift = 0;
 		
 		for(ArrayList<Integer> l : valueLists) {
 			for(int k = 0; k < l.size(); k++) {
 				if(l.get(k) == -1) {
-					strings[depth].insert(k, " ");
+					if(k + shift < strings[depth].length()) {
+						strings[depth].insert(k + shift, " ");						
+					}
+					else {
+						strings[depth].append(" ");
+					}
 				}
 				else {
 					strings[depth].insert(k, l.get(k));
 					
 					if(Integer.toString(l.get(k)).length() > 1) {
 						k += Integer.toString(l.get(k)).length() - 1;
-						if(depth > 0) {
-							for(int i = 0; i < Integer.toString(l.get(k)).length() -1 ; i++) {
-								//strings[depth - 1].insert(index + 1, " ");
-								
-							}							
-						}
 					}
 					
 					Tree t = verts[parentIndex];
@@ -409,15 +414,30 @@ public abstract class DescriptionTree implements Cloneable {
 							}
 							
 							if(gap == 0) {
-								strings[depth + 1].setCharAt(i, '|');
+								if(i < strings[depth + 1].length()) {
+									strings[depth + 1].setCharAt(i, '|');									
+								}
+								else {
+									strings[depth + 1].append("|");
+								}
 								break;
 							}
 							else if(gap == 2) {
-								strings[depth + 1].setCharAt(i + 1, '\\');
+								if(i + 1< strings[depth + 1].length()) {
+									strings[depth + 1].setCharAt(i + 1, '\\');									
+								}
+								else {
+									strings[depth + 1].append('\\');
+								}
 								break;
 							}
 							else if(gap == -2) {
-								strings[depth + 1].setCharAt(i - 1, '/');
+								if(i < strings[depth + 1].length()) {
+									strings[depth + 1].setCharAt(i - 1, '/');									
+								}
+								else {
+									strings[depth + 1].append('/');
+								}
 								break;
 							}
 							else if(gap > 2) {
@@ -425,18 +445,23 @@ public abstract class DescriptionTree implements Cloneable {
 								for(int j = 0; j < gap-2; j++) {
 									if(!Character.isDigit(strings[depth].charAt(m - (gap - gapCount)))) {
 										strings[depth].setCharAt(m - (gap - gapCount), '_');	
-										//k++;
+										shift++;
 									}
 									
 									gapCount++;
 								}
-								strings[depth + 1].setCharAt(m - 1, '\\');
+								if(m - 1 < strings[depth + 1].length()) {
+									strings[depth + 1].setCharAt(m - 1, '\\');									
+								}
+								else {
+									strings[depth + 1].append('\\');
+								}
 								break;
 							}
 							else if(gap < -2) {
 								int gapCount = 1;
 								for(int j = 0; j < Math.abs(gap) - 2; j++) {
-									if(!Character.isDigit(strings[depth].charAt(m + (Math.abs(gap) - gapCount)))) {
+									if(valueLists.get(valueDepth).get(m + (Math.abs(gap) - gapCount)) == -1) {
 										strings[depth].setCharAt(m + (Math.abs(gap) - gapCount), '_');	
 									}
 									
@@ -451,8 +476,13 @@ public abstract class DescriptionTree implements Cloneable {
 							if(!Character.isDigit(strings[depth].charAt(k + 1))) {
 								strings[depth].setCharAt(k + 1, '_');
 							}
-							strings[depth + 1].setCharAt(k + 1, '|');
-							//k++;
+							if(k + 1 < strings[depth + 1].length()) {
+								strings[depth + 1].setCharAt(k + 1, '|');								
+							}
+							else {
+								strings[depth + 1].append('|');	
+							}
+							shift++;
 						}
 						else if(gap == -1 && isLeft) {
 							if(!Character.isDigit(strings[depth].charAt(k - 1))) {
@@ -466,12 +496,10 @@ public abstract class DescriptionTree implements Cloneable {
 						break;
 					}
 				}
-				index++;
 			}			
 			depth+= 2;
 			valueDepth++;
 			childIndex = 0;
-			index = 0;
 		}
 
 		for(ArrayList<Integer> l : valueLists) {

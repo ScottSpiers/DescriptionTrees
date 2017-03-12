@@ -39,6 +39,10 @@ public class AlphaTree extends DescriptionTree {
 		List<Tree> nodes = descriptionTree.getNodes();
 		
 		
+		if(getNumChildren() < 1) {
+			newTrees.add(this);
+			return newTrees;
+		}
 		//nodeMax += nodes.get(n).getChild(nodes.get(n).getNumChildren()-1).getValue();
 		
 		if(n <= 0) {
