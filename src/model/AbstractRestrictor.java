@@ -82,6 +82,6 @@ public abstract class AbstractRestrictor implements Restrictor {
 	
 	@Override
 	public String toString() {
-		return ("Restriction: " + name + " Min: " + min + "Max: " + max);
+		return ("Restriction: " + name + " Min: " + min + " Max: " + max);
 	}
 }

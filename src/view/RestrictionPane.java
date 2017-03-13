@@ -2,7 +2,8 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Rectangle;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -16,8 +17,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
 
 import model.DescriptionTreeModel;
 import model.Restrictor;
@@ -39,13 +38,14 @@ public class RestrictionPane extends JFrame {
 	private JPanel pnl_list;
 	
 	public RestrictionPane(DescriptionTreeModel model, DescriptionTreeView view) {
+		super("Add Restrictions");
 		this.model = model;
 		restrictions = new HashMap<String, Restrictor>();
 		initRestrictorList();
-		display(view.frameBounds());
+		display(view.frameLocation());
 	}
 	
-	private void display(Rectangle bounds) {
+	private void display(Point p) {
 		Container contentPane = this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		
@@ -78,8 +78,10 @@ public class RestrictionPane extends JFrame {
 		contentPane.add(BorderLayout.CENTER, scrl_restrictions);
 		contentPane.add(BorderLayout.SOUTH, box_btns);
 		
-		this.setBounds(bounds);
+		p.translate(50, 50);
+		this.setLocation(p);
 		this.add(scrl_restrictions);
+		this.setPreferredSize(new Dimension(475, 220));
 		this.pack();
 		this.setVisible(true);
 		

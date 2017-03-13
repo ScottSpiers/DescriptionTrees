@@ -3,8 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.List;
 import java.util.Observable;
@@ -66,7 +65,7 @@ public class DescriptionTreeView implements Observer {
 		background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		frame.getContentPane().add(background);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setPreferredSize(new Dimension(screenSize.width / 2, screenSize.height / 2)); 
+		
 		
 		JMenuBar menu = new DescriptionTreeMenuBar(model, this);
 		frame.setJMenuBar(menu);
@@ -178,6 +177,7 @@ public class DescriptionTreeView implements Observer {
 		box_output.add(lbl_numTreeSeq);
 		
 		JPanel pnl_providedShape = new JPanel();
+		JScrollPane scrl_txt = new JScrollPane(pnl_providedShape);
 		txt_providedShape = new JTextPane();
 		
 		SimpleAttributeSet att = new SimpleAttributeSet();
@@ -185,7 +185,8 @@ public class DescriptionTreeView implements Observer {
 		StyleConstants.setFontSize(att, 30);
 		
 		txt_providedShape.setParagraphAttributes(att, true);
-		txt_providedShape.setPreferredSize(new Dimension(400, 400));
+		txt_providedShape.setSize(new Dimension(pnl_providedShape.getWidth(), pnl_providedShape.getHeight()));
+		txt_providedShape.setAutoscrolls(true);
 		txt_providedShape.setEditable(false);
 		pnl_providedShape.add(txt_providedShape);
 		
@@ -198,14 +199,18 @@ public class DescriptionTreeView implements Observer {
 		eastBox.add(scrl_restrictions);
 		eastBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
 		
-		background.add(BorderLayout.CENTER, pnl_providedShape);
+		background.add(BorderLayout.CENTER, scrl_txt);
 		background.add(BorderLayout.WEST, westBox);
 		background.add(BorderLayout.EAST, eastBox);
 		
+		frame.setPreferredSize(new Dimension(1024, 517));
+		frame.setLocation(screenSize.width / 3, screenSize.height / 3);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	
 	
 	public void displayError(String title, String msg) {
 		JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.ERROR_MESSAGE);
@@ -260,8 +265,8 @@ public class DescriptionTreeView implements Observer {
 		spnr_nodeMax.setEnabled(!spnr_nodeMax.isEnabled());
 	}
 	
-	public Rectangle frameBounds() {
-		return frame.getBounds();
+	public Point frameLocation() {
+		return frame.getLocation();
 	}
 
 	@Override
@@ -273,6 +278,12 @@ public class DescriptionTreeView implements Observer {
 		else if(arg instanceof Boolean) {
 			if((Boolean) arg) {
 				lbl_numTrees.setText(Integer.toString(model.getNumTrees()));
+				txt_providedShape.setText("");
+				String printOut = "";
+				for(DescriptionTree t : model.getTrees()) {
+					printOut += t.printTree() + "\n";
+				}
+				txt_providedShape.setText(printOut);
 				System.out.println(model.getNumTrees());
 			}
 			else if (!(Boolean) arg){

@@ -93,6 +93,10 @@ public class DescriptionTreeModel extends Observable {
 	
 	public List<DescriptionTree> applyRestrictions(List<DescriptionTree> ts) {
 		for(Restrictor r : restrictors) {
+			if(r.getMin() > r.getMax()) {
+				return null;
+			}
+			
 			ts = r.applyRestriction(ts);
 		}
 		return ts;

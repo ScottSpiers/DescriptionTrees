@@ -55,8 +55,9 @@ public class CalcNumTreesListener implements ActionListener {
 			//temp int
 			int nodes = 0;
 			//temp check
-			if(nodeMin == nodeMax) {
-				nodes = nodeMin;
+			if(nodeMin > nodeMax) {
+				view.displayError("Node Number Error", "Minimum number of nodes is greater than maximum.");
+				return;
 			}
 			
 			int paramA = view.getParamA();
@@ -87,15 +88,11 @@ public class CalcNumTreesListener implements ActionListener {
 					newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
 				}
 				
-				/*for(int j = 0; j < newTrees.size(); j++) {
-					for(int k = 0; k < newTrees.size(); k++) {
-						if(j != k && newTrees.get(j).equals(newTrees.get(k))) {
-							newTrees.remove(k);
-						}
-					}
-				}*/
-				
 				newTrees = model.applyRestrictions(newTrees);
+				if(newTrees == null) {
+					view.displayError("Restriction Error", "A restriction has a minumum value greater than a maximum. Please resolve this issue");
+					return;
+				}
 				
 				if((i - nodeMin) > 0) {
 					int oldTrees = 0;

@@ -170,6 +170,9 @@ public abstract class DescriptionTree implements Cloneable {
 					strings[i].append(" ");					
 				}
 			}
+			for(int j = 0; j < width * 2; j++) {
+				strings[i].setCharAt(j, ' ');
+			}
 		}
 		
 		int depthIndex = 1;
@@ -314,9 +317,6 @@ public abstract class DescriptionTree implements Cloneable {
 			index = vertice - 1;
 		}
 		
-		for(ArrayList<Integer> l : valueLists) {
-			System.out.println(l + "\n");
-		}
 		convertAndConnect(valueLists, verts, strings);
 		
 		for(StringBuilder s : strings) {			
@@ -500,10 +500,6 @@ public abstract class DescriptionTree implements Cloneable {
 			depth+= 2;
 			valueDepth++;
 			childIndex = 0;
-		}
-
-		for(ArrayList<Integer> l : valueLists) {
-			System.out.println(l + "\n");
 		}
 	}
 	

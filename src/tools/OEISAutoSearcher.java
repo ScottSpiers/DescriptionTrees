@@ -6,10 +6,12 @@ import java.util.List;
 import model.BetaTree;
 import model.DescriptionTree;
 import model.DescriptionTreeModel;
+import view.OEISAutoSearchView;
 
 public class OEISAutoSearcher {
 
 	private DescriptionTreeModel model;
+	OEISAutoSearchView view;
 	
 	public OEISAutoSearcher(DescriptionTreeModel model) {
 		this.model = model;
@@ -24,6 +26,7 @@ public class OEISAutoSearcher {
 		
 		for(int a = 0; a < 6; a++) {
 			for(int b = 0; b < 6; b++) {
+				
 				int i = 0;
 				for(int n = 0; n < 6; n++) {
 					t = new BetaTree(a,b);
@@ -32,13 +35,7 @@ public class OEISAutoSearcher {
 						newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
 					}
 						
-					/*for(int j = 0; j < newTrees.size(); j++) {
-						for(int k = 0; k < newTrees.size(); k++) {
-							if(j != k && newTrees.get(j).equals(newTrees.get(k))) {
-								newTrees.remove(k);
-							}
-						}
-					}*/						
+									
 						
 					nodeSeq[i] = newTrees.size();
 					i++;
