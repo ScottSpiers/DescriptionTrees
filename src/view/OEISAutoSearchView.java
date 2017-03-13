@@ -1,10 +1,16 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -19,6 +25,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import listeners.AutoSearchCheckBoxSelectedListener;
 import listeners.AutoSearchListener;
 import model.DescriptionTreeModel;
 import model.Restrictor;
@@ -36,6 +43,7 @@ public class OEISAutoSearchView extends JFrame {
 	
 	private DescriptionTreeModel model;
 	private List<Restrictor> restrictors;
+	private Map<Restrictor, Boolean> selectedRestrictors;
 	private JRadioButton rdo_alpha;
 	private JRadioButton rdo_beta;
 	private JSpinner spnr_nodeMin;
@@ -52,13 +60,35 @@ public class OEISAutoSearchView extends JFrame {
 	
 	private void initRestrictors() {
 		restrictors = new ArrayList<Restrictor>();
-		restrictors.add(new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves ", 1, 1));
-		restrictors.add(new InternalNodeNumRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excludes root) "));
-		restrictors.add(new RootValueRestrictor("Root Value", "Restricts the value of the Root node only "));
-		restrictors.add(new InternalNodeValueRestrictor("Internal Node Value", "Restricts the value of internal nodes (Excludes root) "));
-		restrictors.add(new RootChildrenNumRestrictor("Number of Children of Root", "Restricts the number of children the root node can have "));
-		restrictors.add(new InternalNodeChildrenNumRestrictor("Number of Children of Internal Nodes", "Restricts the number of children internal nodes can have (Excludes root) "));
-		restrictors.add(new PathLengthRestrictor("Path Length", "Restricts the path length (depth of the tree "));
+		selectedRestrictors = new HashMap<Restrictor, Boolean>();
+		
+		Restrictor leafNum = new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves ", 1, 1);
+		restrictors.add(leafNum);
+		selectedRestrictors.put(leafNum, false);
+		
+		Restrictor nodeNum = new InternalNodeNumRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excludes root) ");
+		restrictors.add(nodeNum);
+		selectedRestrictors.put(nodeNum, false);
+		
+		Restrictor rootVal = new RootValueRestrictor("Root Value", "Restricts the value of the Root node only ");
+		restrictors.add(rootVal);
+		selectedRestrictors.put(rootVal, false);
+		
+		Restrictor nodeVal = new InternalNodeValueRestrictor("Internal Node Value", "Restricts the value of internal nodes (Excludes root) ");
+		restrictors.add(nodeVal);
+		selectedRestrictors.put(nodeVal, false);
+		
+		Restrictor rootChildren = new RootChildrenNumRestrictor("Number of Children of Root", "Restricts the number of children the root node can have ");
+		restrictors.add(rootChildren);
+		selectedRestrictors.put(rootChildren, false);
+		
+		Restrictor nodeChildren = new InternalNodeChildrenNumRestrictor("Number of Children of Internal Nodes", "Restricts the number of children internal nodes can have (Excludes root) ");
+		restrictors.add(nodeChildren);
+		selectedRestrictors.put(nodeChildren, false);
+		
+		Restrictor pathLength = new PathLengthRestrictor("Path Length", "Restricts the path length (depth of the tree ");
+		restrictors.add(pathLength);
+		selectedRestrictors.put(pathLength, false);
 	}
 	
 	private void display() {
@@ -122,7 +152,7 @@ public class OEISAutoSearchView extends JFrame {
 		}		
 		
 		JButton btn_runAuto = new JButton("Run");
-		btn_runAuto.addActionListener(new AutoSearchListener(model));
+		btn_runAuto.addActionListener(new AutoSearchListener(model, this));
 		
 		Box bx_main = new Box(BoxLayout.Y_AXIS);
 		bx_main.add(bx_nodes);
@@ -133,7 +163,8 @@ public class OEISAutoSearchView extends JFrame {
 		background.add(BorderLayout.CENTER, bx_main);
 		background.add(BorderLayout.SOUTH, btn_runAuto);
 		
-		this.setBounds(new Rectangle(300, 400));
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((int) screenSize.getWidth() / 3 + 256, (int) screenSize.getHeight() / 3 +  129);
 		this.setMinimumSize(new Dimension(500, 400));
 		this.pack();
 		this.setVisible(true);
@@ -144,8 +175,10 @@ public class OEISAutoSearchView extends JFrame {
 		bx_r.setToolTipText(r.getDesc());
 		JLabel lbl_name = new JLabel(r.getName());
 		JCheckBox chkbx_r = new JCheckBox();
-		JLabel lbl_min = new JLabel("Min: " + r.getMin() + " ");
+		chkbx_r.addActionListener(new AutoSearchCheckBoxSelectedListener(this));
+		JLabel lbl_min = new JLabel("Min: " + r.getMin() + " Max: ");
 		JSpinner spnr_max = new JSpinner();
+		spnr_max.setEnabled(false);
 		spnr_max.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_max.setMaximumSize(new Dimension(50, 20));
 		
@@ -154,6 +187,33 @@ public class OEISAutoSearchView extends JFrame {
 		bx_r.add(lbl_min);
 		bx_r.add(spnr_max);
 		return bx_r;
+	}
+	
+	public List<Restrictor> getSelectedRestrictors() {
+		List<Restrictor> selected = new ArrayList<Restrictor>();
+		for(Restrictor r : restrictors) {
+			if(selectedRestrictors.get(r)) {
+				selected.add(r);
+			}
+		}
+		return selected;
+	}	
+	
+	public void toggleRestrictionSelected(int index) {
+		for(int i = 0; i < restrictors.size(); i++) {
+			if(i == index) {
+				selectedRestrictors.put(restrictors.get(i), !selectedRestrictors.get(restrictors.get(i)));
+			}
+		}
+		/*toggleRestrictionSpinner(index);*/
+	}
+	
+	public int getNodeMin() {
+		return (int) spnr_nodeMin.getValue();
+	}
+	
+	public int getNodeMax() {
+		return (int) spnr_nodeMax.getValue();
 	}
 	
 	public boolean isAlphaChecked() {

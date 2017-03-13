@@ -25,10 +25,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import listeners.AddRestrictionListener;
 import listeners.CalcNumTreesListener;
 import listeners.UseProvidedListener;
 import model.AlphaTree;
@@ -70,8 +72,6 @@ public class DescriptionTreeView implements Observer {
 		JMenuBar menu = new DescriptionTreeMenuBar(model, this);
 		frame.setJMenuBar(menu);
 		
-		Box westBox = new Box(BoxLayout.Y_AXIS);
-		Box eastBox = new Box(BoxLayout.X_AXIS);
 		
 		Dimension spnrSize = new Dimension(50, 20);
 		
@@ -134,6 +134,7 @@ public class DescriptionTreeView implements Observer {
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
+		scrl_restrictions.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_scrl = new Box(BoxLayout.Y_AXIS);
 		//pnl_restrictions.setLayout(new BoxLayout(pnl_restrictions, BoxLayout.Y_AXIS));
 		pnl_restrictions.add(box_scrl);
@@ -190,14 +191,25 @@ public class DescriptionTreeView implements Observer {
 		txt_providedShape.setEditable(false);
 		pnl_providedShape.add(txt_providedShape);
 		
+		Box westBox = new Box(BoxLayout.Y_AXIS);
+		Box eastBox = new Box(BoxLayout.Y_AXIS);
+		
 		westBox.add(box_treeChoice);
 		westBox.add(box_params);
 		westBox.add(box_numNodes);
 		westBox.add(box_output);
 		westBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
 		
-		eastBox.add(scrl_restrictions);
+		
+		JButton btn_addRestriction = new JButton("+");
+		btn_addRestriction.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_addRestriction.setAlignmentX(Component.LEFT_ALIGNMENT);
+		btn_addRestriction.setMaximumSize(new Dimension(400, 20));
+		btn_addRestriction.addActionListener(new AddRestrictionListener(model, this));
+		
 		eastBox.setMinimumSize(new Dimension((int) (frame.getWidth() * 0.5), frame.getHeight()));
+		eastBox.add(scrl_restrictions);
+		eastBox.add(btn_addRestriction);
 		
 		background.add(BorderLayout.CENTER, scrl_txt);
 		background.add(BorderLayout.WEST, westBox);

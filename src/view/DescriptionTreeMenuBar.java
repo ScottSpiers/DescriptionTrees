@@ -5,7 +5,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import listeners.AddRestrictionListener;
-import listeners.AutoSearchListener;
+import listeners.AutoSearchToolListener;
 import listeners.LoadPrefsListener;
 import listeners.LoadShapeListener;
 import listeners.OEISListener;
@@ -67,7 +67,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		restrict.addActionListener(new AddRestrictionListener(model, view));
 		shape.addActionListener(new ProvideShapeListener(model, view));
 		oeis.addActionListener(new OEISListener(model, view));
-		oeisAuto.addActionListener(new AutoSearchListener(model));
+		oeisAuto.addActionListener(new AutoSearchToolListener(model));
 		tool.add(shape);
 		tool.add(restrict);
 		tool.add(oeis);
