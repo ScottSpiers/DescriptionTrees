@@ -2,8 +2,6 @@ package listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.ImageProducer;
-import java.awt.image.MemoryImageSource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -42,18 +40,15 @@ public class SetDrawingListener implements ActionListener {
 		Drawing drawing = drawingApp.drawing(); 
 		Figure f = null;
 		NodeFigure root = null;
-		ConnectionFigure cf = null;
 		List<NodeFigure> nodeFigs = new ArrayList<NodeFigure>();
 		List<ConnectionFigure> connFigs = new ArrayList<ConnectionFigure>();
 		Enumeration<Figure> figs = null;
-		Enumeration<Figure> conFigs = null;
 		Tree tree = new Empty();
 		tree = tree.addLeaf();
 		
 		
 		int rootCount = 0;
 		boolean isRoot = true;
-		int nodeCount = 0;
 		
 		figs = drawing.figures();
 		
@@ -142,12 +137,8 @@ public class SetDrawingListener implements ActionListener {
 				curNode++;
 			}
 		}
-		//temp
-		System.out.println(tree);
-		System.out.println(tree.getNodes().size());
-		model.setProvidedTree(tree);
 		
-		drawingApp.exit();
+		model.setProvidedTree(tree);
 	}
 
 }

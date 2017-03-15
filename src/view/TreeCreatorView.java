@@ -2,12 +2,15 @@ package view;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import CH.ifa.draw.application.DrawApplication;
 import CH.ifa.draw.framework.Tool;
@@ -44,7 +47,8 @@ public class TreeCreatorView extends DrawApplication {
 		
 		Component drawingView = c.getComponent(0);
 		
-		Component statusLine = c.getComponent(2);
+		JTextField statusLine = (JTextField) c.getComponent(2);
+		statusLine.setAlignmentX(Component.LEFT_ALIGNMENT);
 		c.remove(drawingView);
 		c.remove(statusLine);
 		
@@ -52,19 +56,26 @@ public class TreeCreatorView extends DrawApplication {
 		Box bottomBox = new Box(BoxLayout.Y_AXIS);
 		
 		//Box infoBox = new Box(BoxLayout.X_AXIS);
-		JLabel lbl_info = new JLabel("Nodes are processed in numerical order. Therefore, if you create a root node such that it has children shown to be in order 2, 6, 3; then "
-									+ "	the tree is considered as a root node with children 2, 3 and 6 in that order\n The overall structure of the children is similar.");
-		//JButton btn_closeInfo = new JButton()
+		JLabel lbl_info = new JLabel("Each level is processed in numerical order by the node label shown. Therefore, creating a node such that it has children drawn as 2, 3, 1;");
+		JLabel lbl_info2 = new JLabel("gives the node the children 1, 2 and 3 in that order regardless of further structure.");
+		
 		
 		JButton btn_setDrawing = new JButton("Set Drawing");
+		btn_setDrawing.setAlignmentX(Component.LEFT_ALIGNMENT);
+		btn_setDrawing.setMaximumSize(new Dimension(850, 20));
 		btn_setDrawing.addActionListener(new SetDrawingListener(model, view,  this));
 		
 		topBox.add(lbl_info);
+		topBox.add(lbl_info2);
 		topBox.add(drawingView);
 		bottomBox.add(statusLine);
 		bottomBox.add(btn_setDrawing);
 		c.add("Center", topBox);
-		c.add("South", bottomBox);			
+		c.add("South", bottomBox);	
+		this.setPreferredSize(new Dimension(850, 800));
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation( (int) (screenSize.width / 1.675), screenSize.height / 3);
+		this.setResizable(false);
 		pack();
 	}
 	

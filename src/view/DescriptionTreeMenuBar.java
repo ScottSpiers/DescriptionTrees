@@ -34,8 +34,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		this.model = model;
 		this.view = view;
 		this.add(createFileMenu());
-		this.add(createToolMenu());
-		this.add(createHelpMenu());		
+		this.add(createToolMenu());	
 	}
 	
 	private JMenu createFileMenu() {
@@ -73,12 +72,5 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		tool.add(oeis);
 		tool.add(oeisAuto);
 		return tool;		
-	}
-	
-	private JMenu createHelpMenu() {
-		JMenu help = new JMenu("Help");
-		JMenuItem helpRestrict = new JMenuItem("Help: Add Restriction");
-		help.add(helpRestrict);
-		return help;
 	}
 }

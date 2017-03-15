@@ -78,21 +78,30 @@ public class DescriptionTreeView implements Observer {
 		JLabel lbl_treeChoiceInstr = new JLabel("<html>Please choose a description tree:</html>");
 		ButtonGroup grp_trees = new ButtonGroup();
 		rdo_alpha = new JRadioButton("Alpha(a, b)");
+		rdo_alpha.setAlignmentX(Component.LEFT_ALIGNMENT);
 		rdo_beta = new JRadioButton("Beta(a, b)");
+		rdo_beta.setAlignmentX(Component.LEFT_ALIGNMENT);
 		grp_trees.add(rdo_alpha);
 		grp_trees.add(rdo_beta);
 		
 		JLabel lbl_params = new JLabel("<html>Provide the paramaters:</html>");
+		lbl_params.setAlignmentX(Component.LEFT_ALIGNMENT);
 		Box box_a = new Box(BoxLayout.X_AXIS);
+		box_a.setAlignmentX(Component.LEFT_ALIGNMENT);
 		Box box_b = new Box(BoxLayout.X_AXIS);
+		box_b.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JLabel lbl_a = new JLabel("a = ");
+		lbl_a.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JLabel lbl_b = new JLabel("b = ");
+		lbl_b.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		spnr_a = new JSpinner();
+		spnr_a.setAlignmentX(Component.LEFT_ALIGNMENT);
 		spnr_a.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnr_a.setMaximumSize(spnrSize);
 		
 		spnr_b = new JSpinner();
+		spnr_b.setAlignmentX(Component.LEFT_ALIGNMENT);
 		spnr_b.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_b.setMaximumSize(spnrSize);
 		
@@ -103,37 +112,49 @@ public class DescriptionTreeView implements Observer {
 		
 		
 		spnr_nodeMin = new JSpinner();
+		spnr_nodeMin.setAlignmentX(Component.LEFT_ALIGNMENT);
 		spnr_nodeMin.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_nodeMin.setMaximumSize(spnrSize);
 		
 		spnr_nodeMax = new JSpinner();
+		spnr_nodeMax.setAlignmentX(Component.LEFT_ALIGNMENT);
 		spnr_nodeMax.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_nodeMax.setMaximumSize(spnrSize);
 		
 		JLabel lbl_numNodes = new JLabel("Provide the Number of Nodes:");
 		lbl_numNodes.setAlignmentX(Component.LEFT_ALIGNMENT);
 		Box box_node = new Box(BoxLayout.X_AXIS);
+		box_node.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JLabel lbl_node = new JLabel("n = ");
+		lbl_node.setAlignmentX(Component.LEFT_ALIGNMENT);
 		JLabel lbl_toMax = new JLabel(" to ");
+		lbl_toMax.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_node.add(lbl_node);
 		box_node.add(spnr_nodeMin);
 		box_node.add(lbl_toMax);
 		box_node.add(spnr_nodeMax);
 		
 		Box box_btns = new Box(BoxLayout.X_AXIS);
+		box_btns.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		JButton btn_run = new JButton("Calculate");
+		btn_run.setAlignmentX(Component.LEFT_ALIGNMENT);
 		btn_run.addActionListener(new CalcNumTreesListener(this, model));
 		box_btns.add(btn_run);
 		
 		JLabel lbl_totalTrees = new JLabel("<html>Total Number of Trees:</html>");
+		lbl_totalTrees.setAlignmentX(Component.LEFT_ALIGNMENT);
 		lbl_numTrees = new JLabel();
+		lbl_numTrees.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		JLabel lbl_numTreeSeqDesc = new JLabel("<html>Number of Trees sequence:</html>");
+		lbl_numTreeSeqDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
 		lbl_numTreeSeq = new JLabel();
+		lbl_numTreeSeq.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		JPanel pnl_restrictions = new JPanel();
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_restrictions);
+		scrl_restrictions.setToolTipText("Restriction List");
 		scrl_restrictions.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_scrl = new Box(BoxLayout.Y_AXIS);
 		//pnl_restrictions.setLayout(new BoxLayout(pnl_restrictions, BoxLayout.Y_AXIS));
@@ -145,6 +166,7 @@ public class DescriptionTreeView implements Observer {
 		Border paramBorder = BorderFactory.createEmptyBorder(10, 0, 10, 0);
 		
 		Box box_treeChoice = new Box(BoxLayout.Y_AXIS);
+		box_treeChoice.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_treeChoice.setBorder(paramBorder);
 		box_treeChoice.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box_treeChoice.add(lbl_treeChoiceInstr);
@@ -165,6 +187,7 @@ public class DescriptionTreeView implements Observer {
 		box_numNodes.add(box_node);
 		
 		chkbx_useProvided = new JCheckBox("Use Provided Tree");
+		chkbx_useProvided.setAlignmentX(Component.LEFT_ALIGNMENT);
 		chkbx_useProvided.addActionListener(new UseProvidedListener(this));
 		
 		Box box_output = new Box(BoxLayout.Y_AXIS);
@@ -179,6 +202,7 @@ public class DescriptionTreeView implements Observer {
 		
 		JPanel pnl_providedShape = new JPanel();
 		JScrollPane scrl_txt = new JScrollPane(pnl_providedShape);
+		scrl_txt.setToolTipText("Calculated/ Provided Tree(s)");
 		txt_providedShape = new JTextPane();
 		
 		SimpleAttributeSet att = new SimpleAttributeSet();
@@ -192,7 +216,9 @@ public class DescriptionTreeView implements Observer {
 		pnl_providedShape.add(txt_providedShape);
 		
 		Box westBox = new Box(BoxLayout.Y_AXIS);
+		westBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		Box eastBox = new Box(BoxLayout.Y_AXIS);
+		eastBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		westBox.add(box_treeChoice);
 		westBox.add(box_params);

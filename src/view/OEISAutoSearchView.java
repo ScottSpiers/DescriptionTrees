@@ -1,11 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +23,7 @@ import javax.swing.SpinnerNumberModel;
 
 import listeners.AutoSearchCheckBoxSelectedListener;
 import listeners.AutoSearchListener;
+import listeners.AutoSearchRestrictorSpinnerListener;
 import model.DescriptionTreeModel;
 import model.Restrictor;
 import restrictors.InternalNodeChildrenNumRestrictor;
@@ -48,8 +45,10 @@ public class OEISAutoSearchView extends JFrame {
 	private JRadioButton rdo_beta;
 	private JSpinner spnr_nodeMin;
 	private JSpinner spnr_nodeMax;
-	private JSpinner spnr_a;
-	private JSpinner spnr_b;
+	private JSpinner spnr_aMin;
+	private JSpinner spnr_aMax;
+	private JSpinner spnr_bMin;
+	private JSpinner spnr_bMax;
 	
 	public OEISAutoSearchView(DescriptionTreeModel model) {
 		super("OEIS Auto Search");
@@ -128,22 +127,37 @@ public class OEISAutoSearchView extends JFrame {
 		bx_treeType.add(rdo_beta);
 		
 		
-		Box bx_values = new Box(BoxLayout.X_AXIS);
+		Box bx_values = new Box(BoxLayout.Y_AXIS);
+		Box bx_a = new Box(BoxLayout.X_AXIS);
+		Box bx_b = new Box(BoxLayout.X_AXIS);
 		
 		JLabel lbl_a = new JLabel(" a = ");
 		JLabel lbl_b = new JLabel(" b = ");
-		spnr_a = new JSpinner();
-		spnr_a.setModel(new SpinnerNumberModel(1, 0, null, 1));
-		spnr_a.setMaximumSize(new Dimension(50, 20));
+		JLabel lbl_to = new JLabel(" to ");
+		spnr_aMin = new JSpinner();
+		spnr_aMin.setModel(new SpinnerNumberModel(0, 0, null, 1));
+		spnr_aMax = new JSpinner();
+		spnr_aMax.setModel(new SpinnerNumberModel(1, 0, null, 1));
+		spnr_aMin.setMaximumSize(new Dimension(50, 20));
+		spnr_aMax.setMaximumSize(new Dimension(50, 20));
 		
-		spnr_b = new JSpinner();
-		spnr_b.setModel(new SpinnerNumberModel(1, 0, null, 1));
-		spnr_b.setMaximumSize(new Dimension(50, 20));
-		bx_values.add(lbl_a);
-		bx_values.add(spnr_a);
-		bx_values.add(lbl_b);
-		bx_values.add(spnr_b);
-		
+		spnr_bMin = new JSpinner();
+		spnr_bMin.setModel(new SpinnerNumberModel(0, 0, null, 1));
+		spnr_bMax = new JSpinner();
+		spnr_bMax.setModel(new SpinnerNumberModel(1, 0, null, 1));
+		spnr_bMin.setMaximumSize(new Dimension(50, 20));
+		spnr_bMax.setMaximumSize(new Dimension(50, 20));
+		bx_a.add(lbl_a);
+		bx_a.add(spnr_aMin);
+		bx_a.add(lbl_to);
+		bx_a.add(spnr_aMax);
+		lbl_to = new JLabel(" to ");
+		bx_b.add(lbl_b);
+		bx_b.add(spnr_bMin);
+		bx_b.add(lbl_to);
+		bx_b.add(spnr_bMax);
+		bx_values.add(bx_a);
+		bx_values.add(bx_b);
 		
 		Box bx_restrictors = new Box(BoxLayout.Y_AXIS);		
 		
@@ -178,6 +192,7 @@ public class OEISAutoSearchView extends JFrame {
 		chkbx_r.addActionListener(new AutoSearchCheckBoxSelectedListener(this));
 		JLabel lbl_min = new JLabel("Min: " + r.getMin() + " Max: ");
 		JSpinner spnr_max = new JSpinner();
+		spnr_max.addChangeListener(new AutoSearchRestrictorSpinnerListener(this));
 		spnr_max.setEnabled(false);
 		spnr_max.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_max.setMaximumSize(new Dimension(50, 20));
@@ -205,7 +220,6 @@ public class OEISAutoSearchView extends JFrame {
 				selectedRestrictors.put(restrictors.get(i), !selectedRestrictors.get(restrictors.get(i)));
 			}
 		}
-		/*toggleRestrictionSpinner(index);*/
 	}
 	
 	public int getNodeMin() {
@@ -216,11 +230,31 @@ public class OEISAutoSearchView extends JFrame {
 		return (int) spnr_nodeMax.getValue();
 	}
 	
+	public int getAMin() {
+		return (int) spnr_aMin.getValue();
+	}
+	
+	public int getAMax() {
+		return (int) spnr_aMax.getValue();
+	}
+	
+	public int getBMin() {
+		return (int) spnr_bMin.getValue();
+	}
+	
+	public int getBMax() {
+		return (int) spnr_bMax.getValue();
+	}
+	
 	public boolean isAlphaChecked() {
 		return rdo_alpha.isSelected();
 	}
 	
 	public boolean isBetaChecked() {
 		return rdo_beta.isSelected();
+	}
+	
+	public Restrictor getRestrictor(int index) {
+		return restrictors.get(index);
 	}
 }

@@ -141,7 +141,6 @@ public abstract class DescriptionTree implements Cloneable {
 	}
 	
 	public String printTree() {
-		String treeString = descriptionTree.toString();
 		String strOut = "";
 		int fullDepth = getDepth() + 1;
 		int[] depths = new int[getNumVertices()];
@@ -189,9 +188,7 @@ public abstract class DescriptionTree implements Cloneable {
 			verts[curNode] = t;
 			i++;
 			
-			int maxDepth = 0;
 			for(Tree child : t.getAllChildren()) {
-				int childDepth = child.getDepth();
 				depths[depthIndex] = depths[curNode] + 1;
 				depthIndex++;
 				
@@ -239,16 +236,10 @@ public abstract class DescriptionTree implements Cloneable {
 					parentIndex = 0;
 				}
 				
-				int startIndex = 0;
 				int[] indices = new int[curTree.getNumChildren()];
-				int childIndex = 0;
 				int endIndex;
 				count = 0;
-				while(count < curTree.getNumChildren()) {
-					if(count == 0) {
-						startIndex = curIndex;
-					}					
-					
+				while(count < curTree.getNumChildren()) {					
 					if(valueLists.get(depth + 1).get(curIndex) != -1) {
 						indices[count] = curIndex;
 						count++;
@@ -262,13 +253,41 @@ public abstract class DescriptionTree implements Cloneable {
 				
 				endIndex = curIndex;
 				if(curTree.getNumChildren() == 0) {
-					valueLists.get(depth).add(parentIndex, -1);
+					valueLists.get(depth).add(parentIndex + 1, -1);
 					parentIndex += 3;
 					elementCount++;
 					vertice++;
 					nodeCount++;
 					index = vertice - 1;
 					continue;
+				}
+				else if(curTree.getNumChildren() == 2) {
+					int locForParent = (indices[0] + endIndex) / 2;
+					if(locForParent < parentIndex) {
+						for(int j = 0; j < parentIndex - locForParent; j++) {
+							valueLists.get(depth + 1).add(indices[0], -1);						
+						}
+						endIndex += parentIndex - locForParent;
+						
+						for(int j = 0; j < curTree.getNumChildren(); j++) {
+							indices[j] += parentIndex - locForParent;
+						}	
+						
+					}
+					else {
+						for(int j = 0; j < locForParent - parentIndex; j++) {
+							valueLists.get(depth).add(parentIndex, -1);
+						}
+						parentIndex += (locForParent - parentIndex);
+						
+						
+						
+						shift += (locForParent - parentIndex);							
+					}
+					
+					valueLists.get(depth).add(parentIndex + 1, -1);
+					parentIndex++;
+					//shift++;
 				}
 				else {
 					int locForParent = (indices[0] + endIndex) / 2;
@@ -280,7 +299,8 @@ public abstract class DescriptionTree implements Cloneable {
 						
 						for(int j = 0; j < curTree.getNumChildren(); j++) {
 							indices[j] += parentIndex - locForParent;
-						}
+						}	
+						
 					}
 					else {
 						
@@ -289,15 +309,17 @@ public abstract class DescriptionTree implements Cloneable {
 						}
 						parentIndex += (locForParent - parentIndex);
 						
-						for(int j = 1; j < curTree.getNumChildren() / 2; j++) {
+						int loopCount = (curTree.getNumChildren() / 2);
+						
+						for(int j = 0; j < loopCount; j++) {
 							valueLists.get(depth).add(parentIndex + 1, -1);
 							parentIndex++;
 							shift++;
 						}
 						
+						shift += (locForParent - parentIndex);					
 						
-						shift += (locForParent - parentIndex);				
-					}					
+					}	
 				}
 				
 				parentIndex +=2;
@@ -467,7 +489,12 @@ public abstract class DescriptionTree implements Cloneable {
 									
 									gapCount++;
 								}
-								strings[depth + 1].setCharAt(m + 1, '/');
+								if(m + 1 < strings[depth + 1].length()) {
+									strings[depth + 1].setCharAt(m + 1, '/');									
+								}
+								else {
+									strings[depth + 1].append('/');
+								}
 								break;
 							}		
 						}
@@ -488,7 +515,12 @@ public abstract class DescriptionTree implements Cloneable {
 							if(!Character.isDigit(strings[depth].charAt(k - 1))) {
 								strings[depth].setCharAt(k - 1, '_');
 							}
-							strings[depth + 1].setCharAt(k -1, '|');
+							if(k - 1 < strings[depth + 1].length()) {
+								strings[depth + 1].setCharAt(k -1, '|');								
+							}
+							else {
+								strings[depth + 1].append('|');
+							}
 						}
 					}
 					parentIndex++;
