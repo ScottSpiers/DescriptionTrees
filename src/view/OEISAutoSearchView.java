@@ -29,6 +29,7 @@ import model.Restrictor;
 import restrictors.InternalNodeChildrenNumRestrictor;
 import restrictors.InternalNodeNumRestrictor;
 import restrictors.InternalNodeValueRestrictor;
+import restrictors.JumpNumRestrictor;
 import restrictors.LeafNumRestrictor;
 import restrictors.PathLengthRestrictor;
 import restrictors.RootChildrenNumRestrictor;
@@ -88,6 +89,10 @@ public class OEISAutoSearchView extends JFrame {
 		Restrictor pathLength = new PathLengthRestrictor("Path Length", "Restricts the path length (depth of the tree ");
 		restrictors.add(pathLength);
 		selectedRestrictors.put(pathLength, false);
+		
+		Restrictor jumpNum = new JumpNumRestrictor("Number of Jumps", "Restricts the number of times a node has a value greater than sum of its children");
+		restrictors.add(jumpNum);
+		selectedRestrictors.put(jumpNum, false);
 	}
 	
 	private void display() {

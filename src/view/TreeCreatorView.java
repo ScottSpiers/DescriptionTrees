@@ -12,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import CH.ifa.draw.application.DrawApplication;
 import CH.ifa.draw.framework.Tool;
 import CH.ifa.draw.tool.ConnectionTool;
+import CH.ifa.draw.application.DrawApplication;
 import listeners.SetDrawingListener;
 import model.DescriptionTreeModel;
 

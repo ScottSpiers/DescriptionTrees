@@ -27,6 +27,7 @@ sealed abstract class Tree {
   
   private def setNodeValue(n : Int, i : Int, xs : List[Tree]) : List[Tree] = (xs, i) match {
     case (Nil, i) => Nil
+    case (Empty() :: xs, i) => Empty() :: setNodeValue(n, i, xs)    
     case (Leaf(m) :: xs, i) => (Leaf(m) :: setNodeValue(n, i, xs))
     case (Node(m, ys) :: xs, 0) => (Node(n, ys) :: xs)
     case (Node(m, ys) :: xs, i) => if (i <= numNodes(ys)) {
@@ -65,6 +66,7 @@ sealed abstract class Tree {
   
   private def addLeafToLeaf(xs : List[Tree], i : Int) : List[Tree] = (xs, i) match {
     case (Nil, i) => Nil
+    case ((Empty() :: xs), i) => Empty() :: addLeafToLeaf(xs, i)
     case (Leaf(n) :: xs, 0) => Node(n, (Leaf(0) :: Nil)) :: xs
     case (Leaf(n) :: xs, i) => Leaf(n) :: addLeafToLeaf(xs, i-1)
     case ((Node(n, ys) :: xs), i) => if(i < numLeaves(ys)) {
@@ -84,6 +86,7 @@ sealed abstract class Tree {
   
   private def addLeafToNode(xs : List[Tree], i : Int) : List[Tree] = (xs, i) match {
     case (Nil, i) => Nil
+    case (Empty() :: xs, i) => Empty() :: addLeafToNode(xs, i)
     case ((Leaf(n) :: xs), i) => Leaf(n) :: addLeafToNode(xs, i)
     case ((Node(n, ys) :: xs), 0) => Node(n, ys ++ (Leaf(0) :: Nil)) :: xs
     case ((Node(n, ys) :: xs), i) => if((i - 1) < numNodes(ys)) {
@@ -103,6 +106,7 @@ sealed abstract class Tree {
   def addLeafAsChildAt(i : Int) : Tree = (this, i) match {
     case (Empty(), i) => Leaf(0)
     case (Leaf(n), i) => Node(n, (Leaf(0) :: Nil))
+    case (Node(n, Nil), i) => Node(n, Leaf(0) :: Nil)
     case (Node(n, xs), 0) => Node(n, (Leaf(0) :: xs))
     case (Node(n, x :: xs), i) => Node(n, x :: addLeafToChildAt(xs, i-1))
   }
@@ -144,6 +148,7 @@ sealed abstract class Tree {
   
   private def getLeaves(l : List[Tree]) : List[Tree] = l match {
     case Nil => Nil
+    case Empty() :: xs => Nil
     case Leaf(n) :: xs => Leaf(n) :: getLeaves(xs)
     case Node(n, xs) :: ls => getLeaves(xs) ++ getLeaves(ls)
   }
@@ -168,6 +173,7 @@ sealed abstract class Tree {
   def getChild(i : Int) : Tree = (this, i) match {
     case (Empty(), i) => Empty()
     case (Leaf(n), i) => Empty()
+    case (Node(n, Nil), i) => Empty()
     case (Node(n, x :: xs), 0) => x
     case (Node(n, x :: xs), i) => getChild(i-1, xs)
   } 

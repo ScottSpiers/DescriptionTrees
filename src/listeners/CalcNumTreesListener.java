@@ -48,6 +48,12 @@ public class CalcNumTreesListener implements ActionListener {
 				return;
 			}
 			newTrees.addAll(tree.evaluateTree(tree.getNodes().size()-1));
+			newTrees = model.applyRestrictions(newTrees);
+			if(newTrees == null) {
+				view.displayError("Restriction Error", "A restriction has a minumum value greater than a maximum. Please resolve this issue");
+				return;
+			}
+			view.setSequence("");
 		}
 		else {			
 			int nodeMin = view.getNodeMin();
