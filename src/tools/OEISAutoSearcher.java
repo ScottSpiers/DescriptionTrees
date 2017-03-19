@@ -118,6 +118,7 @@ public class OEISAutoSearcher {
 		printSeqs(seqs);
 	}
 	
+	@SuppressWarnings("unused")
 	private void restrictionLoop(int i) {
 		if(i == 0) {
 			int min = selectedRestrictors.get(0).getMin();

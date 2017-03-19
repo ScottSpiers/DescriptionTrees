@@ -3,10 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.scala.Tree;
-
 public abstract class AbstractRestrictor implements Restrictor {
 
+	
+	private static final long serialVersionUID = -5908220996575041727L;
 	protected String name;
 	protected String desc;
 	protected int min;

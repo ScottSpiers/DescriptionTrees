@@ -29,6 +29,16 @@ import restrictors.PathLengthRestrictor;
 import restrictors.RootChildrenNumRestrictor;
 import restrictors.RootValueRestrictor;
 
+/**
+ * 
+ * @author Scott Spiers
+ * University of Strathclyde
+ * Final Year Project: Description Trees
+ * Supervisor: Sergey Kitaev
+ *
+ * Displays a list of restrictions that can be added and
+ * provides functionality to do so
+ */
 public class RestrictionPane extends JFrame {
 	
 	private static final long serialVersionUID = -4046493742306257235L;
@@ -38,14 +48,23 @@ public class RestrictionPane extends JFrame {
 	private JList<String> lst_restrictions;
 	private JPanel pnl_list;
 	
+	/**
+	 * 
+	 * @param model The DescriptionTreeModel being used
+	 * @param view The DescriptionTreeView being used
+	 */
 	public RestrictionPane(DescriptionTreeModel model, DescriptionTreeView view) {
 		super("Add Restrictions");
 		this.model = model;
-		restrictions = new HashMap<String, Restrictor>();
+		restrictions = new HashMap<String, Restrictor>(); //init the map to map restrictor names to Restrictors
 		initRestrictorList();
 		display(view.frameLocation());
 	}
 	
+	/**
+	 * 
+	 * @param p The location this window opens
+	 */
 	private void display(Point p) {
 		Container contentPane = this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
@@ -55,6 +74,7 @@ public class RestrictionPane extends JFrame {
 		JScrollPane scrl_restrictions = new JScrollPane(pnl_list);		
 		lst_restrictions = new JList<String>();
 		
+		//get the restriction keys from the map and store them
 		String[] restrictors = new String[restrictions.keySet().size()];
 		int i = 0;
 		for(String key : restrictions.keySet()) {
@@ -62,8 +82,8 @@ public class RestrictionPane extends JFrame {
 			i++;
 		}
 		
-		lst_restrictions.setListData(restrictors);
-		lst_restrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		lst_restrictions.setListData(restrictors); //use the array to set the list data
+		lst_restrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); //allow multiple selection
 		
 		JButton btn_add = new JButton("Add");
 		btn_add.addActionListener(new AddRestrictorListener());
@@ -79,6 +99,7 @@ public class RestrictionPane extends JFrame {
 		contentPane.add(BorderLayout.CENTER, scrl_restrictions);
 		contentPane.add(BorderLayout.SOUTH, box_btns);
 		
+		//move the window
 		p.translate(50, 50);
 		this.setLocation(p);
 		this.add(scrl_restrictions);
@@ -88,10 +109,16 @@ public class RestrictionPane extends JFrame {
 		
 	}
 	
+	/**
+	 * Close the window
+	 */
 	private void close() {
 		this.setVisible(false);
 	}
 	
+	/**
+	 * Initialise the restrictor map for use in displaying the Restrictors
+	 */
 	private void initRestrictorList() {
 		restrictions.put("Number of Leaves", new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves", 1, 1));
 		restrictions.put("Number of Nodes", new InternalNodeNumRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excludes root)"));
@@ -103,22 +130,49 @@ public class RestrictionPane extends JFrame {
 		restrictions.put("Number of Jumps", new JumpNumRestrictor("Number of Jumps", "Restricts the number of times a node has a value greater than sum of its children"));
 	}
 	
+	/**
+	 * 
+	 * @author Scott Spiers
+	 * University of Strathclyde
+	 * Final Year Project: Description Trees
+	 * Supervisor: Sergey Kitaev
+	 *
+	 * Listener to add selected restrictors
+	 */
 	private class AddRestrictorListener implements ActionListener {
-
+		
+		/*
+		 * (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//for every selected restrictor
 			for(String s : lst_restrictions.getSelectedValuesList()) {
-				model.addRestrictor(restrictions.get(s));
+				model.addRestrictor(restrictions.get(s)); //add it to the model
 			}
-			close();
+			close(); //close the window
 		}		
 	}
 	
+	/**
+	 * 
+	 * @author Scott Spiers
+	 * University of Strathclyde
+	 * Final Year Project: Description Trees
+	 * Supervisor: Sergey Kitaev
+	 *
+	 * Listener to cancel adding restrictors
+	 */
 	private class CancelAddListener implements ActionListener {
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			close();
+			close(); //just close the window
 			
 		}
 		

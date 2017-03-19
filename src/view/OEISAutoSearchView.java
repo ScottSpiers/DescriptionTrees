@@ -22,8 +22,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import listeners.AutoSearchCheckBoxSelectedListener;
-import listeners.AutoSearchListener;
 import listeners.AutoSearchRestrictorSpinnerListener;
+import listeners.RunAutoSearchListener;
 import model.DescriptionTreeModel;
 import model.Restrictor;
 import restrictors.InternalNodeChildrenNumRestrictor;
@@ -35,6 +35,17 @@ import restrictors.PathLengthRestrictor;
 import restrictors.RootChildrenNumRestrictor;
 import restrictors.RootValueRestrictor;
 
+/**
+ * 
+ * @author Scott Spiers
+ * University of Strathclyde
+ * Final Year Project: Description Trees
+ * Supervisor: Sergey Kitaev
+ *
+ * The view for the auto search tool
+ * The tool allows various parameters and returns a table 
+ * with the values and oeis search link
+ */
 public class OEISAutoSearchView extends JFrame {
 
 	private static final long serialVersionUID = 7422466254922478739L;
@@ -51,6 +62,10 @@ public class OEISAutoSearchView extends JFrame {
 	private JSpinner spnr_bMin;
 	private JSpinner spnr_bMax;
 	
+	/**
+	 * 
+	 * @param model The DescriptionTreeModel being used
+	 */
 	public OEISAutoSearchView(DescriptionTreeModel model) {
 		super("OEIS Auto Search");
 		this.model = model;
@@ -58,6 +73,10 @@ public class OEISAutoSearchView extends JFrame {
 		display();
 	}
 	
+	/**
+	 * Initialises the restrictors list and map
+	 * of restirctors to whether or not they are selected
+	 */
 	private void initRestrictors() {
 		restrictors = new ArrayList<Restrictor>();
 		selectedRestrictors = new HashMap<Restrictor, Boolean>();
@@ -95,15 +114,18 @@ public class OEISAutoSearchView extends JFrame {
 		selectedRestrictors.put(jumpNum, false);
 	}
 	
+	/**
+	 * builds and displays the view
+	 */
 	private void display() {
 		BorderLayout layout = new BorderLayout();
 		JPanel background = new JPanel(layout);
 		background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		this.getContentPane().add(background);
 		
-		Box bx_params = new Box(BoxLayout.Y_AXIS);
 		Box bx_nodes = new Box(BoxLayout.X_AXIS);
 		
+		//create node spinners
 		spnr_nodeMin = new JSpinner();
 		spnr_nodeMin.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnr_nodeMin.setMaximumSize(new Dimension(50, 20));
@@ -120,6 +142,7 @@ public class OEISAutoSearchView extends JFrame {
 		
 		Box bx_treeType = new Box(BoxLayout.X_AXIS);
 		
+		//create tree type radio buttons
 		JLabel lbl_treeChoiceInstr = new JLabel("Tree Type: ");
 		ButtonGroup grp_trees = new ButtonGroup();
 		rdo_alpha = new JRadioButton("Alpha(a, b) ");
@@ -136,6 +159,7 @@ public class OEISAutoSearchView extends JFrame {
 		Box bx_a = new Box(BoxLayout.X_AXIS);
 		Box bx_b = new Box(BoxLayout.X_AXIS);
 		
+		//create value spinners
 		JLabel lbl_a = new JLabel(" a = ");
 		JLabel lbl_b = new JLabel(" b = ");
 		JLabel lbl_to = new JLabel(" to ");
@@ -166,12 +190,13 @@ public class OEISAutoSearchView extends JFrame {
 		
 		Box bx_restrictors = new Box(BoxLayout.Y_AXIS);		
 		
+		//add restrictor boxes
 		for(Restrictor r : restrictors) {
 			bx_restrictors.add(restrictorBox(r));
 		}		
 		
 		JButton btn_runAuto = new JButton("Run");
-		btn_runAuto.addActionListener(new AutoSearchListener(model, this));
+		btn_runAuto.addActionListener(new RunAutoSearchListener(model, this));
 		
 		Box bx_main = new Box(BoxLayout.Y_AXIS);
 		bx_main.add(bx_nodes);
@@ -189,6 +214,11 @@ public class OEISAutoSearchView extends JFrame {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Builds a box containing the components needed to provide restrictor params
+	 * @param r The Restrictor this box models
+	 * @return The created Box
+	 */
 	private Box restrictorBox(Restrictor r) {
 		Box bx_r = new Box(BoxLayout.X_AXIS);
 		bx_r.setToolTipText(r.getDesc());
@@ -209,6 +239,10 @@ public class OEISAutoSearchView extends JFrame {
 		return bx_r;
 	}
 	
+	/**
+	 * Gets the user selected restrictors
+	 * @return The restrictors selected by the user
+	 */
 	public List<Restrictor> getSelectedRestrictors() {
 		List<Restrictor> selected = new ArrayList<Restrictor>();
 		for(Restrictor r : restrictors) {
@@ -219,6 +253,10 @@ public class OEISAutoSearchView extends JFrame {
 		return selected;
 	}	
 	
+	/**
+	 * Toggles whether or not the restriction is selected in the map
+	 * @param index The index of the restrictor to toggle
+	 */
 	public void toggleRestrictionSelected(int index) {
 		for(int i = 0; i < restrictors.size(); i++) {
 			if(i == index) {
@@ -227,38 +265,75 @@ public class OEISAutoSearchView extends JFrame {
 		}
 	}
 	
+	/**
+	 * Gets the minimum number of nodes
+	 * @return The minimum number of nodes
+	 */
 	public int getNodeMin() {
 		return (int) spnr_nodeMin.getValue();
 	}
 	
+	/**
+	 * Gets the maximum number of nodes
+	 * @return The maximum number of nodes
+	 */
 	public int getNodeMax() {
 		return (int) spnr_nodeMax.getValue();
 	}
 	
+	/**
+	 * Gets the minimum value for the first parameter
+	 * @return the minimum value for the first parameter
+	 */
 	public int getAMin() {
 		return (int) spnr_aMin.getValue();
 	}
 	
+	/**
+	 * Gets the maximum value for the first parameter
+	 * @return the maximum value for the first parameter
+	 */
 	public int getAMax() {
 		return (int) spnr_aMax.getValue();
 	}
 	
+	/**
+	 * Gets the minimum value for the second parameter
+	 * @return the minimum value for the second parameter
+	 */
 	public int getBMin() {
 		return (int) spnr_bMin.getValue();
 	}
 	
+	/**
+	 * Gets the maximum value for the second parameter
+	 * @return the maximum value for the second parameter
+	 */
 	public int getBMax() {
 		return (int) spnr_bMax.getValue();
 	}
 	
+	/**
+	 * 
+	 * @return whether or not the selected tree type is Alpha
+	 */
 	public boolean isAlphaChecked() {
 		return rdo_alpha.isSelected();
 	}
 	
+	/**
+	 * 
+	 * @return whether or not the selected tree type is Beta
+	 */
 	public boolean isBetaChecked() {
 		return rdo_beta.isSelected();
 	}
 	
+	/**
+	 * 
+	 * @param index Index of the restrictor to get
+	 * @return the restrictor at index in the restrictor list
+	 */
 	public Restrictor getRestrictor(int index) {
 		return restrictors.get(index);
 	}

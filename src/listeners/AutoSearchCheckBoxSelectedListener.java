@@ -9,14 +9,31 @@ import javax.swing.JCheckBox;
 
 import view.OEISAutoSearchView;
 
+/**
+ * 
+ * @author Scott Spiers
+ * University of Strathclyde
+ * Final Year Project: Description Trees
+ *
+ * Listener for selection of checkboxes within the auto search tool
+ */
 public class AutoSearchCheckBoxSelectedListener implements ActionListener {
 	
 	private OEISAutoSearchView view;
 	
+	/**
+	 * 
+	 * @param view The AUtoSearch view being used
+	 */
 	public AutoSearchCheckBoxSelectedListener(OEISAutoSearchView view) {
 		this.view = view;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		//Convert the source to the checkbox we know it is
 		JCheckBox chkbx_changed = (JCheckBox) e.getSource();

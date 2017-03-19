@@ -25,20 +25,38 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.Restrictor;
 
+/**
+ * 
+ * @author Scott Spiers
+ * University of Strathclyde
+ * Final Year Project: Description Trees
+ * Supervisor: Sergey Kitaev
+ *
+ * The view for the auto search results
+ */
 public class AutoSearchResultsView extends JFrame {
 
 	private static final long serialVersionUID = -7713142573397836176L;
 	
 	private JTextArea txt_output;
 	
-	
+	/**
+	 * 
+	 * @param seqs The list of sequences resulting from the calculations
+	 * @param rs The list of selected restrictors
+	 */
 	public AutoSearchResultsView(List<String> seqs, List<Restrictor> rs) {
 		super("Auto Search Results");
 		display(seqs, rs);
 	}
 	
-	
+	/**
+	 * 
+	 * @param seqs The list of sequences resulting from the calculations
+	 * @param rs The list of selected restrictors
+	 */
 	private void display(List<String> seqs, List<Restrictor> rs) {
+		//create and set menubar
 		JMenuBar menu = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem save = new JMenuItem("Save Results");
@@ -67,22 +85,31 @@ public class AutoSearchResultsView extends JFrame {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Sets the text of the output
+	 * @param seqs The list of sequences resulting from the calculations
+	 * @param rs The list of selected restrictors
+	 */
+	@SuppressWarnings("unused")
 	private void setText(List<String> seqs, List<Restrictor> rs) {
-		String formatString = "| %7s | %10s | %10s | ";
+		String formatString = "| %7s | %10s | %10s | "; //init the format string
 		
+		//for all restrictors
 		for(Restrictor r : rs) {
-			formatString += "%25s | ";
+			formatString += "%25s | "; //add to the format string
 		}
 		
-		formatString += "%50s |%n";
+		formatString += "%50s |%n"; //add the format for the links
 		
+		//create an array for arguments
 		Object[] args = new Object[4 + rs.size()];
 		args[0] = "Nodes";
 		args[1] = "a";
 		args[2] = "b";
 		
+		//for each restriction
 		for(int m = 3; m < args.length - 1; m++) {
-			args[m] = rs.get(m - 3).getName();
+			args[m] = rs.get(m - 3).getName(); //add its name to the array
 			
 		}
 		args[args.length -1] = "Link";
@@ -95,56 +122,82 @@ public class AutoSearchResultsView extends JFrame {
 		txt_output.setText(strOut);
 	}
 	
+	/**
+	 * 
+	 * @author Scott Spiers
+	 * University of Strathclyde
+	 * Final Year Project: Description Trees
+	 * Supervisor: Sergey Kitaev
+	 *
+	 * Listener to save the results from the calculations to text file
+	 */
 	private class SaveResultsListener implements ActionListener {
 		private List<String> seqs;
 		private List<Restrictor> rs;
 		
+		/**
+		 * 
+		 * @param seqs The list of sequences resulting from the calculations
+		 * @param rs The list of selected restrictors
+		 */
 		public SaveResultsListener(List<String> seqs, List<Restrictor> rs) {
 			this.seqs = seqs;
 			this.rs = rs;
 		}
-
+		
+		/*
+		 * (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
+		@SuppressWarnings("unused")
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			File file;		
 			FileWriter fw;
 			BufferedWriter bw;		
 			
-			
+			//create a file chooser
 			JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+			//create a file filter
 			FileFilter ff = new FileNameExtensionFilter("Text File (.txt)", "txt", "text");
 			
+			//set selection mode and filter
 			jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			jfc.addChoosableFileFilter(ff);
-			int response = jfc.showSaveDialog(null);
+			jfc.setFileFilter(ff);
+			int response = jfc.showSaveDialog(null); //show file chooser and get response
 			
-			if(response == JFileChooser.CANCEL_OPTION) {
-				return;
+			if(response == JFileChooser.CANCEL_OPTION) { //if the user cancels
+				return; //do nothing
 			}
-			else if(response == JFileChooser.ERROR_OPTION) {
+			else if(response == JFileChooser.ERROR_OPTION) { //if there is an error
+				//inform the user
 				JOptionPane.showMessageDialog(null, "There was a problem with saving the file", "File Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			else if(response == JFileChooser.APPROVE_OPTION) {
-				file = jfc.getSelectedFile();
+			else if(response == JFileChooser.APPROVE_OPTION) { //otherwise
+				file = jfc.getSelectedFile(); //get the selected file
 				try {
-					String fileName = file.getPath();
-					if(!fileName.endsWith(".txt")) {
-						fileName += ".txt";
+					String fileName = file.getPath(); //get the path
+					if(!fileName.endsWith(".txt")) { //if we don't end in .txt
+						fileName += ".txt"; //add it
 					}
-					fw = new FileWriter(fileName);
-					bw = new BufferedWriter(fw);
-					String formatString = "| %10s | %10s | %10s | ";
+					fw = new FileWriter(fileName); //init the file writer
+					bw = new BufferedWriter(fw); //init the buffered writer
+					
+					String formatString = "| %10s | %10s | %10s | "; //set the format strings
+					//for every restrictor
 					for(Restrictor r : rs) {
-						formatString += "%25s | ";
+						formatString += "%25s | "; //add to the format string
 					}
 					
-					formatString += "%100s |%n";
+					formatString += "%100s |%n"; //set space for the link
+					//create an array for arguments
 					Object[] args = new Object[4 + rs.size()];
 					args[0] = "Nodes";
 					args[1] = "a";
 					args[2] = "b";
 					
+					//add every restrictors name as an argument
 					for(int m = 3; m < args.length - 1; m++) {
 						args[m] = rs.get(m - 3).getName();
 						
@@ -162,7 +215,8 @@ public class AutoSearchResultsView extends JFrame {
 					
 				}
 				catch (IOException ex) {
-					JOptionPane.showMessageDialog(null, "There was a problem with saving the file", "File Error", JOptionPane.ERROR_MESSAGE);
+					//There was a problem, inform the user
+					JOptionPane.showMessageDialog(null, "There was a problem with saving the file: " + ex.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 			}
