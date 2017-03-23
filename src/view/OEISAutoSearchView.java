@@ -85,7 +85,7 @@ public class OEISAutoSearchView extends JFrame {
 		restrictors.add(leafNum);
 		selectedRestrictors.put(leafNum, false);
 		
-		Restrictor nodeNum = new InternalNodeNumRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excludes root) ");
+		Restrictor nodeNum = new InternalNodeNumRestrictor("Number of Internal Nodes: ", "Restricts the number of internal nodes (Excludes root) ");
 		restrictors.add(nodeNum);
 		selectedRestrictors.put(nodeNum, false);
 		
@@ -185,6 +185,7 @@ public class OEISAutoSearchView extends JFrame {
 		bx_b.add(spnr_bMin);
 		bx_b.add(lbl_to);
 		bx_b.add(spnr_bMax);
+		bx_values.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 		bx_values.add(bx_a);
 		bx_values.add(bx_b);
 		

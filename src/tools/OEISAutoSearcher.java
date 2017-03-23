@@ -13,6 +13,14 @@ import model.Restrictor;
 import view.AutoSearchResultsView;
 import view.OEISAutoSearchView;
 
+/**
+ * 
+ * @author Scott Spiers
+ * University of Strathclyde
+ * Final Year Project: Description Trees
+ * Supervisor: Sergey Kitaev
+ *
+ */
 public class OEISAutoSearcher {
 
 	private DescriptionTreeModel model;
@@ -33,13 +41,20 @@ public class OEISAutoSearcher {
 	private int bMin;
 	private int bMax;
 	
-	
+	/**
+	 * 
+	 * @param model The DescriptionTreeModel being used
+	 * @param view The DescriptionTreeView being used
+	 */
 	public OEISAutoSearcher(DescriptionTreeModel model, OEISAutoSearchView view) {
 		this.model = model;
 		this.view = view;
 		run();
 	}
 	
+	/**
+	 * Run the calculations
+	 */
 	private void run() {
 		seqs = new ArrayList<String>();
 		newTrees = new ArrayList<DescriptionTree>();
@@ -79,7 +94,7 @@ public class OEISAutoSearcher {
 		
 		selectedRestrictors = view.getSelectedRestrictors();
 		
-		
+		//run through all possible values
 		for(a = aMin; a <= aMax; a++) {
 			for(b = bMin; b <= bMax; b++) {
 				if(selectedRestrictors.isEmpty()) {
@@ -95,7 +110,8 @@ public class OEISAutoSearcher {
 						for(DescriptionTree dt : model.genTrees(t, n)) {
 							newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
 						}										
-							
+						
+						model.removeDuplicates(newTrees);
 						nodeSeq[i] = newTrees.size();
 						i++;
 					}
@@ -118,18 +134,24 @@ public class OEISAutoSearcher {
 		printSeqs(seqs);
 	}
 	
+	/**
+	 * Uses recursion to nest loops for each restriction selected
+	 * @param i the number of restrictors to use
+	 */
 	@SuppressWarnings("unused")
 	private void restrictionLoop(int i) {
-		if(i == 0) {
+		if(i == 0) { //if this is the last restrictor
 			int min = selectedRestrictors.get(0).getMin();
 			int max = selectedRestrictors.get(0).getMax();
 			if(min > max) {
 				JOptionPane.showMessageDialog(view, "Minimum value is greater than maximum", selectedRestrictors.get(0).getName() + " Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
+			//loop over this restrictor
 			for(int j = min; j <= max; j++) {
 				selectedRestrictors.get(0).setMax(j);
 				int k = 0;
+				//run the main loop
 				for(int n = nodeMin; n <= nodeMax; n++) {
 					if(isAlpha) {
 						t = new AlphaTree(a, b);
@@ -141,14 +163,22 @@ public class OEISAutoSearcher {
 					for(DescriptionTree dt : model.genTrees(t, n)) {
 						newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
 					}
+					
+					for(int t = 0; i < newTrees.size(); i++) {
+						for(Restrictor r : selectedRestrictors) {
+							if(!r.applyRestriction(newTrees.get(t))) {
+								newTrees.remove(t);
+								t--;
+							}
+						}
 						
-					for(Restrictor r : selectedRestrictors) {
-						newTrees = r.applyRestriction(newTrees);
 					}
 						
+					model.removeDuplicates(newTrees);
 					nodeSeq[k] = newTrees.size();
 					k++;
 				}
+				//prepare the output
 				String seq = "| 0 to 5 | a: " + a + " | b: " + b + " | Link: http://www.oeis.org/search?q=";
 				String linkEnd = "";
 				for(int l = 0; l < nodeSeq.length - 1 ; l++) {
@@ -173,7 +203,7 @@ public class OEISAutoSearcher {
 				seqs.add(seq);
 			}
 		}
-		else {
+		else { //otherwise
 			int min = selectedRestrictors.get(i).getMin();
 			int max = selectedRestrictors.get(i).getMax();
 			
@@ -182,13 +212,18 @@ public class OEISAutoSearcher {
 				return;
 			}
 			
+			//create a loop for this restrictor
 			for(int j = min; j <= max; j++) {
 				selectedRestrictors.get(i).setMax(j);
-				restrictionLoop(i-1);
+				restrictionLoop(i-1); //recurse to create loops for the rest
 			}
 		}
 	}
 	
+	/**
+	 * Output the results
+	 * @param seqs THe list of sequences gathered from the calculations
+	 */
 	private void printSeqs(List<String> seqs) {
 		new AutoSearchResultsView(seqs, selectedRestrictors);
 	}

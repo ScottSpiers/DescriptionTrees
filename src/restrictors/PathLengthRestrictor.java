@@ -1,9 +1,10 @@
 package restrictors;
 
-import model.AbstractRestrictor;
 import model.DescriptionTree;
 
 public class PathLengthRestrictor extends AbstractRestrictor {
+
+	private static final long serialVersionUID = 2921226218724363858L;
 
 	public PathLengthRestrictor(String name) {
 		super(name);

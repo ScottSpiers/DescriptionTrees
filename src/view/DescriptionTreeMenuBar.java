@@ -51,8 +51,8 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 	private JMenu createFileMenu() {
 		//create menu and items
 		JMenu file = new JMenu("File");
-		JMenuItem save = new JMenuItem("Save Preferences");
-		JMenuItem load = new JMenuItem("Load Preferences");
+		JMenuItem save = new JMenuItem("Save Restrictions");
+		JMenuItem load = new JMenuItem("Load Restrictions");
 		JMenuItem saveProvided = new JMenuItem("Save Provided Shape");
 		JMenuItem loadProvided = new JMenuItem("Load Provided Shape");
 		JMenuItem print = new JMenuItem("Print to File");

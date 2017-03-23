@@ -5,13 +5,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -20,10 +15,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.Restrictor;
+import tools.FileManager;
 
 /**
  * 
@@ -151,75 +145,38 @@ public class AutoSearchResultsView extends JFrame {
 		 */
 		@SuppressWarnings("unused")
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			File file;		
-			FileWriter fw;
-			BufferedWriter bw;		
-			
-			//create a file chooser
-			JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
-			//create a file filter
-			FileFilter ff = new FileNameExtensionFilter("Text File (.txt)", "txt", "text");
-			
-			//set selection mode and filter
-			jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			jfc.setFileFilter(ff);
-			int response = jfc.showSaveDialog(null); //show file chooser and get response
-			
-			if(response == JFileChooser.CANCEL_OPTION) { //if the user cancels
-				return; //do nothing
-			}
-			else if(response == JFileChooser.ERROR_OPTION) { //if there is an error
-				//inform the user
-				JOptionPane.showMessageDialog(null, "There was a problem with saving the file", "File Error", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			else if(response == JFileChooser.APPROVE_OPTION) { //otherwise
-				file = jfc.getSelectedFile(); //get the selected file
-				try {
-					String fileName = file.getPath(); //get the path
-					if(!fileName.endsWith(".txt")) { //if we don't end in .txt
-						fileName += ".txt"; //add it
-					}
-					fw = new FileWriter(fileName); //init the file writer
-					bw = new BufferedWriter(fw); //init the buffered writer
-					
-					String formatString = "| %10s | %10s | %10s | "; //set the format strings
-					//for every restrictor
-					for(Restrictor r : rs) {
-						formatString += "%25s | "; //add to the format string
-					}
-					
-					formatString += "%100s |%n"; //set space for the link
-					//create an array for arguments
-					Object[] args = new Object[4 + rs.size()];
-					args[0] = "Nodes";
-					args[1] = "a";
-					args[2] = "b";
-					
-					//add every restrictors name as an argument
-					for(int m = 3; m < args.length - 1; m++) {
-						args[m] = rs.get(m - 3).getName();
-						
-					}
-					args[args.length -1] = "Link";
-					
-					String strOut = "";
-					bw.write(String.format(formatString, args));
-					
-					for(String s : seqs) {
-						bw.write(s);
-					}
-					bw.flush();
-					bw.close();
+		public void actionPerformed(ActionEvent e) {					
+				String formatString = "| %10s | %10s | %10s | "; //set the format strings
+				//for every restrictor
+				for(Restrictor r : rs) {
+					formatString += "%25s | "; //add to the format string
+				}
+				
+				formatString += "%50s |%n"; //set space for the link
+				//create an array for arguments
+				Object[] args = new Object[4 + rs.size()];
+				args[0] = "Nodes";
+				args[1] = "a";
+				args[2] = "b";
+				
+				//add every restrictors name as an argument
+				for(int m = 3; m < args.length - 1; m++) {
+					args[m] = rs.get(m - 3).getName();
 					
 				}
-				catch (IOException ex) {
-					//There was a problem, inform the user
-					JOptionPane.showMessageDialog(null, "There was a problem with saving the file: " + ex.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
-					return;
+				args[args.length -1] = "Link";
+				
+				String strOut = "";
+				strOut += String.format(formatString, args);
+				
+				for(String s : seqs) {
+					strOut += s;
 				}
-			}
+				
+				boolean saved = FileManager.saveAsText(null, strOut);
+				if(saved) {
+					JOptionPane.showMessageDialog(null, "File Saved", "File Saved", JOptionPane.INFORMATION_MESSAGE);
+				}
 		}		
 	}
 }

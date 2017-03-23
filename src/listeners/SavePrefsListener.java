@@ -2,14 +2,11 @@ package listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
-import javax.swing.JFileChooser;
+import java.util.List;
 
 import model.DescriptionTreeModel;
+import model.Restrictor;
+import tools.FileManager;
 import view.DescriptionTreeView;
 
 /**
@@ -42,26 +39,12 @@ public class SavePrefsListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		File file;
-		//create a file chooser
-		JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+		List<Restrictor> restrictors = model.getRestrictors();
 		
-		jfc.showSaveDialog(null); //open the file chooser
-		try {
-			file = jfc.getSelectedFile(); //get the selected file
-			FileOutputStream fos = new FileOutputStream(file.getPath() + ".ser"); //init the file stream
-			ObjectOutputStream oos = new ObjectOutputStream(fos); //init the object stream
-			
-			oos.writeObject(model.getRestrictors()); //write the restrictor list
-			oos.close();
-			fos.close();
-		}
-		catch(IOException ex) {
-			// If there was an error, inform the user
-			view.displayError("Save restrictions error", "There was an issue when saving preferences: " + ex.getMessage());
-			return;
-		}
+		boolean saved = FileManager.saveObject(view.getFrame(), restrictors, ".ser");
 		
+		if(saved) {
+			view.displayMessage("File Saved", "File Saved");
+		}
 	}
-
 }

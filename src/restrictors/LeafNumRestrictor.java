@@ -1,12 +1,10 @@
 package restrictors;
 
-import java.util.List;
-
-import model.AbstractRestrictor;
 import model.DescriptionTree;
-import model.scala.Tree;
 
 public class LeafNumRestrictor extends AbstractRestrictor {
+
+	private static final long serialVersionUID = -3656758475448134321L;
 
 	public LeafNumRestrictor(String name) {
 		super(name);

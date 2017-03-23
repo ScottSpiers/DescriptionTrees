@@ -76,6 +76,8 @@ public class CalcNumTreesListener implements ActionListener {
 				return;
 			}
 			view.setSequence(""); //using a provided tree means a single number of nodes
+			model.resetTrees();
+			model.addTrees(newTrees);
 		}
 		else { //otherwise
 			int nodeMin = view.getNodeMin(); //get the min number of nodes
@@ -127,6 +129,8 @@ public class CalcNumTreesListener implements ActionListener {
 					view.displayError("Restriction Error", "A restriction has a minumum value greater than a maximum. Please resolve this issue");
 					return;
 				}
+				
+				model.removeDuplicates(newTrees);
 				
 				//if our current run is not the first
 				if((i - nodeMin) > 0) {

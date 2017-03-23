@@ -175,7 +175,7 @@ public class DescriptionTreeView implements Observer {
 		pnl_restrictions.add(box_scrl);
 		pnl_restrictions.setPreferredSize(new Dimension(400, height));
 		
-		JButton btn_addRestriction = new JButton("+");
+		JButton btn_addRestriction = new JButton("Add Restriction");
 		btn_addRestriction.setHorizontalTextPosition(SwingConstants.CENTER);
 		btn_addRestriction.setAlignmentX(Component.LEFT_ALIGNMENT);
 		btn_addRestriction.setMaximumSize(new Dimension(400, 20));
@@ -343,9 +343,18 @@ public class DescriptionTreeView implements Observer {
 	}
 	
 	/**
+	 * Displays a message to the user
+	 * @param title the title of the message
+	 * @param msg the message
+	 */
+	public void displayMessage(String title, String msg) {
+		JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	/**
 	 * Displays an error message to the users
 	 * @param title the title of the message
-	 * @param msg //the message
+	 * @param msg the message
 	 */
 	public void displayError(String title, String msg) {
 		JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.ERROR_MESSAGE);
@@ -445,6 +454,14 @@ public class DescriptionTreeView implements Observer {
 	public void toggleNodesEnabled() {
 		spnr_nodeMin.setEnabled(!spnr_nodeMin.isEnabled());
 		spnr_nodeMax.setEnabled(!spnr_nodeMax.isEnabled());
+	}
+	
+	/**
+	 * Returns the frame as a component to be used for setting new screen's parent
+	 * @return the frame as a component
+	 */
+	public Component getFrame() {
+		return frame;
 	}
 	
 	/**

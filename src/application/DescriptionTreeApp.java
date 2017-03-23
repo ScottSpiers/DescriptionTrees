@@ -1,5 +1,6 @@
 package application;
 
+import tools.FileManager;
 import view.DescriptionTreeView;
 
 /**
@@ -13,6 +14,7 @@ import view.DescriptionTreeView;
 public class DescriptionTreeApp {
 	
 	public static void main(String[] args) {
+		new FileManager();
 		new DescriptionTreeView().display();
 	}
 }

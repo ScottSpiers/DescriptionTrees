@@ -65,7 +65,7 @@ public class AlphaTree extends DescriptionTree {
 		}
 		else {
 			for(int i = n; i >= 0; i--) {			
-				nodeMin = alpha; //iknitialise min
+				nodeMin = alpha; //initialise min
 				nodeMax = beta; //initialise max
 				nodes = descriptionTree.getNodes(); //get the nodeList
 				//calculate min

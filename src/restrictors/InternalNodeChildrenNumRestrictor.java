@@ -2,11 +2,12 @@ package restrictors;
 
 import java.util.List;
 
-import model.AbstractRestrictor;
 import model.DescriptionTree;
 import model.scala.Tree;
 
 public class InternalNodeChildrenNumRestrictor  extends AbstractRestrictor {
+
+	private static final long serialVersionUID = 3569823286706768487L;
 
 	public InternalNodeChildrenNumRestrictor(String name) {
 		super(name);

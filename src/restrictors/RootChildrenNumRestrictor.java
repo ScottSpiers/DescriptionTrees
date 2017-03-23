@@ -1,9 +1,10 @@
 package restrictors;
 
-import model.AbstractRestrictor;
 import model.DescriptionTree;
 
 public class RootChildrenNumRestrictor extends AbstractRestrictor {
+
+	private static final long serialVersionUID = 7370083957299180247L;
 
 	public RootChildrenNumRestrictor(String name) {
 		super(name);

@@ -83,7 +83,7 @@ public abstract class DescriptionTree implements Cloneable {
 		descriptionTree = descriptionTree.addLeafAsFirstChild();
 	}
 	
-	public void addChildToChildAt(int i) {
+	public void addLeafAsChildAt(int i) {
 		descriptionTree = descriptionTree.addLeafAsChildAt(i);
 	}
 	
@@ -136,6 +136,9 @@ public abstract class DescriptionTree implements Cloneable {
 	public boolean equals(Object t) {
 		if(t instanceof DescriptionTree) {
 			return (descriptionTree.getNodes().equals(((DescriptionTree) t).getNodes()));
+		}
+		else if(t instanceof Tree) {
+			return descriptionTree.equals((Tree) t); 
 		}
 		return false;
 	}
@@ -287,7 +290,6 @@ public abstract class DescriptionTree implements Cloneable {
 					
 					valueLists.get(depth).add(parentIndex + 1, -1);
 					parentIndex++;
-					//shift++;
 				}
 				else {
 					int locForParent = (indices[0] + endIndex) / 2;
@@ -533,60 +535,6 @@ public abstract class DescriptionTree implements Cloneable {
 			valueDepth++;
 			childIndex = 0;
 		}
-	}
-	
-	
-	
-	
-	public String printString() {
-		int numStrings = (getDepth() * 2) + 1;
-		StringBuilder[] strings = new StringBuilder[numStrings];
-		int startIndex = 0;
-		int numVertices = getNumVertices();
-		boolean oddChildren = numVertices % 2 == 1;
-		int level = 0;
-		int stringLength = 0;
-		
-		if(oddChildren) {
-			stringLength = numVertices + 2;
-		}
-		else {
-			stringLength = numVertices + 1;
-		}
-		
-		for(int i = 0; i < strings.length; i++) {
-			strings[i] = new StringBuilder();
-			strings[i].setLength(stringLength);
-		}
-		
-		strings[0].setCharAt((stringLength / 2) + 1, Integer.toString(getValue()).charAt(0));
-		
-		for(Tree t : getAllChildren()) {
-			printString(t, level + 2, startIndex, strings, numVertices);
-		}
-		
-		System.out.println("      __________6__________\n     /      /   |   \\      \\\n  __3__    4  __5__  6      7\n / / \\ \\     / / \\ \\       /|\\\n1 2   3 4   1 2   3 4     1 2 3\n       /|\\\n      1 2 3");
-		String str_out = "";
-		for(StringBuilder s : strings) {
-			str_out += s + "\n";
-		}
-		return str_out;
-	}
-	
-	private void printString(Tree t, int level, int startIndex, StringBuilder[] strings, int numVertices) {
-		int numVerts = numVertices;
-		int indexStart = startIndex;
-		int divide = t.getNumVertices() * ((strings[0].length() - startIndex) / numVerts);
-		int index = startIndex + (divide / 2);
-		
-		strings[level].setCharAt(index, Integer.toString(t.getValue()).charAt(0));
-		indexStart += divide;
-		numVerts -= t.getNumVertices();
-		
-		for(Tree child : t.getAllChildren()) {
-			printString(child, level + 2, indexStart, strings, numVerts);
-		}
-		
 	}
 	
 	private String toStringHelper(Tree t, int level) {

@@ -18,8 +18,7 @@ public class DescriptionTreeModel extends Observable {
 	}
 	
 	/**
-	 * TESTING PURPOSES ONLY
-	 * DELETE AFTER TESTING COMPLETE
+	 * 
 	 * @return
 	 */
 	public List<DescriptionTree> getTrees() {
@@ -62,6 +61,17 @@ public class DescriptionTreeModel extends Observable {
 		trees.clear();
 	}
 	
+	public void removeDuplicates(List<DescriptionTree> ts) {
+		for(int i = 0; i < ts.size(); i++) {
+			for(int j = 0; j < ts.size(); j++) {
+				if(i != j && ts.get(i).equals(ts.get(j))) {
+					ts.remove(j);
+					j--;
+				}
+			}
+		}
+	}
+	
 	public int getNumTrees() {
 		return trees.size();
 	}
@@ -81,23 +91,31 @@ public class DescriptionTreeModel extends Observable {
 	}
 	
 	public void restrictTrees() {
-		List<DescriptionTree> newTrees = new ArrayList<DescriptionTree>();
-		newTrees.addAll(trees);
-		for(Restrictor r : restrictors) {
-			newTrees = r.applyRestriction(newTrees);
+		for(int i = 0; i < trees.size(); i++) {
+			for(Restrictor r : restrictors) {
+				if(!r.applyRestriction(trees.get(i))) {
+					trees.remove(i);
+					i--;
+				}
+			}
+			
 		}
-		trees = newTrees;
+		
 		this.setChanged();
 		this.notifyObservers(true);
 	}
 	
 	public List<DescriptionTree> applyRestrictions(List<DescriptionTree> ts) {
-		for(Restrictor r : restrictors) {
-			if(r.getMin() > r.getMax()) {
-				return null;
+		for(int i = 0; i< ts.size(); i++) {			
+			for(Restrictor r : restrictors) {
+				if(r.getMin() > r.getMax()) {
+					return null;
+				}
+				if(!r.applyRestriction(ts.get(i))) {
+					ts.remove(i);
+					i--;
+				}
 			}
-			
-			ts = r.applyRestriction(ts);
 		}
 		return ts;
 	}
@@ -124,7 +142,7 @@ public class DescriptionTreeModel extends Observable {
 				
 				DescriptionTree cln2_t = (DescriptionTree) t.clone();
 				for(int i = 0; i <= cln2_t.getNumChildren(); i++) {
-					cln2_t.addChildToChildAt(i);
+					cln2_t.addLeafAsChildAt(i);
 					if(!treeList.contains(cln2_t)) {
 						treeList.add(cln2_t);						
 					}

@@ -121,13 +121,13 @@ public class RestrictionPane extends JFrame {
 	 */
 	private void initRestrictorList() {
 		restrictions.put("Number of Leaves", new LeafNumRestrictor("Number of Leaves: ", "Restricts the number of leaves", 1, 1));
-		restrictions.put("Number of Nodes", new InternalNodeNumRestrictor("Number of Nodes: ", "Restricts the number of internal nodes (Excludes root)"));
+		restrictions.put("Number of Internal Nodes", new InternalNodeNumRestrictor("Number of Internal Nodes: ", "Restricts the number of internal nodes (Excludes root)"));
 		restrictions.put("Root Value", new RootValueRestrictor("Root Value", "Restricts the value of the Root node only"));
 		restrictions.put("Internal Node Value", new InternalNodeValueRestrictor("Internal Node Value", "Restricts the value of internal nodes (Excludes root)"));
 		restrictions.put("Number of Children (Root)", new RootChildrenNumRestrictor("Number of Children of Root", "Restricts the number of children the root node can have"));
 		restrictions.put("Number of Children (Internal Node)", new InternalNodeChildrenNumRestrictor("Number of Children of Internal Nodes", "Restricts the number of children internal nodes can have (Excludes root)"));
 		restrictions.put("Path Length", new PathLengthRestrictor("Path Length", "Restricts the path length (depth0 of the tree"));
-		restrictions.put("Number of Jumps", new JumpNumRestrictor("Number of Jumps", "Restricts the number of times a node has a value greater than sum of its children"));
+		restrictions.put("Number of Jumps", new JumpNumRestrictor("Number of Jumps", "Restricts the number of times a node has a value greater than sum of its children", 0, 0));
 	}
 	
 	/**

@@ -38,28 +38,46 @@ public class OEISListener implements ActionListener {
 	/*
 	 * (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 * 
+	 * Mac OS specific section source: http://alvinalexander.com/java/mac-java-open-url-browser-osascript
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Desktop desktop = Desktop.getDesktop();
-		if(Desktop.isDesktopSupported()) { //if supported
+		String os = System.getProperty("os.name");
+		//get the uri
+		String uri = "www.oeis.org/search?q="; 
+		
+		if(os.equals("Mac OS X")) {
+			Runtime rt = Runtime.getRuntime();
+			String[] args = {"osascript", "-e", "open " + uri + view.getSequence()};
 			try {
-				//get the uri
-				String uri = "www.oeis.org/search?q="; 
-				uri += view.getSequence();
-				desktop.browse(new URI(uri)); //initiate the search
+				Process p = rt.exec(args);
 			}
-			catch(URISyntaxException ex) {
-				view.displayError("URI Error", ex.getMessage());
-			}
-			catch(IOException ex) {
-				view.displayError("IO Error", ex.getMessage());
+			catch (IOException ex) {
+				view.displayError("Search Error", ex.getMessage());
 			}
 		}
-		else { //otherwise
-			//display that this is not supported
-			view.displayError("Browser Error", "Unfortunately this tool is incompatible with this platform");
+		else {
+			Desktop desktop = Desktop.getDesktop();
+			if(Desktop.isDesktopSupported()) { //if supported
+				try {
+					uri += view.getSequence();
+					desktop.browse(new URI(uri)); //initiate the search
+				}
+				catch(URISyntaxException ex) {
+					view.displayError("URI Error", ex.getMessage());
+				}
+				catch(IOException ex) {
+					view.displayError("IO Error", ex.getMessage());
+				}
+			}
+			else { //otherwise
+				//display that this is not supported
+				view.displayError("Browser Error", "Unfortunately this tool is incompatible with this platform");
+			}			
 		}
+		
 		
 	}
 
