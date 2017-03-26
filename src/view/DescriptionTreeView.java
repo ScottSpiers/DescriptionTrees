@@ -457,6 +457,13 @@ public class DescriptionTreeView implements Observer {
 	}
 	
 	/**
+	 * Requests that the frame gets focussed
+	 */
+	public void getFocus() {
+		frame.requestFocus();
+	}
+	
+	/**
 	 * Returns the frame as a component to be used for setting new screen's parent
 	 * @return the frame as a component
 	 */

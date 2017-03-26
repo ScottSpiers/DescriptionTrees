@@ -92,10 +92,14 @@ public class DescriptionTreeModel extends Observable {
 	
 	public void restrictTrees() {
 		for(int i = 0; i < trees.size(); i++) {
+			if(trees.isEmpty()) {
+				break;
+			}
 			for(Restrictor r : restrictors) {
 				if(!r.applyRestriction(trees.get(i))) {
 					trees.remove(i);
 					i--;
+					break;
 				}
 			}
 			
@@ -114,6 +118,7 @@ public class DescriptionTreeModel extends Observable {
 				if(!r.applyRestriction(ts.get(i))) {
 					ts.remove(i);
 					i--;
+					break;
 				}
 			}
 		}

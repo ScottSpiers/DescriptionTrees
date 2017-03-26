@@ -15,14 +15,34 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+/**
+ * 
+ * @author Scott Spiers
+ * University of Strathclyde
+ * Final Year Project: Description Trees
+ * Supervisor: Sergey Kitaev
+ * 
+ * Provides generic saving and loading functionality 
+ */
 public class FileManager {
 	
+	//one instance of a file chooser at all times
 	private static JFileChooser jfc;
 	
+	/**
+	 * Constructor to initialise the file chooser
+	 */
 	public FileManager() {
 		jfc = new JFileChooser(System.getProperty("user.dir"));
 	}
 
+	/**
+	 * Saves the provided object using the file type provided
+	 * @param frame The parent for the file chooser
+	 * @param o The object to be saved
+	 * @param fileType The file extension to save as
+	 * @return Whether or not the file saved successfully
+	 */
 	public static boolean saveObject(Component frame, Object o, String fileType) {
 		File file;
 		//create a file chooser		
@@ -53,9 +73,16 @@ public class FileManager {
 				return false;
 			}
 		}
+		//we must have failed
 		return false;
 	}
 	
+	/**
+	 * Saves the provided text to a .txt file
+	 * @param frame The parent for the file chooser
+	 * @param text The text to save
+	 * @return Whether or not the file saved
+	 */
 	public static boolean saveAsText(Component frame, String text) {
 		File file;		
 		FileWriter fw;
@@ -101,9 +128,15 @@ public class FileManager {
 				return false;
 			}		
 		}
+		//we must have failed
 		return false;
 	}
 	
+	/**
+	 * Load in an object. The caller is expected to know the type and cast if required
+	 * @param frame The parent for the file chooser
+	 * @return The loaded object if successful, null otherwise
+	 */
 	public static Object loadObject(Component frame) {
 		FileInputStream fis;
 		ObjectInputStream ois;
@@ -140,6 +173,7 @@ public class FileManager {
 				return null;
 			}
 		}
+		//we must have failed
 		return null;		
 	}
 }

@@ -100,12 +100,12 @@ public class SetDrawingListener implements ActionListener {
 		//if we have more than one root
 		if(rootCount > 1) {
 			//this can't happen, tell the user
-			JOptionPane.showMessageDialog(null, "More than one root node found.");
+			JOptionPane.showMessageDialog(view.getFrame(), "More than one root node found.", "Tree Creation Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		else if(rootCount == 0) { //if we have no roots
 			// tell the user
-			JOptionPane.showMessageDialog(null, "No Root Node Found");
+			JOptionPane.showMessageDialog(view.getFrame(), "No Root Node Found", "Tree Creation Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		else {
@@ -142,7 +142,7 @@ public class SetDrawingListener implements ActionListener {
 					kids.add(child); //add to the list
 					if(childCount == 0) { // if current is a leaf
 						//add a leaf to it
-						tree = tree.addLeafToLeaf(numLeaves - (tree.getNumVertices() - curNode)); //the leaf index is the total leaves - total vertices - the current node index
+						tree = tree.addLeafToLeaf(numLeaves - (tree.getNumVertices(0) - curNode)); //the leaf index is the total leaves - total vertices - the current node index
 						numNodes++; //we have a new node
 						//no new leaves
 						childCount++;
@@ -164,6 +164,7 @@ public class SetDrawingListener implements ActionListener {
 		}
 		
 		model.setProvidedTree(tree); //set the tree in the model
+		view.getFocus();
 	}
 
 }

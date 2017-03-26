@@ -63,7 +63,7 @@ public class OEISAutoSearcher {
 		nodeMax = view.getNodeMax();
 		nodeSeq = new int[(nodeMax - nodeMin) + 1];
 		
-		
+		//check for error
 		if(nodeMin > nodeMax) {
 			JOptionPane.showMessageDialog(view, "Minimum node number is greater than maximum", "Node Input Error", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -72,6 +72,7 @@ public class OEISAutoSearcher {
 		aMin = view.getAMin();
 		aMax = view.getAMax();
 		
+		//check for error
 		if(aMin > aMax) {
 			JOptionPane.showMessageDialog(view, "Minimum 'a' value is greater than maximum",  "Value Input Error", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -80,6 +81,7 @@ public class OEISAutoSearcher {
 		bMin = view.getBMin();
 		bMax = view.getBMax();
 		
+		//check for error
 		if(bMin > bMax) {
 			JOptionPane.showMessageDialog(view, "Minimum 'b' value is greater than maximum", "Value Input Error", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -87,6 +89,8 @@ public class OEISAutoSearcher {
 		
 		isAlpha = view.isAlphaChecked();
 		isBeta = view.isBetaChecked();
+		
+		//check for error
 		if(!isAlpha && !isBeta) {
 			JOptionPane.showMessageDialog(view, "Please select either Alpha or Beta tree", "Tree Type Input Error", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -98,27 +102,13 @@ public class OEISAutoSearcher {
 		for(a = aMin; a <= aMax; a++) {
 			for(b = bMin; b <= bMax; b++) {
 				if(selectedRestrictors.isEmpty()) {
-					int i = 0;
-					for(int n = nodeMin; n <= nodeMax; n++) {
-						if(isAlpha) {
-							t = new AlphaTree(a, b);
-						}
-						else {
-							t = new BetaTree(a,b);							
-						}
-						newTrees.clear();
-						for(DescriptionTree dt : model.genTrees(t, n)) {
-							newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
-						}										
-						
-						model.removeDuplicates(newTrees);
-						nodeSeq[i] = newTrees.size();
-						i++;
-					}
+					nodeLoop(); //execute the main loop
+					
+					//format output
 					String seq = "| 0 to 5 | a: " + a + " | b: " + b + " | Link: www.oeis.org/search?q=";
 					String linkEnd = "";
-					for(int l = 0; l < nodeSeq.length - 1 ; l++) {
-						linkEnd += nodeSeq[l] + ",";				
+					for(int l = 0; l < nodeSeq.length - 1 ; l++) { //build sequence
+						linkEnd += nodeSeq[l] + ",";
 					}				
 					linkEnd += nodeSeq[nodeSeq.length - 1];
 					
@@ -126,12 +116,50 @@ public class OEISAutoSearcher {
 					seqs.add(seq);
 				}
 				else {
-					restrictionLoop(selectedRestrictors.size()-1);
+					restrictionLoop(selectedRestrictors.size()-1); //create loops for restrictors
 				}
 				
 			}
 		}
-		printSeqs(seqs);
+		printSeqs(seqs); //print the sequences
+	}
+	
+	/**
+	 * Runs the main loop calculating the number 
+	 * of trees while applying any restrictions
+	 */
+	private void nodeLoop() {
+		int i = 0;
+		for(int n = nodeMin; n <= nodeMax; n++) { //loop over all node numbers
+			//create the right type of tree
+			if(isAlpha) {
+				t = new AlphaTree(a, b);
+			}
+			else {
+				t = new BetaTree(a,b);							
+			}
+			newTrees.clear(); //clear the current trees
+			for(DescriptionTree dt : model.genTrees(t, n)) { //generate
+				newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1)); //valuate
+			}								
+			
+			//restrict
+			for(int t = 0; t < newTrees.size(); t++) {
+				for(Restrictor r : selectedRestrictors) {
+					if(!r.applyRestriction(newTrees.get(t))) {
+						newTrees.remove(t);
+						t--;
+						break;
+					}
+				}
+				
+			}
+			
+			//get rid of duplicates
+			model.removeDuplicates(newTrees);
+			nodeSeq[i] = newTrees.size();
+			i++;
+		}
 	}
 	
 	/**
@@ -150,35 +178,9 @@ public class OEISAutoSearcher {
 			//loop over this restrictor
 			for(int j = min; j <= max; j++) {
 				selectedRestrictors.get(0).setMax(j);
-				int k = 0;
-				//run the main loop
-				for(int n = nodeMin; n <= nodeMax; n++) {
-					if(isAlpha) {
-						t = new AlphaTree(a, b);
-					}
-					else {
-						t = new BetaTree(a,b);							
-					}
-					newTrees.clear();
-					for(DescriptionTree dt : model.genTrees(t, n)) {
-						newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
-					}
-					
-					for(int t = 0; i < newTrees.size(); i++) {
-						for(Restrictor r : selectedRestrictors) {
-							if(!r.applyRestriction(newTrees.get(t))) {
-								newTrees.remove(t);
-								t--;
-							}
-						}
-						
-					}
-						
-					model.removeDuplicates(newTrees);
-					nodeSeq[k] = newTrees.size();
-					k++;
-				}
-				//prepare the output
+				nodeLoop();
+				
+				//format the output
 				String seq = "| 0 to 5 | a: " + a + " | b: " + b + " | Link: http://www.oeis.org/search?q=";
 				String linkEnd = "";
 				for(int l = 0; l < nodeSeq.length - 1 ; l++) {
@@ -191,6 +193,7 @@ public class OEISAutoSearcher {
 					formatString += "%25s | ";
 				}
 				formatString += "%50s |%n";
+				//format restrictor output
 				Object[] args = new Object[4 + selectedRestrictors.size()];
 				args[0] = nodeMin + " to " + nodeMax;
 				args[1] = a;
@@ -207,6 +210,7 @@ public class OEISAutoSearcher {
 			int min = selectedRestrictors.get(i).getMin();
 			int max = selectedRestrictors.get(i).getMax();
 			
+			//check for error
 			if(min > max) {
 				JOptionPane.showMessageDialog(view, selectedRestrictors.get(i).getName() + " Error", "Minimum value is greater than maximum", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -222,9 +226,9 @@ public class OEISAutoSearcher {
 	
 	/**
 	 * Output the results
-	 * @param seqs THe list of sequences gathered from the calculations
+	 * @param seqs The list of sequences gathered from the calculations
 	 */
 	private void printSeqs(List<String> seqs) {
-		new AutoSearchResultsView(seqs, selectedRestrictors);
+		new AutoSearchResultsView(seqs, selectedRestrictors); //open the results view
 	}
 }

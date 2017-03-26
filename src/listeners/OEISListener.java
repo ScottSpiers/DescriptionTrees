@@ -46,13 +46,13 @@ public class OEISListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String os = System.getProperty("os.name");
 		//get the uri
-		String uri = "www.oeis.org/search?q="; 
+		String uri = "http://www.oeis.org/search?q="; 
 		
-		if(os.equals("Mac OS X")) {
+		if(os.startsWith("Mac OS")) {
 			Runtime rt = Runtime.getRuntime();
 			String[] args = {"osascript", "-e", "open " + uri + view.getSequence()};
 			try {
-				Process p = rt.exec(args);
+				Process p = rt.exec("open " + uri + view.getSequence());
 			}
 			catch (IOException ex) {
 				view.displayError("Search Error", ex.getMessage());

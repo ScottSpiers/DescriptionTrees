@@ -83,7 +83,7 @@ public class RestrictionComponent extends JComponent {
 	 */
 	private JSpinner createSpinner(int n) {
 		//create the spinner
-		JSpinner spnr_limit = new JSpinner(new SpinnerNumberModel(n, n, null, 1));
+		JSpinner spnr_limit = new JSpinner(new SpinnerNumberModel(n, 0, null, 1));
 		//connect it to the appropriate listener
 		spnr_limit.addChangeListener(new SpinnerUpdateListener());
 		return spnr_limit;
