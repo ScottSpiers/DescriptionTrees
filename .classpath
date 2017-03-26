@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/Scott/Documents/Uni/4thYear/Final Year Project/TestHotDraw.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Scott/Documents/Uni/4thYear/Final Year Project/JHD_MIW2011.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Scott/Documents/eclipse/plugins/org.scala-lang.scala-library_2.11.8.v20160304-115712-1706a37eb8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

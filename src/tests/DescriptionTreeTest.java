@@ -25,6 +25,10 @@ public class DescriptionTreeTest {
 	@Before
 	public void setup() {
 		t  = new AlphaTree(); //chosen tree type doesn't matter for equality
+		t.addLeaf();
+		t.addLeaf();
+		t.addLeafToLeaf(0);
+		t.addLeafToLeaf(1);
 		empty = new AlphaTree();
 		leaf = new AlphaTree();
 		leaf.addLeaf();
@@ -186,46 +190,90 @@ public class DescriptionTreeTest {
 	
 	@Test
 	public void testAddNode() {
+		node.addLeaf();
+		Tree nodeToAdd = new Leaf(0);
+		nodeToAdd = nodeToAdd.addLeaf();
+		nodeToAdd = nodeToAdd.addLeaf();
+		node.addNode(new AlphaTree(nodeToAdd));
+		DescriptionTree testTree = new AlphaTree();
+		testTree.addLeaf();
+		testTree.addLeaf();
+		testTree.addLeaf();
+		testTree.addLeafToLeaf(1);
+		testTree.addLeafToNode(1);
+		assertTrue(node.equals(testTree));
+	}
+	
+	@Test
+	public void testSetAllLeafValuesBeta() {
+		DescriptionTree Bnode = new BetaTree(1, 0);
+		Bnode.addLeaf();
+		Bnode.addLeaf();
+		Bnode.addLeafToLeaf(0);
+		Bnode.addLeafToNode(1);
+		Bnode.addLeafToNode(1);
+		Bnode.evaluateTree(Bnode.getNodes().size()-1);
+		List<Tree> leaves = Bnode.getLeaves();
+		boolean isValued = true;
+		for(Tree l : leaves) {
+			if(l.getValue() != 1) {
+				isValued = false;
+				break;
+			}
+		}
+		assertTrue(isValued);
+	}
+	
+	@Test
+	public void testSetAllLeafValuesAlpha() {
+		DescriptionTree Anode = new AlphaTree(0, 1);
+		Anode.addLeaf();
+		Anode.addLeaf();
+		Anode.addLeafToLeaf(0);
+		Anode.addLeafToNode(1);
+		Anode.addLeafToNode(1);
+		Anode.evaluateTree(Anode.getNodes().size()-1);
+		List<Tree> leaves = Anode.getLeaves();
+		boolean isValued = true;
+		for(Tree l : leaves) {
+			if(l.getValue() != 1) {
+				isValued = false;
+				break;
+			}
+		}
+		assertTrue(isValued);
+	}
+	
+	@Test
+	public void testEvaluateAlpha() {
+		DescriptionTree aNode = new AlphaTree(0,1);
+		aNode.addLeaf();
+		aNode.addLeaf();
+		aNode.addLeaf();
+		List<DescriptionTree> valdTrees = aNode.evaluateTree(aNode.getNodes().size()-1);
+		assertTrue(valdTrees.size() == 3);
+	}
+	
+	@Test
+	public void testEvaluateBeta() {
+		DescriptionTree bNode = new BetaTree(0,1);
+		bNode.addLeaf();
+		bNode.addLeaf();
+		bNode.addLeaf();
+		List<DescriptionTree> valdTrees = bNode.evaluateTree(bNode.getNodes().size()-1);
+		assertTrue(valdTrees.size() == 1);
+	}
+	
+	@Test
+	public void testGetNumLeaves() {
+		node.addLeaf();
+		node.addLeaf();
+		node.addLeaf();
+		node.addLeafToLeaf(0);
+		node.addLeafToLeaf(0);
+		assertTrue(node.getNumLeaves() == 3);
+	}
 		
-	}
-	
-	@Test
-	public void testEqualsNull() {
-		assertFalse(t.equals(null));
-	}
-	
-	@Test
-	public void testEqualEmpty() {
-		assertTrue(t.equals(empty));
-	}
-	
-	@Test
-	public void testEqualLeaf() {
-		t.addLeaf();
-		assertTrue(t.equals(leaf));
-	}
-	
-	/*@Test
-	public void testEqualNode() {
-		t.getChild(0).addLeaf();
-		assertTrue(t.equals(node));
-	}*/
-	
-	@Test
-	public void testEqualTree() {
-		
-	}
-	
-	@Test
-	public void testNotEqualLeaf() {
-		
-	}
-	
-	@Test
-	public void testNotEqualNode() {
-		
-	}
-	
 	@Test
 	public void testGetWidth() {
 		DescriptionTree node2 = (DescriptionTree) node.clone();
@@ -309,29 +357,72 @@ public class DescriptionTreeTest {
 	}
 	
 	@Test
-	public void testEval() {
-		System.out.println("Eval 1:\n");
-		DescriptionTree bTree = new BetaTree(1, 0);
-		bTree.addLeaf();
-		bTree.addLeaf();
-		bTree.addLeaf();
-		bTree.addLeafToLeaf(1);
-		bTree.addLeafToLeaf(1);
-		bTree.addLeafToLeaf(0);
+	public void testEqualsNull() {
+		assertFalse(t.equals(null));
 	}
 	
 	@Test
-	public void testEval2() {
-		System.out.println("Eval 2\n");
-		DescriptionTree bTree = new BetaTree(1, 0);
-		bTree.addLeaf();
-		bTree.addLeaf();
-		bTree.addLeaf();
-		bTree.addLeafToLeaf(0);
-		bTree.addLeafToLeaf(1);
-		bTree.addLeafToNode(1);
-		bTree.addLeafToLeaf(1);
-		
+	public void testEqualsEmpty() {
+		DescriptionTree testEmpty = new AlphaTree();
+		assertTrue(empty.equals(testEmpty));
 	}
-
+	
+	@Test
+	public void testEqualsLeaf() {
+		DescriptionTree testLeaf = new AlphaTree();
+		testLeaf.addLeaf();
+		assertTrue(leaf.equals(testLeaf));
+	}
+	
+	@Test
+	public void testEqualsNode() {
+		node.addLeaf();
+		DescriptionTree testNode = new AlphaTree();
+		testNode.addLeaf();
+		testNode.addLeaf();
+		assertTrue(node.equals(testNode));
+	}
+	
+	@Test
+	public void testNotEqualLeaf() {
+		DescriptionTree testLeaf = new AlphaTree(new Leaf(1), 0, 1);
+		assertFalse(leaf.equals(testLeaf));
+	}
+	
+	@Test
+	public void testNotEqualNodeRoot() {
+		node.addLeaf();
+		DescriptionTree testNode = new AlphaTree(new Leaf(1));
+		testNode.addLeaf();
+		assertFalse(node.equals(testNode));
+	}
+	
+	@Test
+	public void testNotEqualNodeChild() {
+		node.addLeaf();
+		DescriptionTree testNode = new AlphaTree(new Leaf(0), 0, 1);
+		testNode.addLeaf();
+		testNode.evaluateTree(0);
+		assertFalse(node.equals(testNode));		
+	}
+	
+	@Test
+	public void testEqualsReflexive() {
+		assertTrue(leaf.equals(leaf));
+	}
+	
+	@Test
+	public void testEqualsSymmetric() {
+		DescriptionTree testLeaf = new AlphaTree();
+		testLeaf.addLeaf();
+		assertTrue(leaf.equals(testLeaf) && testLeaf.equals(leaf));
+	}
+	
+	@Test
+	public void testEqualsTransitive() {
+		DescriptionTree testLeaf = new AlphaTree();
+		DescriptionTree leaf2 = new AlphaTree(new Leaf(0));
+		testLeaf.addLeaf();
+		assertTrue(leaf.equals(testLeaf) && testLeaf.equals(leaf2) && leaf2.equals(leaf));
+	}
 }

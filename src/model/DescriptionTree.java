@@ -256,10 +256,17 @@ public abstract class DescriptionTree implements Cloneable {
 	@Override
 	public boolean equals(Object t) {
 		if(t instanceof DescriptionTree) {
-			return (descriptionTree.getNodes().equals(((DescriptionTree) t).getNodes()));
-		}
-		else if(t instanceof Tree) {
-			return descriptionTree.equals((Tree) t); 
+			if(descriptionTree.getNumChildren() == ((DescriptionTree) t).getNumChildren()) {
+				if(descriptionTree.getValue() == ((DescriptionTree) t).getValue()) {
+					return (descriptionTree.getAllChildren().equals(((DescriptionTree) t).getAllChildren()));						
+				}
+				else {
+					return false; 
+				}
+			}
+			else {
+				return false;
+			}
 		}
 		return false;
 	}
