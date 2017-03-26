@@ -230,7 +230,7 @@ public class OEISAutoSearchView extends JFrame {
 		JSpinner spnr_max = new JSpinner();
 		spnr_max.addChangeListener(new AutoSearchRestrictorSpinnerListener(this));
 		spnr_max.setEnabled(false);
-		spnr_max.setModel(new SpinnerNumberModel(1, 0, null, 1));
+		spnr_max.setModel(new SpinnerNumberModel(1, r.getMin(), null, 1));
 		spnr_max.setMaximumSize(new Dimension(50, 20));
 		
 		bx_r.add(lbl_name);

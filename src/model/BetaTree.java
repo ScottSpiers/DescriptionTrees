@@ -50,7 +50,10 @@ public class BetaTree extends DescriptionTree {
 		super(t, a, b);
 	}
 	
-	/**
+	/*
+	 * (non-Javadoc)
+	 * @see model.DescriptionTree#evaluateTree(int)
+	 * 
 	 * Evaluate leaves as a
 	 * Evaluate nodes as:
 	 * 		>= a &&
@@ -65,46 +68,51 @@ public class BetaTree extends DescriptionTree {
 		int nodeMax = beta;
 		List<Tree> nodes = descriptionTree.getNodes();
 		
+		//if we have no children simply return the tree
+		//its a leaf so has already been valued
 		if(getNumChildren() < 1) {
 			newTrees.add(this);
 			return newTrees;
 		}
 		
+		//if we are setting the root node
 		if(n <= 0) {
 			nodeMax = beta;
+			//calculate maximum value
 			for(Tree t : nodes.get(0).getAllChildren()) {
 				nodeMax += t.getValue();
 			}
-			this.setNodeValue(nodeMax, 0);
+			this.setNodeValue(nodeMax, 0); //set this as the nodes value as stated by the definition
 			if(!newTrees.contains(this)) {
 				newTrees.add(this);				
 			}
 		}
-		else {
+		else { //otherwise
 			for(int i = n; i >= 0; i--) {			
 				nodeMax = beta;
-				nodes = descriptionTree.getNodes();
+				nodes = descriptionTree.getNodes(); //get the nodes
 				for(Tree t : nodes.get(i).getAllChildren()) {
-					nodeMax += t.getValue();
+					nodeMax += t.getValue(); //calculate the max value
 				}
 				
+				//if we are at the root node
 				if(i == 0) {
-					this.setNodeValue(nodeMax, 0);
+					this.setNodeValue(nodeMax, 0); //simply set its value
 					if(!newTrees.contains(this)) {
 						newTrees.add(this);				
 					}
 				}
-				else if(nodeMin == nodeMax) {
-					this.setNodeValue(nodeMin, i);
+				else if(nodeMin == nodeMax) { //if we only have one possibility
+					this.setNodeValue(nodeMin, i); //set the nodes value to this value
 				}
 				else {
-					DescriptionTree cln_t = (DescriptionTree) this.clone();
-					for(int j = nodeMin; j <= nodeMax; j++) {
-						cln_t.setNodeValue(j, i);
-						newTrees.addAll(cln_t.evaluateTree(i-1));
-						cln_t = (DescriptionTree) this.clone();
+					DescriptionTree cln_t = (DescriptionTree) this.clone(); //clone the tree
+					for(int j = nodeMin; j <= nodeMax; j++) { //for all possible values
+						cln_t.setNodeValue(j, i); //set the clone's node at i to the current value
+						newTrees.addAll(cln_t.evaluateTree(i-1)); //evaluate this new tree
+						cln_t = (DescriptionTree) this.clone(); //re-clone the tree
 					}
-					i = 0;
+					i = 0; //we are now at the root as all nodes have been covered by the recursion
 				}
 			}			
 		}

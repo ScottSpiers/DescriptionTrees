@@ -53,7 +53,7 @@ public class NodeFigure extends GroupFigure {
 	
 	/**
 	 * Removes a child from this node if it exists
-	 * @param child
+	 * @param child the child to remove
 	 */
 	public void removeChild(NodeFigure child) {
 		if(children.contains(child)) {
