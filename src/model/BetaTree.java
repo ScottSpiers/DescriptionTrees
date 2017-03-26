@@ -5,20 +5,47 @@ import java.util.List;
 
 import model.scala.Tree;
 
+/**
+ * 
+ * @author Scott Spiers
+ * University of Strathclyde
+ * Final Year Project: Description Trees
+ * Supervisor: Sergey Kitaev
+ *
+ * Conccrete class for BetaTrees
+ */
 public class BetaTree extends DescriptionTree {
 
+	/**
+	 * Default Constructor creating an empty tree
+	 */
 	public BetaTree() {
 		super();
 	}
 	
+	/**
+	 * Constructor building the description tree from an existing tree
+	 * @param t The tree to build the description tree from
+	 */
 	public BetaTree(Tree t) {
 		super(t);
 	}
 	
+	/**
+	 * Constructs a description tree with the valuation parameters set
+	 * @param a The first parameter
+	 * @param b The second parameter
+	 */
 	public BetaTree(int a, int b) {
 		super(a, b);
 	}
 	
+	/**
+	 * Constructs a description tree with the valuation parameters set 
+	 * @param t The tree to build the description tree from
+	 * @param a The first parameter
+	 * @param b The second parameter
+	 */
 	public BetaTree(Tree t, int a , int b) {
 		super(t, a, b);
 	}
@@ -85,6 +112,10 @@ public class BetaTree extends DescriptionTree {
 		return newTrees;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see model.DescriptionTree#setAllLeafValues()
+	 */
 	@Override
 	protected void setAllLeafValues() {
 		descriptionTree = descriptionTree.setAllLeafValues(alpha);

@@ -154,12 +154,6 @@ public class DescriptionTreeModel extends Observable {
 					cln2_t = (DescriptionTree) t.clone();
 				}
 				
-				/*cln2_t = (DescriptionTree) t.clone();
-				cln2_t.addLeaf();
-				if(!treeList.contains(cln2_t)) {
-					treeList.add(cln2_t);						
-				}*/
-				
 				//need to make sure we have clean copy of t every time we do this
 				DescriptionTree cln3_t = (DescriptionTree) t.clone();
 				List<Tree> leaves = cln3_t.getLeaves();
