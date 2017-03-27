@@ -11,7 +11,7 @@ import model.Restrictor;
  * Supervisor: Sergey Kitaev
  *
  * Abstract class to provide majority of Restrictor implementation.
- * Utilises Template Method for actual restriction
+ * Utilises Strategy Method for actual restriction (DescriptionTreeModel is the Context)
  */
 public abstract class AbstractRestrictor implements Restrictor {
 	

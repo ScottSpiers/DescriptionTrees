@@ -15,6 +15,9 @@ import model.scala.Tree;
  *
  * The model for the application. Stores trees and restrictions.
  * Provides tree generation functioanltiy as well as methods to get and add trees/restrictors
+ * 
+ * Acts as the Context in the Strategy pattern (Restrictor is the Strategy)
+ * Is the Subject in terms of the Observer pattern (DescriptionTreeView is the Observer)
  */
 public class DescriptionTreeModel extends Observable {
 	private List<DescriptionTree> trees;

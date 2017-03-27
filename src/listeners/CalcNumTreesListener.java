@@ -68,7 +68,7 @@ public class CalcNumTreesListener implements ActionListener {
 				view.displayError("No Tree Provided", "You must provide a tree shape before calculating");
 				return;
 			}
-			newTrees.addAll(tree.evaluateTree(tree.getNodes().size()-1)); //genertae and valuate the tree
+			newTrees.addAll(tree.evaluateTree(tree.getNodes().size()-1)); //generate and valuate the tree
 			newTrees = model.applyRestrictions(newTrees); //restrict the trees
 			if(newTrees == null) { //if the list is now null
 				//we had a restriction with an error
@@ -116,10 +116,15 @@ public class CalcNumTreesListener implements ActionListener {
 					tree = new BetaTree(paramA, paramB);
 				}
 				
-				//for every tree in the list of generated trees
-				for(DescriptionTree dt : model.genTrees(tree, i)){
-					//valuate the trees
-					newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
+				//if we don't have to valuate
+				if(paramA == 0 && paramB == 0) {
+					newTrees.addAll(model.genTrees(tree, i)); //skip the process
+				}
+				else { //otherwise
+					for(DescriptionTree dt : model.genTrees(tree, i)){
+						//valuate the trees
+						newTrees.addAll(dt.evaluateTree(dt.getNodes().size()-1));
+					}					
 				}
 				
 				//apply restrictions
