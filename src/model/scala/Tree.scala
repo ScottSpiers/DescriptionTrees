@@ -208,7 +208,10 @@ sealed abstract class Tree {
    */
   private def getNodes(xs : List[Tree]) : List[Tree] = xs match {
     case Nil => Nil
-    case t :: ts => getNodes(ts) ++ t.getNodes().asScala 
+    case Empty() :: xs => getNodes(xs)
+    case Leaf(n) :: xs => getNodes(xs)
+    case Node(n, ys) :: xs => Node(n,ys) :: getNodes(ys) ++ getNodes(xs)
+   // case t :: ts => getNodes(ts) ++ t.getNodes().asScala 
   }
   
   /**
