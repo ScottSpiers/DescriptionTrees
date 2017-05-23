@@ -90,7 +90,7 @@ public class BetaTree extends DescriptionTree {
 		else { //otherwise
 			for(int i = n; i >= 0; i--) {			
 				nodeMax = beta;
-				nodes = descriptionTree.getNodes(); //get the nodes
+				nodes = getNodes(); //get the nodes
 				for(Tree t : nodes.get(i).getAllChildren()) {
 					nodeMax += t.getValue(); //calculate the max value
 				}

@@ -319,6 +319,37 @@ public class DescriptionTreeTest {
 	}
 	
 	@Test
+	public void testNumNodes() {
+		DescriptionTree node6 = new BetaTree();
+		node6.addLeaf(); //root
+		node6.addLeaf(); //node 1
+		node6.addLeaf(); //leaf 6
+		node6.addLeaf(); // node 3
+		node6.addLeaf(); // leaf 11
+		node6.addLeaf(); //node 4
+		
+		node6.addLeafToLeaf(0);
+		node6.addLeafToNode(1);
+		node6.addLeafToNode(1);
+		node6.addLeafToNode(1); //node 2
+		
+		node6.addLeafToLeaf(3);
+		node6.addLeafToNode(2);
+		node6.addLeafToNode(2);
+		
+		node6.addLeafToLeaf(7);
+		node6.addLeafToNode(3);
+		node6.addLeafToNode(3);
+		node6.addLeafToNode(3);
+		
+		node6.addLeafToLeaf(12);
+		node6.addLeafToNode(4);
+		node6.addLeafToNode(4);
+		
+		assertTrue((node6.getNumVertices() - node6.getNumLeaves()) == node6.getNodes().size());
+	}
+	
+	@Test
 	public void testPrint() {
 		DescriptionTree node5 = new BetaTree();
 		node5.addLeaf(); //root

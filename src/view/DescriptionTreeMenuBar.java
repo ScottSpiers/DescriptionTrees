@@ -6,6 +6,7 @@ import javax.swing.JMenuItem;
 
 import listeners.AddRestrictionListener;
 import listeners.AutoSearchToolListener;
+import listeners.DebugChoicesListener;
 import listeners.LoadPrefsListener;
 import listeners.LoadShapeListener;
 import listeners.OEISListener;
@@ -42,6 +43,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		this.view = view;
 		this.add(createFileMenu());
 		this.add(createToolMenu());	
+		this.add(createDebugMenu());
 	}
 	
 	/**
@@ -97,5 +99,13 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		tool.add(oeis);
 		tool.add(oeisAuto);
 		return tool;		
+	}
+	
+	private JMenu createDebugMenu() {
+		JMenu debug = new JMenu("Debug");
+		JMenuItem choices = new JMenuItem("Debug Choices");
+		choices.addActionListener(new DebugChoicesListener(model, view));
+		debug.add(choices);
+		return debug;
 	}
 }
