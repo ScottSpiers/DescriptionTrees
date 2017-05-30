@@ -43,7 +43,7 @@ public class DescriptionTreeMenuBar extends JMenuBar {
 		this.view = view;
 		this.add(createFileMenu());
 		this.add(createToolMenu());	
-		this.add(createDebugMenu());
+		//this.add(createDebugMenu());
 	}
 	
 	/**

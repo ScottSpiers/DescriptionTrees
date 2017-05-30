@@ -57,6 +57,13 @@ sealed abstract class Tree {
     }
   }
   
+  /* TESTING PURPOSES ONLY
+  def getNumNodes() : Int = this match {
+    case Empty() => 0
+    case Leaf(n) => 0
+    case Node(n, xs) => 1 + numNodes(xs, 0)
+  }*/
+  
   /**
    * Get the number of nodes
    */
@@ -64,7 +71,7 @@ sealed abstract class Tree {
     case Nil => i
     case Empty() :: xs => numNodes(xs, i)
     case Leaf(n) :: xs => numNodes(xs, i)
-    case Node(n, ys) :: xs => numNodes(ys, i + 1 + numNodes(xs, i))
+    case Node(n, ys) :: xs => numNodes(ys, i + 1) + numNodes(xs, 0)
   }
   
   /**

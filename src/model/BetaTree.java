@@ -76,7 +76,7 @@ public class BetaTree extends DescriptionTree {
 		}
 		
 		//if we are setting the root node
-		if(n <= 0) {
+		if(n == 0) {
 			nodeMax = beta;
 			//calculate maximum value
 			for(Tree t : nodes.get(0).getAllChildren()) {
@@ -90,7 +90,7 @@ public class BetaTree extends DescriptionTree {
 		else { //otherwise
 			for(int i = n; i >= 0; i--) {			
 				nodeMax = beta;
-				nodes = getNodes(); //get the nodes
+				nodes = descriptionTree.getNodes(); //get the updated nodes
 				for(Tree t : nodes.get(i).getAllChildren()) {
 					nodeMax += t.getValue(); //calculate the max value
 				}

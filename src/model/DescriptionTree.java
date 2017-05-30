@@ -194,6 +194,11 @@ public abstract class DescriptionTree implements Cloneable {
 		descriptionTree = descriptionTree.setNodeValue(n, i);
 	}
 	
+	//TEMPORARY: TESTING PURPOSES ONLY
+	/*public int getNumNodes() {
+		return descriptionTree.getNumNodes();
+	}*/
+	
 	/**
 	 * 
 	 * @return the number of leaves
