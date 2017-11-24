@@ -15,11 +15,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -53,6 +55,7 @@ public class DescriptionTreeView implements Observer {
 
 	private DescriptionTreeModel model; //The model we observe
 	private JFrame frame;
+	private JFrame progressFrame;
 	private JLabel lbl_numTrees;
 	private JRadioButton rdo_alpha;
 	private JRadioButton rdo_beta;
@@ -340,6 +343,21 @@ public class DescriptionTreeView implements Observer {
 		box_output.add(lbl_numTreeSeqDesc);		
 		box_output.add(lbl_numTreeSeq);
 		return box_output;
+	}
+	
+	public void showProgressBar() {
+		progressFrame = new JFrame("Creating Trees");
+		JComponent contentPane = new JPanel();
+		contentPane.setOpaque(true);
+		progressFrame.setContentPane(contentPane);
+		
+		JProgressBar pBar = new JProgressBar();
+		JPanel pnl_progress = new JPanel();
+		pnl_progress.add(pBar);
+		contentPane.add(pnl_progress);
+		
+		progressFrame.pack();
+		progressFrame.setVisible(true);
 	}
 	
 	/**
